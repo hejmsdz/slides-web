@@ -76,7 +76,11 @@ export const post = async <T>(
   });
 };
 
-export const patch = async <T>(path: string, data: T, options?: RequestInit) => {
+export const patch = async <T>(
+  path: string,
+  data: T,
+  options?: RequestInit,
+) => {
   return post(path, data, {
     method: "PATCH",
     ...options,

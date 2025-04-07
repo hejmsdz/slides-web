@@ -10,9 +10,9 @@ export type Song = {
 
 export type SongWithLyrics = Song & {
   lyrics: string[];
-  canEdit: boolean;
-  canDelete: boolean;
-  canOverride: boolean;
+  // canEdit: boolean;
+  // canDelete: boolean;
+  // canOverride: boolean;
 };
 
 export const getSongs = async (): Promise<Song[]> => {
