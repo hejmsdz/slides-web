@@ -1,14 +1,22 @@
 import { NavLink } from "@remix-run/react";
 import { Song } from "~/api/songs";
 import {
-  SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
+import { Team } from "~/api/teams";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Copy, LockKeyhole } from "lucide-react";
 
-export function NavSongs({ items }: { items: Song[] }) {
+export function NavSongs({
+  items,
+  teams,
+}: {
+  items: Song[];
+  teams: Record<string, Team>;
+}) {
   return (
     <>
       {/* <SidebarGroup className="px-0"> */}
@@ -26,11 +34,30 @@ export function NavSongs({ items }: { items: Song[] }) {
                     asChild
                     isActive={isActive}
                   >
-                    <div>
+                    <div className="flex justify-between">
                       <span className="block truncate">
                         {item.title}
                         {item.subtitle && ` / ${item.subtitle}`}
                       </span>
+                      {item.teamId && (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {item.isOverride ? (
+                              <Copy width={16} height={16} />
+                            ) : (
+                              <LockKeyhole width={16} height={16} />
+                            )}
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              {item.isOverride
+                                ? "Własna wersja "
+                                : "Prywatna pieśń "}{" "}
+                              zespołu {teams[item.teamId].name}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
                     </div>
                   </SidebarMenuButton>
                 )}

@@ -1,4 +1,10 @@
-import { LogOutIcon, MoreVerticalIcon, UserCircleIcon } from "lucide-react";
+import { Form } from "@remix-run/react";
+import {
+  LogOutIcon,
+  MoreVerticalIcon,
+  UserRound,
+  UserRoundCog,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +16,11 @@ import { SidebarMenuButton } from "~/components/ui/sidebar";
 export function NavUser({
   userName,
   teamName,
+  isAdmin,
 }: {
   userName: string;
   teamName: string;
+  isAdmin: boolean;
 }) {
   return (
     <DropdownMenu>
@@ -22,7 +30,11 @@ export function NavUser({
             <div className="text-base font-semibold truncate">{teamName}</div>
             <div className="text-left text-sm leading-tight">
               <span className="truncate text-xs text-muted-foreground flex gap-1">
-                <UserCircleIcon className="h-4 w-4" />
+                {isAdmin ? (
+                  <UserRoundCog className="h-4 w-4" />
+                ) : (
+                  <UserRound className="h-4 w-4" />
+                )}
                 {userName}
               </span>
             </div>
@@ -38,10 +50,14 @@ export function NavUser({
               <UserCircleIcon />
               Ustawienia
             </DropdownMenuItem> */}
-        <DropdownMenuItem>
-          <LogOutIcon />
-          Wyloguj
-        </DropdownMenuItem>
+        <Form method="post" action="/auth/logout">
+          <DropdownMenuItem asChild>
+            <button type="submit" className="w-full">
+              <LogOutIcon />
+              Wyloguj
+            </button>
+          </DropdownMenuItem>
+        </Form>
       </DropdownMenuContent>
     </DropdownMenu>
   );

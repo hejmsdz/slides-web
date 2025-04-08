@@ -9,22 +9,34 @@ import {
 import { Song } from "~/api/songs";
 import { NewSongButton } from "./new-song-button";
 import { SearchForm } from "./search-form";
+import { Team } from "~/api/teams";
 
 export function AppSidebar({
   songs,
+  userName,
+  isAdmin,
+  teams,
+  currentTeamId,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { songs: Song[] }) {
+}: React.ComponentProps<typeof Sidebar> & {
+  songs: Song[];
+  userName: string;
+  isAdmin: boolean;
+  teams: Record<string, Team>;
+  currentTeamId: string;
+}) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader className="px-0">
         <NavUser
-          userName="Mikołaj Rozwadowski"
-          teamName="Zebrani w dnia połowie"
+          userName={userName}
+          teamName={teams[currentTeamId].name}
+          isAdmin={isAdmin}
         />
         <SearchForm value={""} onChange={() => {}} />
       </SidebarHeader>
       <SidebarContent>
-        <NavSongs items={songs} />
+        <NavSongs items={songs} teams={teams} />
       </SidebarContent>
       <SidebarFooter className="px-0">
         <NewSongButton />

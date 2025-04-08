@@ -1,43 +1,32 @@
 const apiUrl = process.env.API_URL;
 
-export const get = async (
+type RequestOptions = {
+  accessToken?: string;
+};
+
+const get = async (
   path: string,
   params?: Record<string, string>,
-  options?: RequestInit,
+  init?: RequestInit,
+  customOptions?: RequestOptions,
 ) => {
   const url = new URL(path, apiUrl);
   if (params) {
     url.search = new URLSearchParams(params).toString();
   }
 
-  // const session = await getSession();
-
   const response = await fetch(url, {
-    ...options,
+    ...init,
     headers: {
-      // ...(session.token && { authorization: `Bearer ${session.token}` }),
-      ...options?.headers,
+      ...(customOptions?.accessToken && {
+        authorization: `Bearer ${customOptions.accessToken}`,
+      }),
+      ...init?.headers,
     },
   });
 
   if (!response.ok) {
     const data = await response.json();
-
-    /*
-    if (
-      response.status === 401 &&
-      data.error === "token expired" &&
-      path !== "v2/auth/refresh"
-    ) {
-      if (typeof window === "undefined") {
-        await refreshAccessToken();
-      } else {
-        throw new Error("token expired");
-      }
-
-      return get(path, params, options);
-    }
-    */
 
     if (data.error) {
       throw new Error(`API error: ${data.error}`);
@@ -60,83 +49,64 @@ export const get = async (
   }
 };
 
-export const post = async <T>(
+const post = async <T>(
   path: string,
   data?: T,
-  { headers, ...restOptions }: RequestInit = {},
+  init?: RequestInit,
+  customOptions?: RequestOptions,
 ) => {
-  return get(path, undefined, {
-    method: "POST",
-    headers: {
-      ...(data && { "Content-Type": "application/json" }),
-      ...headers,
+  console.log(path, data);
+  return get(
+    path,
+    undefined,
+    {
+      method: "POST",
+      headers: {
+        ...(data && { "Content-Type": "application/json" }),
+        ...init?.headers,
+      },
+      body: data && JSON.stringify(data),
+      ...init,
     },
-    body: data && JSON.stringify(data),
-    ...restOptions,
-  });
+    customOptions,
+  );
 };
 
-export const patch = async <T>(
+const patch = async <T>(
   path: string,
   data: T,
-  options?: RequestInit,
+  init?: RequestInit,
+  customOptions?: RequestOptions,
 ) => {
-  return post(path, data, {
-    method: "PATCH",
-    ...options,
-  });
+  return post(
+    path,
+    data,
+    {
+      method: "PATCH",
+      ...init,
+    },
+    customOptions,
+  );
 };
 
-export const destroy = async <T>(
+const destroy = async <T>(
   path: string,
   data?: T | undefined,
-  options?: RequestInit,
+  init?: RequestInit,
+  customOptions?: RequestOptions,
 ) => {
-  return post(path, data, {
-    method: "DELETE",
-    ...options,
-  });
+  return post(
+    path,
+    data,
+    {
+      method: "DELETE",
+      ...init,
+    },
+    customOptions,
+  );
 };
 
 /*
-export type Team = {
-  id: string;
-  name: string;
-};
-
-export const getTeams = async (): Promise<Record<string, Team>> => {
-  const teams = await get("v2/teams");
-
-  return teams.reduce((acc: Record<string, Team>, team: Team) => {
-    acc[team.id] = team;
-
-    return acc;
-  }, {});
-};
-export type AuthResponse = {
-  token: string;
-  refreshToken: string;
-  name: string;
-};
-
-export const postGoogleAuth = async (
-  idToken: string,
-): Promise<AuthResponse> => {
-  return post(`v2/auth/google`, { idToken });
-};
-
-export const postRefreshToken = async (
-  refreshToken: string,
-): Promise<AuthResponse> => {
-  return post(`v2/auth/refresh`, { refreshToken });
-};
-
-export const deleteRefreshToken = async (
-  refreshToken: string,
-): Promise<AuthResponse> => {
-  return destroy(`v2/auth/refresh`, { refreshToken });
-};
-
 type DeckResponse = {
   url: string;
 };
@@ -145,3 +115,34 @@ export const postDeck = async (data: object): Promise<DeckResponse> => {
   return post(`v2/deck`, data);
 };
 */
+
+class Api {
+  customOptions: RequestOptions;
+
+  constructor(private readonly accessToken?: string) {
+    this.customOptions = {
+      accessToken: this.accessToken,
+    };
+  }
+
+  get(path: string, params?: Record<string, string>, init?: RequestInit) {
+    return get(path, params, init, this.customOptions);
+  }
+
+  post<T>(path: string, data?: T, init?: RequestInit) {
+    return post<T>(path, data, init, this.customOptions);
+  }
+
+  patch<T>(path: string, data: T, init?: RequestInit) {
+    return patch<T>(path, data, init, this.customOptions);
+  }
+
+  destroy<T>(path: string, data?: T, init?: RequestInit) {
+    return destroy<T>(path, data, init, this.customOptions);
+  }
+}
+
+export const defaultApi = new Api();
+
+export default Api;
+export type ApiType = InstanceType<typeof Api>;

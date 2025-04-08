@@ -1,4 +1,4 @@
-import { get, post, patch, destroy } from "./api";
+import { type ApiType as Api } from "./api";
 
 export type Song = {
   id: string;
@@ -6,6 +6,7 @@ export type Song = {
   subtitle?: string;
   slug: string;
   teamId?: string;
+  isOverride?: boolean;
 };
 
 export type SongWithLyrics = Song & {
@@ -15,27 +16,32 @@ export type SongWithLyrics = Song & {
   // canOverride: boolean;
 };
 
-export const getSongs = async (): Promise<Song[]> => {
-  return get("v2/songs", { query: "---" });
+export const getSongs = async (api: Api): Promise<Song[]> => {
+  return api.get("v2/songs");
 };
 
-export const getSong = async (id: string): Promise<SongWithLyrics> => {
-  return get(`v2/songs/${id}`);
+export const getSong = async (
+  api: Api,
+  id: string,
+): Promise<SongWithLyrics> => {
+  return api.get(`v2/songs/${id}`);
 };
 
 export const patchSong = async (
+  api: Api,
   id: string,
   data: Omit<SongWithLyrics, "id" | "slug">,
 ): Promise<SongWithLyrics> => {
-  return patch(`v2/songs/${id}`, data);
+  return api.patch(`v2/songs/${id}`, data);
 };
 
-export const destroySong = async (id: string): Promise<void> => {
-  return destroy(`v2/songs/${id}`);
+export const destroySong = async (api: Api, id: string): Promise<void> => {
+  return api.destroy(`v2/songs/${id}`);
 };
 
 export const postSong = async (
+  api: Api,
   data: Omit<SongWithLyrics, "id" | "slug">,
 ): Promise<SongWithLyrics> => {
-  return post(`v2/songs`, data);
+  return api.post("v2/songs", data);
 };
