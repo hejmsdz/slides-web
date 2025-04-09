@@ -29,7 +29,7 @@ const { getSession, commitSession, destroySession } =
 
 export { getSession, commitSession, destroySession };
 
-type Session = Awaited<ReturnType<typeof getSession>>;
+export type Session = Awaited<ReturnType<typeof getSession>>;
 
 export const updateSession = (session: Session, authResponse: AuthResponse) => {
   session.set("accessToken", authResponse.token);

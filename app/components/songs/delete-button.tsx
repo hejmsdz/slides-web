@@ -17,10 +17,12 @@ export function DeleteButton({
   id,
   children,
   className,
+  isOverride,
 }: {
   id: string;
   children: ReactNode;
   className?: string;
+  isOverride?: boolean;
 }) {
   return (
     <AlertDialog>
@@ -33,7 +35,11 @@ export function DeleteButton({
         <AlertDialogHeader>
           <AlertDialogTitle>Potwierdź</AlertDialogTitle>
           <AlertDialogDescription>
-            Czy na pewno chcesz usunąć pieśń?
+            <p>
+              Czy na pewno chcesz usunąć{" "}
+              {isOverride ? "własną wersję pieśni" : "pieśń"}?
+            </p>
+            {isOverride && <p>Zostanie ona zastąpiona wersją oficjalną.</p>}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

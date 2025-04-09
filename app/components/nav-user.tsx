@@ -4,24 +4,33 @@ import {
   MoreVerticalIcon,
   UserRound,
   UserRoundCog,
+  UsersRound,
 } from "lucide-react";
+import { Team } from "~/api/teams";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
 
 export function NavUser({
   userName,
-  teamName,
+  teams,
+  currentTeamId,
   isAdmin,
 }: {
   userName: string;
-  teamName: string;
+  teams: Record<string, Team>;
+  currentTeamId: string;
   isAdmin: boolean;
 }) {
+  const teamName = teams[currentTeamId].name;
+  const teamsList = Object.values(teams);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -46,10 +55,34 @@ export function NavUser({
         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
         align="end"
       >
+        {teamsList.length > 1 && (
+          <Form method="post" action="/dashboard/teams/switch">
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              Twoje zespoły
+            </DropdownMenuLabel>
+            {teamsList.map(
+              (team) =>
+                team.id !== currentTeamId && (
+                  <DropdownMenuItem key={team.id} asChild>
+                    <button
+                      type="submit"
+                      className="w-full"
+                      name="teamId"
+                      value={team.id}
+                    >
+                      <UsersRound />
+                      {team.name}
+                    </button>
+                  </DropdownMenuItem>
+                ),
+            )}
+          </Form>
+        )}
+        <DropdownMenuSeparator />
         {/* <DropdownMenuItem>
-              <UserCircleIcon />
-              Ustawienia
-            </DropdownMenuItem> */}
+          <UserRoundCog />
+          Ustawienia
+        </DropdownMenuItem> */}
         <Form method="post" action="/auth/logout">
           <DropdownMenuItem asChild>
             <button type="submit" className="w-full">

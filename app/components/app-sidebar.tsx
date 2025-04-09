@@ -30,7 +30,8 @@ export function AppSidebar({
       <SidebarHeader className="px-0">
         <NavUser
           userName={userName}
-          teamName={teams[currentTeamId].name}
+          teams={teams}
+          currentTeamId={currentTeamId}
           isAdmin={isAdmin}
         />
         <SearchForm value={""} onChange={() => {}} />

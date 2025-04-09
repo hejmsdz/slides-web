@@ -16,8 +16,11 @@ export type SongWithLyrics = Song & {
   // canOverride: boolean;
 };
 
-export const getSongs = async (api: Api): Promise<Song[]> => {
-  return api.get("v2/songs");
+export const getSongs = async (
+  api: Api,
+  { teamId }: { teamId: string },
+): Promise<Song[]> => {
+  return api.get("v2/songs", { teamId });
 };
 
 export const getSong = async (

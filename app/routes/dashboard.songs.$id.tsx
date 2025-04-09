@@ -3,14 +3,27 @@ import { getSong, patchSong, SongWithLyrics } from "~/api/songs";
 import invariant from "tiny-invariant";
 import { useLoaderData } from "@remix-run/react";
 import SongForm from "~/components/songs/song-form";
-import { requireSession, createAuthenticatedApi } from "~/session";
+import {
+  requireSession,
+  createAuthenticatedApi,
+  commitSession,
+} from "~/session";
 import { createAuthenticatedAction } from "~/routing.server";
 import { getTeams } from "~/api/teams";
 
 export default function Song() {
-  const { song, teams } = useLoaderData<typeof loader>();
+  const { song, teams, isAdmin, currentTeamId } =
+    useLoaderData<typeof loader>();
 
-  return <SongForm song={song} teams={teams} />;
+  return (
+    <SongForm
+      key={song.id}
+      song={song}
+      teams={teams}
+      isAdmin={isAdmin}
+      currentTeamId={currentTeamId}
+    />
+  );
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
@@ -25,14 +38,18 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404 });
   }
 
+  const teams = await getTeams(api);
+
   return {
     song,
-    teams: await getTeams(api),
+    teams,
+    isAdmin: session.get("isAdmin") ?? false,
+    currentTeamId: session.get("teamId") ?? Object.keys(teams)[0],
   };
 }
 
 export const action = createAuthenticatedAction(
-  async ({ params, request }, { api }) => {
+  async ({ params, request }, { api, session }) => {
     invariant(params.id, "id is required");
     const formData = await request.formData();
 
@@ -45,8 +62,11 @@ export const action = createAuthenticatedAction(
     const orNull = (value?: string) => (value && value !== "0" ? value : null);
 
     const teamId = orNull(formData.get("teamId")?.toString());
-    const prevTeamId = orNull(formData.get("prevTeamId")?.toString());
-    const isOverride = teamId !== null && prevTeamId === null;
+    const isOverride = formData.has("isOverride");
+
+    if (teamId !== null && teamId !== "0" && teamId !== session.get("teamId")) {
+      session.set("teamId", teamId);
+    }
 
     const result = await patchSong(api, params.id, {
       title,
@@ -57,9 +77,17 @@ export const action = createAuthenticatedAction(
     });
 
     if (isOverride) {
-      return redirect(`/dashboard/songs/${result.id}`);
+      return redirect(`/dashboard/songs/${result.id}`, {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     }
 
-    return null;
+    return Response.json(true, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   },
 );

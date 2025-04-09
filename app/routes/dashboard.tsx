@@ -39,9 +39,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const session = await requireSession(request);
   const api = await createAuthenticatedApi(session);
 
-  const songs = await getSongs(api);
   const teams = await getTeams(api);
   const currentTeamId = session.get("teamId") || Object.keys(teams)[0];
+
+  const songs = await getSongs(api, { teamId: currentTeamId });
 
   return {
     songs,
