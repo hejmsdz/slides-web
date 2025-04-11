@@ -3,7 +3,6 @@ import { Form } from "@remix-run/react";
 import { SongWithLyrics } from "~/api/songs";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
 import { Team } from "~/api/teams";
@@ -17,6 +16,7 @@ import {
 } from "../ui/select";
 import { DeleteButton } from "./delete-button";
 import { Checkbox } from "../ui/checkbox";
+import LyricsEditor from "./lyrics-editor";
 
 const FormItem = ({
   children,
@@ -116,7 +116,7 @@ export default function SongForm({
       )}
       <FormItem className="flex-grow">
         <Label htmlFor="lyrics">Tekst</Label>
-        <Textarea
+        <LyricsEditor
           id="lyrics"
           name="lyrics"
           className="flex-grow"
