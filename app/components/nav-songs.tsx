@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { NavLink } from "@remix-run/react";
 import { Song } from "~/api/songs";
 import {
@@ -6,43 +7,55 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { Team } from "~/api/teams";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Copy, LockKeyhole } from "lucide-react";
 
-export function NavSongs({
-  items,
-  teams,
-}: {
-  items: Song[];
-  teams: Record<string, Team>;
-}) {
+const slugify = (text: string): string =>
+  text
+    .toLowerCase()
+    .replaceAll("ą", "a")
+    .replaceAll("ć", "c")
+    .replaceAll("ę", "e")
+    .replaceAll("ł", "l")
+    .replaceAll("ń", "n")
+    .replaceAll("ó", "o")
+    .replaceAll("ś", "s")
+    .replaceAll("ź", "z")
+    .replaceAll("ż", "z");
+
+export function NavSongs({ songs, query }: { songs: Song[]; query: string }) {
+  const filteredSongs = useMemo(() => {
+    const searchSlug = slugify(query);
+
+    return songs.filter((song) => song.slug.includes(searchSlug));
+  }, [songs, query]);
+
   return (
     <>
       {/* <SidebarGroup className="px-0"> */}
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.id}>
+          {filteredSongs.map((song) => (
+            <SidebarMenuItem key={song.id}>
               <NavLink
-                to={`/dashboard/songs/${item.id}`}
+                to={`/dashboard/songs/${song.id}`}
                 className="max-w-full"
               >
                 {({ isActive }) => (
                   <SidebarMenuButton
-                    tooltip={item.title}
+                    tooltip={song.title}
                     asChild
                     isActive={isActive}
                   >
                     <div className="flex justify-between">
                       <span className="block truncate">
-                        {item.title}
-                        {item.subtitle && ` / ${item.subtitle}`}
+                        {song.title}
+                        {song.subtitle && ` / ${song.subtitle}`}
                       </span>
-                      {item.teamId && (
+                      {song.teamId && (
                         <Tooltip>
                           <TooltipTrigger>
-                            {item.isOverride ? (
+                            {song.isOverride ? (
                               <Copy width={16} height={16} />
                             ) : (
                               <LockKeyhole width={16} height={16} />
@@ -50,10 +63,9 @@ export function NavSongs({
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>
-                              {item.isOverride
-                                ? "Własna wersja "
-                                : "Prywatna pieśń "}{" "}
-                              zespołu {teams[item.teamId].name}
+                              {song.isOverride
+                                ? "Własna wersja pieśni"
+                                : "Prywatna pieśń"}
                             </p>
                           </TooltipContent>
                         </Tooltip>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavSongs } from "~/components/nav-songs";
 import { NavUser } from "~/components/nav-user";
 import {
@@ -25,6 +26,8 @@ export function AppSidebar({
   teams: Record<string, Team>;
   currentTeamId: string;
 }) {
+  const [query, setQuery] = useState<string>("");
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader className="px-0">
@@ -34,10 +37,15 @@ export function AppSidebar({
           currentTeamId={currentTeamId}
           isAdmin={isAdmin}
         />
-        <SearchForm value={""} onChange={() => {}} />
+        <SearchForm
+          value={query}
+          onChange={(value) => {
+            setQuery(value);
+          }}
+        />
       </SidebarHeader>
       <SidebarContent>
-        <NavSongs items={songs} teams={teams} />
+        <NavSongs songs={songs} query={query} />
       </SidebarContent>
       <SidebarFooter className="px-0">
         <NewSongButton />
