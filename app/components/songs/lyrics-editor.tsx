@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { forwardRef, Fragment, useRef, useState } from "react";
 import { cn } from "~/lib/utils";
 
 type Block = VerseText | VerseDefinition | VerseReference | Comment;
@@ -131,13 +131,12 @@ const colors = [
   "text-orange-700",
 ];
 
-export default function LyricsEditor({
-  className,
-  defaultValue = "",
-  ...rest
-}: Omit<React.ComponentProps<"textarea">, "defaultValue"> & {
-  defaultValue?: string;
-}) {
+const LyricsEditor = forwardRef<
+  HTMLTextAreaElement,
+  Omit<React.ComponentProps<"textarea">, "defaultValue"> & {
+    defaultValue?: string;
+  }
+>(({ className, defaultValue = "", ...rest }, ref) => {
   const [value, setValue] = useState<string>(defaultValue);
   const textRef = useRef<HTMLDivElement>(null);
 
@@ -158,7 +157,7 @@ export default function LyricsEditor({
       )}
     >
       <textarea
-        {...rest}
+        ref={ref}
         value={value}
         onInput={(e) => setValue(e.currentTarget.value)}
         className={cn(
@@ -170,6 +169,7 @@ export default function LyricsEditor({
             textRef.current.scrollTop = event.currentTarget.scrollTop;
           }
         }}
+        {...rest}
       />
       <div
         ref={textRef}
@@ -180,12 +180,16 @@ export default function LyricsEditor({
         aria-hidden
       >
         {blocks.map((block, i) => (
-          <>
-            <Block key={i} block={block} definitionColors={definitionColors} />
+          <Fragment key={i}>
+            <Block block={block} definitionColors={definitionColors} />
             <br />
-          </>
+          </Fragment>
         ))}
       </div>
     </div>
   );
-}
+});
+
+LyricsEditor.displayName = "LyricsEditor";
+
+export default LyricsEditor;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Form } from "@remix-run/react";
 import { SongWithLyrics } from "~/api/songs";
 import { Input } from "../ui/input";
@@ -17,6 +17,7 @@ import {
 import { DeleteButton } from "./delete-button";
 import { Checkbox } from "../ui/checkbox";
 import LyricsEditor from "./lyrics-editor";
+import PreviewButton from "./preview-button";
 
 const FormItem = ({
   children,
@@ -47,6 +48,7 @@ export default function SongForm({
     song !== undefined && song.teamId === null && !isAdmin,
   );
   const [teamId, setTeamId] = useState(song?.teamId ?? "0");
+  const lyricsRef = useRef<HTMLTextAreaElement>(null);
 
   return (
     <Form method="post" className="flex flex-col gap-4 h-full">
@@ -117,6 +119,7 @@ export default function SongForm({
       <FormItem className="flex-grow">
         <Label htmlFor="lyrics">Tekst</Label>
         <LyricsEditor
+          ref={lyricsRef}
           id="lyrics"
           name="lyrics"
           className="flex-grow"
@@ -128,6 +131,7 @@ export default function SongForm({
         <Button type="submit" variant="default" className="flex-[2]">
           {isOverride ? "Zapisz własną wersję" : "Zapisz"}
         </Button>
+        <PreviewButton lyricsRef={lyricsRef} />
         {song?.canDelete && (
           <DeleteButton
             id={song.id}

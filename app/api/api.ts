@@ -106,16 +106,6 @@ const destroy = async <T>(
   );
 };
 
-/*
-type DeckResponse = {
-  url: string;
-};
-
-export const postDeck = async (data: object): Promise<DeckResponse> => {
-  return post(`v2/deck`, data);
-};
-*/
-
 class Api {
   customOptions: RequestOptions;
 
