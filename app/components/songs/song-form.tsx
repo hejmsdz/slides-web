@@ -21,6 +21,7 @@ import PreviewButton from "./preview-button";
 import { SiteHeader } from "../site-header";
 import MainContent from "../main-content";
 import { toast } from "sonner";
+import LyricsFormattingHelpButton from "./lyrics-formatting-help-button";
 
 const FormItem = ({
   children,
@@ -144,7 +145,10 @@ export default function SongForm({
           </>
         )}
         <FormItem className="flex-grow">
-          <Label htmlFor="lyrics">Tekst</Label>
+          <Label htmlFor="lyrics" className="flex items-center gap-2">
+            Tekst
+            <LyricsFormattingHelpButton />
+          </Label>
           <LyricsEditor
             ref={lyricsRef}
             id="lyrics"
