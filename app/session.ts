@@ -34,7 +34,7 @@ export type Session = Awaited<ReturnType<typeof getSession>>;
 export const updateSession = (session: Session, authResponse: AuthResponse) => {
   session.set("accessToken", authResponse.token);
   session.set("refreshToken", authResponse.refreshToken);
-  session.set("name", authResponse.name);
+  session.set("name", authResponse.user.displayName);
 
   const decoded = jwt.decode(authResponse.token);
   if (typeof decoded === "object") {
@@ -89,6 +89,8 @@ export const requireSession = async (
       });
     }
   }
+
+  console.log("session", session.get("refreshToken"));
 
   return session;
 };

@@ -1,9 +1,15 @@
 import { type ApiType as Api } from "./api";
 
+export type User = {
+  id: string;
+  displayName: string;
+  email: string;
+};
+
 export type AuthResponse = {
   token: string;
   refreshToken: string;
-  name: string;
+  user: User;
 };
 
 export const postGoogleAuth = async (
