@@ -76,9 +76,9 @@ export function NavUser({
                   </DropdownMenuItem>
                 ),
             )}
+            <DropdownMenuSeparator />
           </Form>
         )}
-        <DropdownMenuSeparator />
         {/* <DropdownMenuItem>
           <UserRoundCog />
           Ustawienia

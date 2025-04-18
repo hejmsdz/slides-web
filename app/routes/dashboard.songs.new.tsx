@@ -51,6 +51,8 @@ export const action = createAuthenticatedAction(
       session.set("teamId", teamId);
     }
 
+    console.log("teamId", teamId);
+
     const { id } = await postSong(api, {
       title,
       subtitle,

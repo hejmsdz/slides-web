@@ -24,7 +24,6 @@ export default function PreviewButton({
         <Button
           variant="secondary"
           type="button"
-          className="flex-[1]"
           onClick={() => setLyrics(lyricsRef.current?.value ?? "")}
         >
           Podgląd

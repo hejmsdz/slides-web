@@ -1,11 +1,15 @@
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { getSongs } from "../api/songs";
-import { createAuthenticatedApi, requireSession } from "~/session";
+import {
+  commitSession,
+  createAuthenticatedApi,
+  requireSession,
+} from "~/session";
 import { AppSidebar } from "~/components/app-sidebar";
-import { SiteHeader } from "~/components/site-header";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { getTeams } from "~/api/teams";
+import invariant from "tiny-invariant";
 
 export default function Dashboard() {
   const { songs, userName, teams, currentTeamId, isAdmin } =
@@ -22,14 +26,7 @@ export default function Dashboard() {
         currentTeamId={currentTeamId}
       />
       <SidebarInset>
-        <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 p-4 h-full">
-              <Outlet />
-            </div>
-          </div>
-        </div>
+        <Outlet />
       </SidebarInset>
     </SidebarProvider>
   );
@@ -40,15 +37,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const api = await createAuthenticatedApi(session);
 
   const teams = await getTeams(api);
-  const currentTeamId = session.get("teamId") || Object.keys(teams)[0];
+  invariant(Object.keys(teams).length > 0, "No teams found");
+
+  if (!session.has("teamId")) {
+    session.set("teamId", Object.keys(teams)[0]);
+  }
+
+  const currentTeamId = session.get("teamId");
 
   const songs = await getSongs(api, { teamId: currentTeamId });
 
-  return {
-    songs,
-    userName: session.get("name") ?? "Użytkownik",
-    isAdmin: session.get("isAdmin") ?? false,
-    teams,
-    currentTeamId,
-  };
+  return Response.json(
+    {
+      songs,
+      userName: session.get("name") ?? "Użytkownik",
+      isAdmin: session.get("isAdmin") ?? false,
+      teams,
+      currentTeamId,
+    },
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    },
+  );
 }
