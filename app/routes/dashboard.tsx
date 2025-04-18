@@ -10,6 +10,7 @@ import { AppSidebar } from "~/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { getTeams } from "~/api/teams";
 import invariant from "tiny-invariant";
+import { Toaster } from "~/components/ui/sonner";
 
 export default function Dashboard() {
   const { songs, userName, teams, currentTeamId, isAdmin } =
@@ -27,6 +28,7 @@ export default function Dashboard() {
       />
       <SidebarInset>
         <Outlet />
+        <Toaster />
       </SidebarInset>
     </SidebarProvider>
   );

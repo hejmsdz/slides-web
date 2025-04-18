@@ -20,6 +20,7 @@ import LyricsEditor from "./lyrics-editor";
 import PreviewButton from "./preview-button";
 import { SiteHeader } from "../site-header";
 import MainContent from "../main-content";
+import { toast } from "sonner";
 
 const FormItem = ({
   children,
@@ -53,7 +54,13 @@ export default function SongForm({
   const lyricsRef = useRef<HTMLTextAreaElement>(null);
 
   return (
-    <Form method="post" className="flex flex-col gap-4 h-full">
+    <Form
+      method="post"
+      className="flex flex-col gap-4 h-full"
+      onSubmit={() => {
+        toast.success("Pieśń została zapisana.");
+      }}
+    >
       <SiteHeader>
         <div className="flex gap-2 w-full justify-end">
           <Button type="submit" variant="default">
