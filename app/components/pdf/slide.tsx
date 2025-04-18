@@ -1,17 +1,25 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { type PDFDocumentProxy } from "./pdf.client";
 
 type SlideProps = {
   pdfDocument: PDFDocumentProxy;
   pageNumber: number;
-  renderWidth: number;
+  renderWidth?: number;
   className?: string;
+  ariaHidden?: boolean;
 };
 
 const Slide = memo(
-  ({ pdfDocument, pageNumber, renderWidth, className }: SlideProps) => {
+  ({
+    pdfDocument,
+    pageNumber,
+    renderWidth,
+    className,
+    ariaHidden,
+  }: SlideProps) => {
     const ref = useRef<HTMLCanvasElement>(null);
     const isRenderingRef = useRef<boolean>(false);
+    const [textContent, setTextContent] = useState<string>("");
 
     useEffect(() => {
       (async () => {
@@ -31,7 +39,9 @@ const Slide = memo(
 
           const page = await pdfDocument.getPage(pageNumber);
           const [, , width] = page.view;
-          const scale = (renderWidth / width) * window.devicePixelRatio;
+          const scale =
+            ((renderWidth ?? window.innerWidth) / width) *
+            window.devicePixelRatio;
           const viewport = page.getViewport({ scale });
 
           canvas.height = viewport.height;
@@ -41,6 +51,13 @@ const Slide = memo(
             canvasContext: ctx,
             viewport,
           }).promise;
+
+          setTextContent(
+            (await page.getTextContent()).items
+              .filter((item) => "str" in item)
+              .map((item) => item.str)
+              .join(" "),
+          );
         } finally {
           isRenderingRef.current = false;
         }
@@ -48,7 +65,14 @@ const Slide = memo(
     }, [pageNumber, pdfDocument, renderWidth]);
 
     return (
-      <canvas className={className} style={{ width: renderWidth }} ref={ref} />
+      <canvas
+        className={className}
+        style={{ width: renderWidth }}
+        ref={ref}
+        role="img"
+        aria-label={textContent}
+        aria-hidden={ariaHidden}
+      />
     );
   },
 );

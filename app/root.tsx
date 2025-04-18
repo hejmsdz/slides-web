@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
@@ -12,15 +13,22 @@ import "./tailwind.css";
 export const links: LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const matches = useMatches();
+
+  const bodyClassName = matches
+    .filter((match) => match.handle?.bodyClassName)
+    .map((match) => match.handle.bodyClassName)
+    .join(" ");
+
   return (
-    <html lang="pl">
+    <html lang="pl" className="h-full">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className={bodyClassName}>
         {children}
         <ScrollRestoration />
         <Scripts />
