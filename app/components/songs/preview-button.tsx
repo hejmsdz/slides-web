@@ -8,8 +8,7 @@ import {
   Sheet,
 } from "../ui/sheet";
 import SlidesPreview from "./slides-preview";
-
-const fontSize = 54;
+import FontSizeSlider from "./font-size-slider";
 
 export default function PreviewButton({
   lyricsRef,
@@ -17,6 +16,7 @@ export default function PreviewButton({
   lyricsRef: React.RefObject<HTMLTextAreaElement>;
 }) {
   const [lyrics, setLyrics] = useState("");
+  const [fontSize, setFontSize] = useState<number | undefined>(undefined);
 
   return (
     <Sheet>
@@ -34,17 +34,10 @@ export default function PreviewButton({
           <SheetTitle>Podgląd slajdów</SheetTitle>
         </SheetHeader>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          {/* <Label htmlFor="fontSize">Rozmiar tekstu: {fontSize}</Label> */}
-          {/* <Slider
-            id="fontSize"
-            min={fontSizes.min}
-            max={fontSizes.max}
-            defaultValue={fontSize ? [fontSize] : []}
-            onValueCommit={([value]) => setFontSize(value)}
-          /> */}
+          <FontSizeSlider value={fontSize} onChange={setFontSize} />
         </div>
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
-          {lyrics && (
+          {lyrics && fontSize && (
             <SlidesPreview lyrics={lyrics} fontSize={fontSize} ratio="16:9" />
           )}
         </div>
