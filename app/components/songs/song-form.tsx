@@ -3,7 +3,6 @@ import { Form } from "@remix-run/react";
 import { SongWithLyrics } from "~/api/songs";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
 import { Team } from "~/api/teams";
 import {
@@ -22,31 +21,20 @@ import { SiteHeader } from "../site-header";
 import MainContent from "../main-content";
 import { toast } from "sonner";
 import LyricsFormattingHelpButton from "./lyrics-formatting-help-button";
-
-const FormItem = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div className={cn("flex flex-col w-full gap-1.5", className)}>
-      {children}
-    </div>
-  );
-};
+import FormItem from "../form-item";
 
 export default function SongForm({
   song,
   teams,
   currentTeamId,
   isAdmin,
+  autoFocus = false,
 }: {
   song?: SongWithLyrics;
   teams: Record<string, Team>;
   currentTeamId: string;
   isAdmin: boolean;
+  autoFocus?: boolean;
 }) {
   const [isOverride, setIsOverride] = useState<boolean>(
     song !== undefined && song.teamId === null && !isAdmin,
@@ -85,6 +73,7 @@ export default function SongForm({
               name="title"
               defaultValue={song?.title}
               required
+              autoFocus={autoFocus}
             />
           </FormItem>
           <FormItem>

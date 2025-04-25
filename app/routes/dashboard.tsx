@@ -39,13 +39,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const api = await createAuthenticatedApi(session);
 
   const teams = await getTeams(api);
-  invariant(Object.keys(teams).length > 0, "No teams found");
 
-  if (!session.has("teamId")) {
-    session.set("teamId", Object.keys(teams)[0]);
-  }
-
-  const currentTeamId = session.get("teamId");
+  const currentTeamId = session.get("teamId") ?? "";
 
   const songs = await getSongs(api, { teamId: currentTeamId });
 

@@ -19,6 +19,7 @@ export default function NewSong() {
       teams={teams}
       isAdmin={isAdmin}
       currentTeamId={currentTeamId}
+      autoFocus // eslint-disable-line jsx-a11y/no-autofocus
     />
   );
 }

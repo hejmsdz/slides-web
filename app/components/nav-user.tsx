@@ -1,7 +1,9 @@
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import {
   LogOutIcon,
   MoreVerticalIcon,
+  PlusIcon,
+  Settings,
   UserRound,
   UserRoundCog,
   UsersRound,
@@ -16,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
+import { NewTeamDialog } from "./new-team-dialog";
 
 export function NavUser({
   userName,
@@ -28,7 +31,7 @@ export function NavUser({
   currentTeamId: string;
   isAdmin: boolean;
 }) {
-  const teamName = teams[currentTeamId].name;
+  const teamName = teams[currentTeamId]?.name ?? userName;
   const teamsList = Object.values(teams);
 
   return (
@@ -56,7 +59,7 @@ export function NavUser({
         align="end"
       >
         {teamsList.length > 1 && (
-          <Form method="post" action="/dashboard/teams/switch">
+          <Form method="post">
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Twoje zespoły
             </DropdownMenuLabel>
@@ -67,8 +70,7 @@ export function NavUser({
                     <button
                       type="submit"
                       className="w-full"
-                      name="teamId"
-                      value={team.id}
+                      formAction={`/dashboard/teams/${team.id}/switch`}
                     >
                       <UsersRound />
                       {team.name}
@@ -79,10 +81,18 @@ export function NavUser({
             <DropdownMenuSeparator />
           </Form>
         )}
-        {/* <DropdownMenuItem>
-          <UserRoundCog />
-          Ustawienia
-        </DropdownMenuItem> */}
+        <NewTeamDialog>
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <PlusIcon />
+            Utwórz nowy zespół
+          </DropdownMenuItem>
+        </NewTeamDialog>
+        <Link to="/dashboard/settings">
+          <DropdownMenuItem>
+            <Settings />
+            Ustawienia
+          </DropdownMenuItem>
+        </Link>
         <Form method="post" action="/auth/logout">
           <DropdownMenuItem asChild>
             <button type="submit" className="w-full">

@@ -5,10 +5,8 @@ import { createAuthenticatedAction } from "~/routing.server";
 import { commitSession } from "~/session";
 
 export const action = createAuthenticatedAction(
-  async ({ request }, { api, session }) => {
-    const formData = await request.formData();
-
-    const teamId = formData.get("teamId")?.toString();
+  async ({ params }, { api, session }) => {
+    const teamId = params.id;
     invariant(teamId, "teamId is required");
 
     const teams = await getTeams(api);
