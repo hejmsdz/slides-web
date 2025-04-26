@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Form } from "@remix-run/react";
+import { useEffect, useRef, useState } from "react";
+import { Form, useBeforeUnload, useBlocker } from "@remix-run/react";
 import { SongWithLyrics } from "~/api/songs";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -33,6 +33,36 @@ import {
 } from "../ui/sidebar";
 import { PopoverContent, PopoverTrigger, Popover } from "../ui/popover";
 import { Eye, MoreHorizontal, Save, Trash2 } from "lucide-react";
+import useEventListener from "~/hooks/use-event-listener";
+
+function useSaveGuard(): React.MutableRefObject<boolean> {
+  const isSavedRef = useRef<boolean>(true);
+
+  const blocker = useBlocker(() => {
+    return !isSavedRef.current;
+  });
+
+  useEffect(() => {
+    if (blocker.state === "blocked") {
+      const canProceed = window.confirm(
+        "Masz niezapisane zmiany w tekście. Czy na pewno chcesz wyjść z tej strony i odrzucić zmiany?",
+      );
+      if (canProceed) {
+        blocker.proceed();
+      } else {
+        blocker.reset();
+      }
+    }
+  }, [blocker.state]);
+
+  useEventListener("beforeunload", (event) => {
+    if (!isSavedRef.current) {
+      event.preventDefault();
+    }
+  });
+
+  return isSavedRef;
+}
 
 export default function SongForm({
   song,
@@ -53,15 +83,19 @@ export default function SongForm({
   );
   const [teamId, setTeamId] = useState(song?.teamId ?? "0");
   const lyricsRef = useRef<HTMLTextAreaElement>(null);
-
   const isDisabled = (isOverride || isNewSong) && !currentTeamId;
+  const isSavedRef = useSaveGuard();
 
   return (
     <Form
       method="post"
       className="flex flex-col h-full"
       onSubmit={() => {
+        isSavedRef.current = true;
         toast.success("Pieśń została zapisana.");
+      }}
+      onChange={() => {
+        isSavedRef.current = false;
       }}
     >
       <SiteHeader>
