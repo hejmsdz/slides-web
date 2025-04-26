@@ -10,7 +10,9 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        {children}
+        <div className="w-full flex flex-row justify-between items-center gap-2">
+          {children}
+        </div>
       </div>
     </header>
   );

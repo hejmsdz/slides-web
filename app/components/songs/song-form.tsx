@@ -51,7 +51,8 @@ export default function SongForm({
       }}
     >
       <SiteHeader>
-        <div className="flex gap-2 w-full justify-end">
+        <h1>{song?.title ?? "Nowa pieśń"}</h1>
+        <div className="flex gap-2">
           <Button type="submit" variant="default">
             {isOverride ? "Zapisz własną wersję" : "Zapisz"}
           </Button>
