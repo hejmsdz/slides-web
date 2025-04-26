@@ -33,7 +33,7 @@ export default function ConfirmButton({
 }: ConfirmButtonProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild={asChild}>
+      <AlertDialogTrigger asChild>
         {asChild ? (
           children
         ) : (

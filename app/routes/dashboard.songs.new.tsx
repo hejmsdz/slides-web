@@ -2,7 +2,7 @@ import invariant from "tiny-invariant";
 import SongForm from "~/components/songs/song-form";
 import { postSong } from "~/api/songs";
 import { redirect, useLoaderData } from "@remix-run/react";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { createAuthenticatedAction } from "~/routing.server";
 import { getTeams } from "~/api/teams";
 import {
@@ -10,6 +10,10 @@ import {
   createAuthenticatedApi,
   commitSession,
 } from "~/session";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Nowa pieśń" }];
+};
 
 export default function NewSong() {
   const { teams, isAdmin, currentTeamId } = useLoaderData<typeof loader>();

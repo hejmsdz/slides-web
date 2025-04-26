@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { requireSession, createAuthenticatedApi } from "~/session";
 import { getTeam } from "~/api/teams";
 import { useLoaderData } from "@remix-run/react";
@@ -9,6 +9,10 @@ import { MyAccountCard } from "~/components/settings/my-account-card";
 import { DeleteAccountCard } from "~/components/settings/delete-account-card";
 import { getUsersMe } from "~/api/users";
 import { NewTeamCard } from "~/components/settings/new-team-card";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Ustawienia" }];
+};
 
 export default function Settings() {
   const { team, user } = useLoaderData<typeof loader>();

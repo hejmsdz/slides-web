@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Form, useBeforeUnload, useBlocker } from "@remix-run/react";
+import { Form, useBlocker } from "@remix-run/react";
 import { SongWithLyrics } from "~/api/songs";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";

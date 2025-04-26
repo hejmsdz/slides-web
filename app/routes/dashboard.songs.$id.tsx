@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction, redirect } from "@remix-run/node";
 import { getSong, patchSong, SongWithLyrics } from "~/api/songs";
 import invariant from "tiny-invariant";
 import { useLoaderData } from "@remix-run/react";
@@ -10,6 +10,16 @@ import {
 } from "~/session";
 import { createAuthenticatedAction } from "~/routing.server";
 import { getTeams } from "~/api/teams";
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [
+    {
+      title: data?.song
+        ? `${data.song.title}${data.song.subtitle ? ` / ${data.song.subtitle}` : ""}`
+        : "Edytuj pieśń",
+    },
+  ];
+};
 
 export default function Song() {
   const { song, teams, isAdmin, currentTeamId } =
