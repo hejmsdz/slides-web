@@ -8,6 +8,7 @@ import { TeamCard } from "~/components/settings/team-card";
 import { MyAccountCard } from "~/components/settings/my-account-card";
 import { DeleteAccountCard } from "~/components/settings/delete-account-card";
 import { getUsersMe } from "~/api/users";
+import { NewTeamCard } from "~/components/settings/new-team-card";
 
 export default function Settings() {
   const { team, user } = useLoaderData<typeof loader>();
@@ -19,8 +20,10 @@ export default function Settings() {
       </SiteHeader>
       <MainContent>
         <div className="flex flex-col gap-4">
-          {team && (
+          {team ? (
             <TeamCard id={team.id} name={team.name} members={team.members} />
+          ) : (
+            <NewTeamCard />
           )}
           <MyAccountCard displayName={user.displayName} email={user.email} />
           <DeleteAccountCard />
