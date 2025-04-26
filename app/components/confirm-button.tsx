@@ -19,6 +19,7 @@ type ConfirmButtonProps = {
   variant?: ButtonProps["variant"];
   className?: ButtonProps["className"];
   action: string;
+  asChild?: boolean;
 };
 
 export default function ConfirmButton({
@@ -28,13 +29,18 @@ export default function ConfirmButton({
   variant = "ghost",
   className,
   action,
+  asChild = false,
 }: ConfirmButtonProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant={variant} className={className}>
-          {children}
-        </Button>
+      <AlertDialogTrigger asChild={asChild}>
+        {asChild ? (
+          children
+        ) : (
+          <Button variant={variant} className={className}>
+            {children}
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

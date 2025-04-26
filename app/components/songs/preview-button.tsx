@@ -12,22 +12,29 @@ import FontSizeSlider from "./font-size-slider";
 
 export default function PreviewButton({
   lyricsRef,
+  asChild = false,
+  children,
 }: {
   lyricsRef: React.RefObject<HTMLTextAreaElement>;
+  asChild?: boolean;
+  children?: React.ReactNode;
 }) {
   const [lyrics, setLyrics] = useState("");
   const [fontSize, setFontSize] = useState<number | undefined>(undefined);
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="secondary"
-          type="button"
-          onClick={() => setLyrics(lyricsRef.current?.value ?? "")}
-        >
-          Podgląd
-        </Button>
+      <SheetTrigger
+        asChild
+        onClick={() => setLyrics(lyricsRef.current?.value ?? "")}
+      >
+        {asChild ? (
+          children
+        ) : (
+          <Button variant="secondary" type="button">
+            Podgląd
+          </Button>
+        )}
       </SheetTrigger>
       <SheetContent className="flex flex-col w-[366px] duration-1000">
         <SheetHeader className="flex-shrink-0">

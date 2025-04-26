@@ -5,11 +5,13 @@ export function DeleteButton({
   id,
   children,
   isOverride,
+  asChild = false,
 }: {
   id: string;
   children: ReactNode;
   className?: string;
   isOverride?: boolean;
+  asChild?: boolean;
 }) {
   return (
     <ConfirmButton
@@ -23,6 +25,7 @@ export function DeleteButton({
       }
       action={`/dashboard/songs/${id}/destroy`}
       actionButtonLabel="Usuń"
+      asChild={asChild}
     >
       {children}
     </ConfirmButton>

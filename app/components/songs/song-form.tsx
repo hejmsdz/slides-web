@@ -22,6 +22,17 @@ import MainContent from "../main-content";
 import { toast } from "sonner";
 import LyricsFormattingHelpButton from "./lyrics-formatting-help-button";
 import FormItem from "../form-item";
+import {
+  SidebarMenuItem,
+  SidebarMenu,
+  SidebarGroupContent,
+  SidebarGroup,
+  SidebarContent,
+  Sidebar,
+  SidebarMenuButton,
+} from "../ui/sidebar";
+import { PopoverContent, PopoverTrigger, Popover } from "../ui/popover";
+import { Eye, MoreHorizontal, Save, Trash2 } from "lucide-react";
 
 export default function SongForm({
   song,
@@ -54,19 +65,59 @@ export default function SongForm({
       }}
     >
       <SiteHeader>
-        <h1>{isNewSong ? "Nowa pieśń" : song.title}</h1>
-        <div className="flex gap-2">
+        <h1 className="truncate">{isNewSong ? "Nowa pieśń" : song.title}</h1>
+        <div className="flex gap-2 ml-auto">
           {!isDisabled && (
             <Button type="submit" variant="default">
-              {isOverride ? "Zapisz własną wersję" : "Zapisz"}
+              <Save className="sm:hidden w-4 h-4" />
+              <span className="max-sm:sr-only">Zapisz</span>
             </Button>
           )}
-          <PreviewButton lyricsRef={lyricsRef} />
-          {song?.canDelete && (
-            <DeleteButton id={song.id} isOverride={song.isOverride}>
-              {song.isOverride ? "Usuń własną wersję" : "Usuń"}
-            </DeleteButton>
-          )}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                className="data-[state=open]:bg-accent"
+              >
+                <MoreHorizontal />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-56 overflow-hidden rounded-lg p-0"
+              align="end"
+            >
+              <Sidebar collapsible="none">
+                <SidebarContent>
+                  <SidebarGroup className="border-b last:border-none">
+                    <SidebarGroupContent className="gap-0">
+                      <SidebarMenu>
+                        <PreviewButton lyricsRef={lyricsRef} asChild>
+                          <SidebarMenuItem>
+                            <SidebarMenuButton type="button">
+                              <Eye /> <span>Podgląd</span>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        </PreviewButton>
+                        {song?.canDelete && (
+                          <DeleteButton id={song.id} asChild>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                type="button"
+                                className="text-red-500 hover:text-red-600 active:text-red-700"
+                              >
+                                <Trash2 /> <span>Usuń</span>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          </DeleteButton>
+                        )}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+              </Sidebar>
+            </PopoverContent>
+          </Popover>
         </div>
       </SiteHeader>
       <MainContent>
