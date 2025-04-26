@@ -47,9 +47,11 @@ export function AppSidebar({
       <SidebarContent>
         <NavSongs songs={songs} query={query} />
       </SidebarContent>
-      <SidebarFooter className="px-0">
-        <NewSongButton />
-      </SidebarFooter>
+      {currentTeamId && (
+        <SidebarFooter className="px-0">
+          <NewSongButton />
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 }
