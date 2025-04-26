@@ -18,3 +18,7 @@ export const patchUsersMe = async (
 ): Promise<User> => {
   return api.patch("v2/users/me", user);
 };
+
+export const destroyUsersMe = async (api: Api): Promise<void> => {
+  return api.destroy("v2/users/me");
+};

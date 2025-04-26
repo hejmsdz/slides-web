@@ -20,7 +20,7 @@ export function DeleteAccountCard() {
       <CardContent>
         <ConfirmButton
           message="Czy na pewno chcesz usunąć swoje konto?"
-          action="/dashboard/settings/delete-account"
+          action="/dashboard/account/destroy"
           actionButtonLabel="Usuń konto"
         >
           Usuń konto
