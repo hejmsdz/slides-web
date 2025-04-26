@@ -1,4 +1,4 @@
-import { redirect } from "@remix-run/node";
+import { redirect } from "react-router";
 import invariant from "tiny-invariant";
 import { getTeams, leaveTeam } from "~/api/teams";
 import { createAuthenticatedAction } from "~/routing.server";

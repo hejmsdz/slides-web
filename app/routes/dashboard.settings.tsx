@@ -1,7 +1,7 @@
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { requireSession, createAuthenticatedApi } from "~/session";
 import { getTeam } from "~/api/teams";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 import MainContent from "~/components/main-content";
 import { SiteHeader } from "~/components/site-header";
 import { TeamCard } from "~/components/settings/team-card";

@@ -1,5 +1,5 @@
 import { destroyUsersMe } from "~/api/users";
-import { redirect } from "@remix-run/react";
+import { redirect } from "react-router";
 import { createAuthenticatedAction } from "~/routing.server";
 import { destroySession } from "~/session";
 

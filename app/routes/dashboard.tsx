@@ -1,5 +1,4 @@
-import { Outlet, useLoaderData } from "@remix-run/react";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { Outlet, useLoaderData, LoaderFunctionArgs } from "react-router";
 import { getSongs } from "../api/songs";
 import {
   commitSession,

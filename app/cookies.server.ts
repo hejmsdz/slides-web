@@ -1,4 +1,4 @@
-import { CookieSerializeOptions, createCookie } from "@remix-run/node"; // or cloudflare/deno
+import { CookieSerializeOptions, createCookie } from "react-router"; // or cloudflare/deno
 
 const cookieOptions: CookieSerializeOptions = {
   path: "/",

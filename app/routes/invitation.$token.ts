@@ -1,4 +1,4 @@
-import { LoaderFunction, redirect } from "@remix-run/node";
+import { LoaderFunction, redirect } from "react-router";
 import invariant from "tiny-invariant";
 import { ApiError } from "~/api/api";
 import { joinTeam } from "~/api/teams";

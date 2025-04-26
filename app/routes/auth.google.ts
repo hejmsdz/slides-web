@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { LoaderFunctionArgs, redirect } from "react-router";
 import { generateCodeVerifier, generateState } from "arctic";
 import { google } from "~/auth.server";
 import * as cookies from "~/cookies.server";

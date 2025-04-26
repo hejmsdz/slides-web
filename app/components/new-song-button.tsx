@@ -1,6 +1,6 @@
 import { PlusIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 
 export function NewSongButton() {
   return (

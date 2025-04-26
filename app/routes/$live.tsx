@@ -1,5 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderFunctionArgs, useLoaderData } from "react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PdfPresentation from "~/components/pdf/pdf-presentation";
 import useEventListener from "~/hooks/use-event-listener";

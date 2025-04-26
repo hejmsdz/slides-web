@@ -1,6 +1,6 @@
 import { destroySong, getSong, SongWithLyrics } from "~/api/songs";
 import invariant from "tiny-invariant";
-import { redirect } from "@remix-run/react";
+import { redirect } from "react-router";
 import { createAuthenticatedAction } from "~/routing.server";
 
 export const action = createAuthenticatedAction(async ({ params }, { api }) => {

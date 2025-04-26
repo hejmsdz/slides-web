@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs } from "react-router";
 import { createAuthenticatedApi, requireSession, Session } from "./session";
 import { ApiType } from "~/api/api";
 

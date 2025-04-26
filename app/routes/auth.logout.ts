@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs } from "react-router";
 import { requireSession, logOut } from "~/session";
 
 export async function action({ request }: ActionFunctionArgs) {

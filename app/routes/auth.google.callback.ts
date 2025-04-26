@@ -1,4 +1,4 @@
-import { Cookie, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { Cookie, LoaderFunctionArgs, redirect } from "react-router";
 import { OAuth2Tokens } from "arctic";
 import invariant from "tiny-invariant";
 import { defaultApi } from "~/api/api";

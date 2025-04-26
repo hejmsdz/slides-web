@@ -12,7 +12,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import FormItem from "./form-item";
-import { Form } from "@remix-run/react";
+import { Form } from "react-router";
 
 export function NewTeamDialog({ children }: { children: React.ReactNode }) {
   return (

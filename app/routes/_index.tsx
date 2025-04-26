@@ -1,5 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import type { MetaFunction } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { Key, Smartphone } from "lucide-react";
 import { defaultApi } from "~/api/api";
 import { getBootstrap } from "~/api/bootstrap";

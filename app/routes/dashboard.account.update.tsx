@@ -1,6 +1,6 @@
 import invariant from "tiny-invariant";
 import { patchUsersMe } from "~/api/users";
-import { redirect } from "@remix-run/react";
+import { redirect } from "react-router";
 import { createAuthenticatedAction } from "~/routing.server";
 import { commitSession } from "~/session";
 
