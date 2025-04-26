@@ -15,6 +15,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const team = await joinTeam(api, token);
   session.set("teamId", team.id);
+  session.flash("toast", `Witaj w zespole ${team.name}`);
 
   return redirect(`/dashboard`, {
     headers: {

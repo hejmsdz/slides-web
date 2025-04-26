@@ -3,9 +3,15 @@ import { OAuth2Tokens } from "arctic";
 import invariant from "tiny-invariant";
 import { defaultApi } from "~/api/api";
 import { postGoogleAuth, AuthResponse } from "~/api/auth";
+import { getTeams } from "~/api/teams";
 import { google } from "~/auth.server";
 import * as cookies from "~/cookies.server";
-import { commitSession, getSession, updateSession } from "~/session";
+import {
+  commitSession,
+  createAuthenticatedApi,
+  getSession,
+  updateSession,
+} from "~/session";
 
 const defaultRedirectUrl = "/dashboard";
 const getSafeRedirectUrl = (unsafeRedirectUrl: string) => {
@@ -68,6 +74,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const session = await getSession(cookieHeader);
   updateSession(session, authResponse);
+
+  const api = await createAuthenticatedApi(session);
+  const teams = await getTeams(api);
+  session.set("teamId", Object.keys(teams)[0]);
 
   const deleteCookie = async (cookie: Cookie) => {
     return await cookie.serialize(null, { maxAge: -1 });

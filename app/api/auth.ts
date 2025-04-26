@@ -1,10 +1,5 @@
 import { type ApiType as Api } from "./api";
-
-export type User = {
-  id: string;
-  displayName: string;
-  email: string;
-};
+import { User } from "./users";
 
 export type AuthResponse = {
   token: string;

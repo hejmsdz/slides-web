@@ -13,7 +13,9 @@ type SessionData = {
   teamId: string;
 };
 
-type SessionFlashData = never;
+type SessionFlashData = {
+  toast: string;
+};
 
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage<SessionData, SessionFlashData>({

@@ -1,4 +1,5 @@
 import { Form } from "@remix-run/react";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -11,42 +12,53 @@ import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import FormItem from "../form-item";
 
-export function MyAccountCard() {
+export function MyAccountCard({
+  displayName,
+  email,
+}: {
+  displayName: string;
+  email: string;
+}) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Twój profil</CardTitle>
       </CardHeader>
-      <CardContent>
-        <FormItem>
-          <Label htmlFor="title">Imię i nazwisko</Label>
-          <Input
-            type="text"
-            id="title"
-            name="title"
-            defaultValue="Mikołaj Rozwadowski"
-            required
-          />
-        </FormItem>
-        <FormItem>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            type="email"
-            id="email"
-            name="email"
-            defaultValue="...@gmail.com"
-            required
-            disabled
-          />
-        </FormItem>
-      </CardContent>
-      <CardFooter>
-        <div className="flex gap-2">
-          <Form method="post" action="/dashboard/settings/invite">
+      <Form
+        method="post"
+        action="/dashboard/account/update"
+        onSubmit={() => {
+          toast.success("Zapisano");
+        }}
+      >
+        <CardContent>
+          <FormItem>
+            <Label htmlFor="displayName">Imię i nazwisko</Label>
+            <Input
+              type="text"
+              id="displayName"
+              name="displayName"
+              defaultValue={displayName}
+              required
+            />
+          </FormItem>
+          <FormItem>
+            <Label htmlFor="email">Adres e-mail</Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              defaultValue={email}
+              disabled
+            />
+          </FormItem>
+        </CardContent>
+        <CardFooter>
+          <div className="flex gap-2">
             <Button type="submit">Zapisz</Button>
-          </Form>
-        </div>
-      </CardFooter>
+          </div>
+        </CardFooter>
+      </Form>
     </Card>
   );
 }

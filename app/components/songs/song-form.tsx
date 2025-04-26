@@ -45,7 +45,7 @@ export default function SongForm({
   return (
     <Form
       method="post"
-      className="flex flex-col gap-4 h-full"
+      className="flex flex-col h-full"
       onSubmit={() => {
         toast.success("Pieśń została zapisana.");
       }}
@@ -64,89 +64,93 @@ export default function SongForm({
         </div>
       </SiteHeader>
       <MainContent>
-        <div className="flex flex-col md:flex-row gap-4">
-          <FormItem>
-            <Label htmlFor="title">Tytuł</Label>
-            <Input
-              type="text"
-              id="title"
-              name="title"
-              defaultValue={song?.title}
+        <div className="flex flex-col h-full">
+          <div className="flex flex-col md:flex-row gap-4">
+            <FormItem>
+              <Label htmlFor="title">Tytuł</Label>
+              <Input
+                type="text"
+                id="title"
+                name="title"
+                defaultValue={song?.title}
+                required
+                autoFocus={autoFocus} // eslint-disable-line jsx-a11y/no-autofocus
+              />
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="subtitle">Podtytuł</Label>
+              <Input
+                type="text"
+                id="subtitle"
+                name="subtitle"
+                defaultValue={song?.subtitle}
+              />
+            </FormItem>
+          </div>
+          {isAdmin ? (
+            <FormItem>
+              <Label htmlFor="teamId">Widoczność</Label>
+              <Select
+                name="teamId"
+                value={teamId}
+                onValueChange={(value) => setTeamId(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Wybierz zespół" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="0">Publiczna</SelectItem>
+                    {Object.entries(teams).map(([id, team]) => (
+                      <SelectItem key={id} value={id}>
+                        {team.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {song?.teamId === null && teamId !== "0" && (
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isOverride"
+                    name="isOverride"
+                    checked={isOverride}
+                    onCheckedChange={(checked) =>
+                      setIsOverride(checked === true)
+                    }
+                  />
+                  <label
+                    htmlFor="isOverride"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Zapisz jako własną wersję
+                  </label>
+                </div>
+              )}
+            </FormItem>
+          ) : (
+            <>
+              <input type="hidden" name="teamId" value={currentTeamId} />
+              {isOverride && (
+                <input type="hidden" name="isOverride" value="yes" />
+              )}
+            </>
+          )}
+          <FormItem className="flex-grow">
+            <Label htmlFor="lyrics" className="flex items-center gap-2">
+              Tekst
+              <LyricsFormattingHelpButton />
+            </Label>
+            <LyricsEditor
+              ref={lyricsRef}
+              id="lyrics"
+              name="lyrics"
+              className="flex-grow"
+              defaultValue={song?.lyrics.join("\n\n")}
               required
-              autoFocus={autoFocus}
-            />
-          </FormItem>
-          <FormItem>
-            <Label htmlFor="subtitle">Podtytuł</Label>
-            <Input
-              type="text"
-              id="subtitle"
-              name="subtitle"
-              defaultValue={song?.subtitle}
             />
           </FormItem>
         </div>
-        {isAdmin ? (
-          <FormItem>
-            <Label htmlFor="teamId">Widoczność</Label>
-            <Select
-              name="teamId"
-              value={teamId}
-              onValueChange={(value) => setTeamId(value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Wybierz zespół" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="0">Publiczna</SelectItem>
-                  {Object.entries(teams).map(([id, team]) => (
-                    <SelectItem key={id} value={id}>
-                      {team.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {song?.teamId === null && teamId !== "0" && (
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="isOverride"
-                  name="isOverride"
-                  checked={isOverride}
-                  onCheckedChange={(checked) => setIsOverride(checked === true)}
-                />
-                <label
-                  htmlFor="isOverride"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Zapisz jako własną wersję
-                </label>
-              </div>
-            )}
-          </FormItem>
-        ) : (
-          <>
-            <input type="hidden" name="teamId" value={currentTeamId} />
-            {isOverride && (
-              <input type="hidden" name="isOverride" value="yes" />
-            )}
-          </>
-        )}
-        <FormItem className="flex-grow">
-          <Label htmlFor="lyrics" className="flex items-center gap-2">
-            Tekst
-            <LyricsFormattingHelpButton />
-          </Label>
-          <LyricsEditor
-            ref={lyricsRef}
-            id="lyrics"
-            name="lyrics"
-            className="flex-grow"
-            defaultValue={song?.lyrics.join("\n\n")}
-            required
-          />
-        </FormItem>
       </MainContent>
     </Form>
   );
