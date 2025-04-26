@@ -32,15 +32,18 @@ export default function SongForm({
 }: {
   song?: SongWithLyrics;
   teams: Record<string, Team>;
-  currentTeamId: string;
+  currentTeamId?: string;
   isAdmin: boolean;
   autoFocus?: boolean;
 }) {
+  const isNewSong = song === undefined;
   const [isOverride, setIsOverride] = useState<boolean>(
-    song !== undefined && song.teamId === null && !isAdmin,
+    !isNewSong && song.teamId === null && !isAdmin,
   );
   const [teamId, setTeamId] = useState(song?.teamId ?? "0");
   const lyricsRef = useRef<HTMLTextAreaElement>(null);
+
+  const isDisabled = (isOverride || isNewSong) && !currentTeamId;
 
   return (
     <Form
@@ -51,11 +54,13 @@ export default function SongForm({
       }}
     >
       <SiteHeader>
-        <h1>{song?.title ?? "Nowa pieśń"}</h1>
+        <h1>{isNewSong ? "Nowa pieśń" : song.title}</h1>
         <div className="flex gap-2">
-          <Button type="submit" variant="default">
-            {isOverride ? "Zapisz własną wersję" : "Zapisz"}
-          </Button>
+          {!isDisabled && (
+            <Button type="submit" variant="default">
+              {isOverride ? "Zapisz własną wersję" : "Zapisz"}
+            </Button>
+          )}
           <PreviewButton lyricsRef={lyricsRef} />
           {song?.canDelete && (
             <DeleteButton id={song.id} isOverride={song.isOverride}>
@@ -75,6 +80,7 @@ export default function SongForm({
                 name="title"
                 defaultValue={song?.title}
                 required
+                readOnly={isDisabled}
                 autoFocus={autoFocus} // eslint-disable-line jsx-a11y/no-autofocus
               />
             </FormItem>
@@ -85,6 +91,7 @@ export default function SongForm({
                 id="subtitle"
                 name="subtitle"
                 defaultValue={song?.subtitle}
+                readOnly={isDisabled}
               />
             </FormItem>
           </div>
@@ -149,6 +156,7 @@ export default function SongForm({
               className="flex-grow"
               defaultValue={song?.lyrics.join("\n\n")}
               required
+              readOnly={isDisabled}
             />
           </FormItem>
         </div>

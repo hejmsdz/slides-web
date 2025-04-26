@@ -78,6 +78,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const api = await createAuthenticatedApi(session);
   const teams = await getTeams(api);
   session.set("teamId", Object.keys(teams)[0]);
+  session.flash("toast", `Cześć, ${authResponse.user.displayName}!`);
 
   const deleteCookie = async (cookie: Cookie) => {
     return await cookie.serialize(null, { maxAge: -1 });

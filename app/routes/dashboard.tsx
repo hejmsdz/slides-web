@@ -10,19 +10,25 @@ import { AppSidebar } from "~/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { getTeams } from "~/api/teams";
 import { Toaster } from "~/components/ui/sonner";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
+const useFlashMessage = () => {
+  const { flashMessage } = useLoaderData<typeof loader>();
+  const displayedMessageRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (flashMessage && flashMessage !== displayedMessageRef.current) {
+      toast.info(flashMessage);
+      displayedMessageRef.current = flashMessage;
+    }
+  }, [flashMessage]);
+};
+
 export default function Dashboard() {
-  const { songs, userName, teams, currentTeamId, isAdmin, flashMessage } =
+  const { songs, userName, teams, currentTeamId, isAdmin } =
     useLoaderData<typeof loader>();
 
-  useEffect(() => {
-    if (flashMessage) {
-      toast.info(flashMessage);
-    }
-  }, []);
-
+  useFlashMessage();
   return (
     <SidebarProvider>
       <AppSidebar

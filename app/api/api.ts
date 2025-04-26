@@ -4,6 +4,17 @@ type RequestOptions = {
   accessToken?: string;
 };
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public readonly statusCode: number,
+  ) {
+    super(message);
+    this.name = "ApiError";
+    this.statusCode = statusCode;
+  }
+}
+
 const get = async (
   path: string,
   params?: Record<string, string>,
@@ -29,7 +40,7 @@ const get = async (
     const data = await response.json();
 
     if (data.error) {
-      throw new Error(`API error: ${data.error}`);
+      throw new ApiError(data.error, response.status);
     } else {
       throw new Error(`Unknown API error: ${JSON.stringify(data)}`);
     }

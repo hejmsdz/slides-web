@@ -61,7 +61,11 @@ export const requireSession = async (
   const session = await getSession(request.headers.get("Cookie"));
   const accessToken = session.get("accessToken");
   if (!accessToken) {
-    throw await logOut(session);
+    throw redirect(
+      `/auth/google?${new URLSearchParams({
+        redirect: request.url,
+      })}`,
+    );
   }
 
   const accessTokenExpiresAt = session.get("accessTokenExpiresAt");
@@ -91,8 +95,6 @@ export const requireSession = async (
       });
     }
   }
-
-  console.log("session", session.get("refreshToken"));
 
   return session;
 };

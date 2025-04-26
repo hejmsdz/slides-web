@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return {
     teams: await getTeams(api),
     isAdmin: session.get("isAdmin") ?? false,
-    currentTeamId: session.get("teamId") ?? "0",
+    currentTeamId: session.get("teamId"),
   };
 }
 

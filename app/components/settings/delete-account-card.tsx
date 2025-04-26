@@ -13,8 +13,8 @@ export function DeleteAccountCard() {
       <CardHeader>
         <CardTitle>Usuń konto</CardTitle>
         <CardDescription>
-          Jeśli usuniesz konto, na zawsze stracisz dostęp do swojego zespołu i
-          wszystkich zapisanych w nim pieśni.
+          Jeśli usuniesz konto, bezpowrotnie stracisz dostęp do swojego zespołu
+          i wszystkich zapisanych w nim pieśni.
         </CardDescription>
       </CardHeader>
       <CardContent>
