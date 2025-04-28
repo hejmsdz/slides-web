@@ -7,6 +7,7 @@ import "~/styles/presentation.css";
 import useOffline from "~/hooks/use-offline";
 import useMouseIdle from "~/hooks/use-mouse-idle";
 import { cn } from "~/lib/utils";
+import Spinner from "~/components/spinner";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   return {
@@ -21,12 +22,12 @@ type PresentationState = {
 
 type SSEResult = {
   data: PresentationState | null;
-  isConnected: boolean;
+  isConnected: boolean | null;
 };
 
 const useSSE = (url: string): SSEResult => {
   const [data, setData] = useState<PresentationState | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
     const eventSource = new EventSource(url);
@@ -128,7 +129,11 @@ export default function Live() {
   });
 
   if (!presentationState) {
-    return null;
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        {isConnected === null && <Spinner />}
+      </div>
+    );
   }
 
   const page = isConnected && !isOffline ? presentationState.currentPage : 0;

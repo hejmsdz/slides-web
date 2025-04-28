@@ -1,5 +1,6 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { LinksFunction } from "react-router";
+import { ExternalScripts } from "remix-utils/external-scripts";
 
 import "./tailwind.css";
 
@@ -16,6 +17,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <ExternalScripts />
         <ScrollRestoration />
         <Scripts />
       </body>
