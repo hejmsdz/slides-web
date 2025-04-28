@@ -1,32 +1,10 @@
 import { Cookie, LoaderFunctionArgs, redirect } from "react-router";
 import { OAuth2Tokens } from "arctic";
-import invariant from "tiny-invariant";
 import { defaultApi } from "~/api/api";
 import { postGoogleAuth, AuthResponse } from "~/api/auth";
-import { getTeams } from "~/api/teams";
-import { google } from "~/auth.server";
+import { authenticateUser, getSafeRedirectUrl, google } from "~/auth.server";
 import * as cookies from "~/cookies.server";
-import {
-  commitSession,
-  createAuthenticatedApi,
-  getSession,
-  updateSession,
-} from "~/session";
-
-const defaultRedirectUrl = "/dashboard";
-const getSafeRedirectUrl = (unsafeRedirectUrl: string) => {
-  invariant(process.env.FRONTEND_URL, "FRONTEND_URL is not set");
-
-  const redirectUrl = new URL(
-    unsafeRedirectUrl,
-    process.env.FRONTEND_URL,
-  ).toString();
-  if (redirectUrl.startsWith(process.env.FRONTEND_URL)) {
-    return redirectUrl;
-  }
-
-  return defaultRedirectUrl;
-};
+import { commitSession, getSession } from "~/session";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -37,7 +15,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const storedState = await cookies.googleOAuthState.parse(cookieHeader);
   const codeVerifier = await cookies.googleCodeVerifier.parse(cookieHeader);
   const redirectUrl = getSafeRedirectUrl(
-    (await cookies.redirectUrl.parse(cookieHeader)) ?? defaultRedirectUrl,
+    await cookies.redirectUrl.parse(cookieHeader),
   );
 
   if (!code || !state || !storedState || !codeVerifier) {
@@ -58,7 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   } catch (e) {
     console.error("error validating authorization code", e);
     return new Response(null, {
-      status: 400,
+      status: 401,
     });
   }
 
@@ -66,19 +44,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     authResponse = await postGoogleAuth(defaultApi, tokens.idToken());
   } catch (e) {
-    console.error("error posting google auth", e);
     return new Response(null, {
-      status: 400,
+      status: 401,
     });
   }
 
   const session = await getSession(cookieHeader);
-  updateSession(session, authResponse);
 
-  const api = await createAuthenticatedApi(session);
-  const teams = await getTeams(api);
-  session.set("teamId", Object.keys(teams)[0]);
-  session.flash("toast", `Cześć, ${authResponse.user.displayName}!`);
+  await authenticateUser(session, authResponse);
 
   const deleteCookie = async (cookie: Cookie) => {
     return await cookie.serialize(null, { maxAge: -1 });

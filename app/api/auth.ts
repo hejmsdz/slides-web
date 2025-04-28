@@ -27,3 +27,10 @@ export const deleteRefreshToken = async (
 ): Promise<AuthResponse> => {
   return api.destroy("v2/auth/refresh", { refreshToken });
 };
+
+export const postAuthNonceVerify = async (
+  api: Api,
+  nonce: string,
+): Promise<AuthResponse> => {
+  return api.post("v2/auth/nonce/verify", { nonce });
+};
