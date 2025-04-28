@@ -3,7 +3,7 @@ import { getSongs } from "../api/songs";
 import {
   commitSession,
   createAuthenticatedApi,
-  requireSession,
+  requireSessionWithRefresh,
 } from "~/session";
 import { AppSidebar } from "~/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
@@ -47,7 +47,7 @@ export default function Dashboard() {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await requireSession(request);
+  const session = await requireSessionWithRefresh(request);
   const api = await createAuthenticatedApi(session);
 
   const teams = await getTeams(api);

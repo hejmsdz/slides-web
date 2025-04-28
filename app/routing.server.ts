@@ -1,5 +1,9 @@
 import { ActionFunctionArgs } from "react-router";
-import { createAuthenticatedApi, requireSession, Session } from "./session";
+import {
+  createAuthenticatedApi,
+  requireSessionWithRefresh,
+  Session,
+} from "./session";
 import { ApiType } from "~/api/api";
 
 export const createAuthenticatedAction = (
@@ -16,7 +20,7 @@ export const createAuthenticatedAction = (
     const headers = new Headers();
     const { request } = args;
 
-    const session = await requireSession(request, headers);
+    const session = await requireSessionWithRefresh(request, headers);
     const api = await createAuthenticatedApi(session);
 
     const result = await action(args, { api, session, headers });
