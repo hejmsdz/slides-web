@@ -1,4 +1,4 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useMatches } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { LinksFunction } from "react-router";
 
 import "./tailwind.css";
@@ -6,13 +6,6 @@ import "./tailwind.css";
 export const links: LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const matches = useMatches();
-
-  const bodyClassName = matches
-    .filter((match) => match.handle?.bodyClassName)
-    .map((match) => match.handle.bodyClassName)
-    .join(" ");
-
   return (
     <html lang="pl" className="h-full">
       <head>

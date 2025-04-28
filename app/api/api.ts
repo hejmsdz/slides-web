@@ -66,7 +66,6 @@ const post = async <T>(
   init?: RequestInit,
   customOptions?: RequestOptions,
 ) => {
-  console.log(path, data);
   return get(
     path,
     undefined,
