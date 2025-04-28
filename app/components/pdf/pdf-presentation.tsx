@@ -15,7 +15,7 @@ type CanvasState = {
 };
 
 export default forwardRef<HTMLDivElement, PdfPresentationProps>(
-  function PdfPresentation({ src, page, ...rest }, ref) {
+  function PdfPresentation({ src, page, className, ...rest }, ref) {
     const pdfDocument = usePdfDocument(src);
 
     const [
@@ -45,7 +45,7 @@ export default forwardRef<HTMLDivElement, PdfPresentationProps>(
       "absolute object-contain w-full h-full transition-opacity duration-500";
 
     return (
-      <div ref={ref} className="w-screen h-screen" {...rest}>
+      <div ref={ref} className={cn("w-screen h-screen", className)} {...rest}>
         {[firstCanvasPage, secondCanvasPage].map((pageNumber, index) => {
           const isActive = activeCanvasIndex === index;
 

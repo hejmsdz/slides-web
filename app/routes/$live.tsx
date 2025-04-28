@@ -3,6 +3,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import PdfPresentation from "~/components/pdf/pdf-presentation";
 import useEventListener from "~/hooks/use-event-listener";
 import useWakeLock from "~/hooks/use-wake-lock";
+import "~/styles/presentation.css";
+import useOffline from "~/hooks/use-offline";
+import useMouseIdle from "~/hooks/use-mouse-idle";
+import { cn } from "~/lib/utils";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   return {
@@ -10,20 +14,26 @@ export async function loader({ params }: LoaderFunctionArgs) {
   };
 }
 
-export const handle = {
-  bodyClassName: "bg-black text-white",
-};
-
 type PresentationState = {
   url: string;
   currentPage: number;
 };
 
-const useSSE = (url: string): PresentationState | null => {
+type SSEResult = {
+  data: PresentationState | null;
+  isConnected: boolean;
+};
+
+const useSSE = (url: string): SSEResult => {
   const [data, setData] = useState<PresentationState | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const eventSource = new EventSource(url);
+
+    eventSource.addEventListener("open", () => {
+      setIsConnected(true);
+    });
 
     eventSource.addEventListener("start", (event) => {
       const { url, currentPage } = JSON.parse(event.data);
@@ -35,29 +45,35 @@ const useSSE = (url: string): PresentationState | null => {
       setData((prevData) => prevData && { ...prevData, currentPage: page });
     });
 
+    eventSource.addEventListener("error", () => {
+      setIsConnected(false);
+    });
+
     return () => {
       eventSource.close();
     };
   }, [url]);
 
-  return data;
+  return { data, isConnected };
 };
 
 export default function Live() {
   const { eventSourceUrl } = useLoaderData<typeof loader>();
-  const presentationState = useSSE(eventSourceUrl);
+  const { data: presentationState, isConnected } = useSSE(eventSourceUrl);
+  const isOffline = useOffline();
 
-  const ref = useRef<HTMLDivElement>(null);
+  const presentationRef = useRef<HTMLDivElement>(null);
+  const linkRef = useRef<HTMLAnchorElement>(null);
   const [wakeLock, requestWakeLock] = useWakeLock();
+  const { isIdle, handleMouseMove } = useMouseIdle();
 
   const toggleFullscreen = useCallback(() => {
-    console.log("toggleFullscreen", document.fullscreenElement);
     if (document.fullscreenElement) {
       document.exitFullscreen();
-    } else if (ref.current) {
+    } else if (presentationRef.current) {
       requestWakeLock(); // Safari requires that wake lock is acquired directly from a user gesture handler
 
-      ref.current.requestFullscreen({ navigationUI: "hide" });
+      presentationRef.current?.requestFullscreen({ navigationUI: "hide" });
 
       setTimeout(() => {
         requestWakeLock(); // Firefox on macOS releases the wake lock as you go full screen
@@ -65,9 +81,7 @@ export default function Live() {
     }
   }, [requestWakeLock]);
 
-  // useEventListener("doubleclick", toggleFullscreen);
   useEffect(() => {
-    console.log("adding doubleclick listener");
     document.body.addEventListener("dblclick", toggleFullscreen);
 
     return () => {
@@ -103,15 +117,34 @@ export default function Live() {
     }
   });
 
+  useEventListener("keydown", (event) => {
+    const letter = (event as KeyboardEvent).key.toLowerCase();
+
+    if (letter === "f") {
+      toggleFullscreen();
+    } else if (letter === "d") {
+      linkRef.current?.click();
+    }
+  });
+
   if (!presentationState) {
     return null;
   }
 
+  const page = isConnected && !isOffline ? presentationState.currentPage : 0;
+
   return (
-    <PdfPresentation
-      ref={ref}
-      src={presentationState.url}
-      page={presentationState.currentPage + 1}
-    />
+    <>
+      <PdfPresentation
+        ref={presentationRef}
+        src={presentationState.url}
+        page={page + 1}
+        onMouseMove={handleMouseMove}
+        className={cn({ "cursor-none": isIdle })}
+      />
+      <a className="hidden" href={presentationState.url} ref={linkRef}>
+        {presentationState.url}
+      </a>
+    </>
   );
 }

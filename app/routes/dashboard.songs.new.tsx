@@ -1,8 +1,12 @@
 import invariant from "tiny-invariant";
 import SongForm from "~/components/songs/song-form";
 import { postSong } from "~/api/songs";
-import { redirect, useLoaderData } from "react-router";
-import { LoaderFunctionArgs, MetaFunction } from "react-router";
+import {
+  redirect,
+  useLoaderData,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "react-router";
 import { createAuthenticatedAction } from "~/routing.server";
 import { getTeams } from "~/api/teams";
 import {
@@ -48,15 +52,14 @@ export const action = createAuthenticatedAction(
     const subtitle = formData.get("subtitle")?.toString();
     const lyrics = formData.get("lyrics")?.toString()?.split("\n\n");
     invariant(lyrics, "lyrics are required");
-    const orNull = (value?: string) => (value && value !== "0" ? value : null);
+    const orUndefined = (value?: string) =>
+      value && value !== "0" ? value : undefined;
 
-    const teamId = orNull(formData.get("teamId")?.toString());
+    const teamId = orUndefined(formData.get("teamId")?.toString());
 
-    if (teamId !== null && teamId !== "0" && teamId !== session.get("teamId")) {
+    if (teamId !== undefined && teamId !== session.get("teamId")) {
       session.set("teamId", teamId);
     }
-
-    console.log("teamId", teamId);
 
     const { id } = await postSong(api, {
       title,
