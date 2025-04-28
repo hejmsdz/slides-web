@@ -97,7 +97,7 @@ const Ref = ({
 };
 
 const Comment = ({ text }: Comment) => {
-  return <div className="text-gray-400">{text}</div>;
+  return <div className="text-gray-400 line-through">{text}</div>;
 };
 
 const Block = ({
