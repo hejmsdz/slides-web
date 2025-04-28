@@ -1,0 +1,24 @@
+# dependencies
+node_modules
+npm-debug.log
+
+# build output
+build
+dist
+
+# local env files
+.env
+.env.*
+
+# misc
+.DS_Store
+*.local
+
+# git
+.git
+.gitignore
+
+# editor configs
+.vscode
+.idea
+*.swp
