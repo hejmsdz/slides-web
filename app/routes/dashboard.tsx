@@ -57,6 +57,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const songs = await getSongs(api, { teamId: currentTeamId });
 
+  const isWebView = request.headers
+    .get("User-Agent")
+    ?.includes("PsalltWebView");
+
   return Response.json(
     {
       songs,
@@ -65,6 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       teams,
       currentTeamId,
       flashMessage,
+      isWebView,
     },
     {
       headers: {

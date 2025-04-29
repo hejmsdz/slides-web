@@ -8,7 +8,7 @@ import { commitSession, getSession } from "~/session";
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const nonce = url.searchParams.get("nonce");
-  const teamId = url.searchParams.get("code") ?? undefined;
+  const teamId = url.searchParams.get("teamId") ?? undefined;
   const redirectUrl = getSafeRedirectUrl(
     url.searchParams.get("redirect") ?? undefined,
   );

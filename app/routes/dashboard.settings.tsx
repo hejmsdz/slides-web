@@ -1,7 +1,6 @@
-import { LoaderFunctionArgs, MetaFunction } from "react-router";
+import { LoaderFunctionArgs, MetaFunction, useLoaderData } from "react-router";
 import { requireSession, createAuthenticatedApi } from "~/session";
 import { getTeam } from "~/api/teams";
-import { useLoaderData } from "react-router";
 import MainContent from "~/components/main-content";
 import { SiteHeader } from "~/components/site-header";
 import { TeamCard } from "~/components/settings/team-card";
@@ -42,9 +41,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const api = await createAuthenticatedApi(session);
 
   const user = await getUsersMe(api);
-  const team = session.has("teamId")
-    ? await getTeam(api, session.get("teamId")!)
-    : null;
+  const teamId = session.get("teamId");
+  const team = teamId ? await getTeam(api, teamId) : null;
 
   return {
     team,
