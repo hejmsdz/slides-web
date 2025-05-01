@@ -97,10 +97,3 @@ export const action = createAuthenticatedAction(
     });
   },
 );
-
-export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
-  const result = await serverAction();
-  cache.clear();
-
-  return result;
-}

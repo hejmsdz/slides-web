@@ -1,10 +1,9 @@
 import invariant from "tiny-invariant";
 import SongForm from "~/components/songs/song-form";
 import { postSong } from "~/api/songs";
-import { redirect, MetaFunction, ClientActionFunctionArgs } from "react-router";
+import { redirect, MetaFunction } from "react-router";
 import { createAuthenticatedAction } from "~/routing.server";
 import { commitSession } from "~/session";
-import * as cache from "~/cache.client";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Nowa pieśń" }];
@@ -51,10 +50,3 @@ export const action = createAuthenticatedAction(
     });
   },
 );
-
-export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
-  const result = await serverAction();
-  cache.clear();
-
-  return result;
-}

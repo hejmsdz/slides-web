@@ -1,4 +1,5 @@
-import { Form, Link } from "react-router";
+import { Link } from "react-router";
+import Form from "~/components/form";
 import {
   LogOutIcon,
   MoreVerticalIcon,

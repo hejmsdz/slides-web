@@ -1,4 +1,4 @@
-import { Form } from "react-router";
+import Form from "~/components/form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {

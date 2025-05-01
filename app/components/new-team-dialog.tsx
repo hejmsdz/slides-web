@@ -12,7 +12,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import FormItem from "./form-item";
-import { Form } from "react-router";
+import Form from "~/components/form";
 
 export function NewTeamDialog({ children }: { children: React.ReactNode }) {
   return (
