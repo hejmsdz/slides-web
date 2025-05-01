@@ -7,8 +7,8 @@ import {
   UserRound,
   UserRoundCog,
   UsersRound,
+  Smartphone,
 } from "lucide-react";
-import { Team } from "~/api/teams";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,18 +19,12 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
 import { NewTeamDialog } from "./new-team-dialog";
+import useDashboardData from "~/hooks/use-dashboard-data";
 
-export function NavUser({
-  userName,
-  teams,
-  currentTeamId,
-  isAdmin,
-}: {
-  userName: string;
-  teams: Record<string, Team>;
-  currentTeamId: string;
-  isAdmin: boolean;
-}) {
+export function NavUser() {
+  const { userName, teams, currentTeamId, isAdmin, appDownloadUrl } =
+    useDashboardData();
+
   const teamName = teams[currentTeamId]?.name ?? userName;
   const teamsList = Object.values(teams);
 
@@ -87,6 +81,14 @@ export function NavUser({
             Utwórz nowy zespół
           </DropdownMenuItem>
         </NewTeamDialog>
+        {appDownloadUrl && (
+          <a href={appDownloadUrl} target="_blank" rel="noopener noreferrer">
+            <DropdownMenuItem>
+              <Smartphone />
+              Pobierz aplikację
+            </DropdownMenuItem>
+          </a>
+        )}
         <Link to="/dashboard/settings">
           <DropdownMenuItem>
             <Settings />

@@ -18,6 +18,7 @@ import * as cache from "~/cache.client";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
+import { getBootstrap } from "~/api/bootstrap";
 
 const useFlashMessage = () => {
   const { flashMessage } = useLoaderData<typeof loader>();
@@ -31,20 +32,10 @@ const useFlashMessage = () => {
 };
 
 export default function Dashboard() {
-  const { songs, userName, teams, currentTeamId, isAdmin } =
-    useLoaderData<typeof loader>();
-
   useFlashMessage();
   return (
     <SidebarProvider>
-      <AppSidebar
-        variant="inset"
-        songs={songs}
-        userName={userName}
-        isAdmin={isAdmin}
-        teams={teams}
-        currentTeamId={currentTeamId}
-      />
+      <AppSidebar variant="inset" />
       <SidebarInset>
         <Outlet />
         <Toaster />
@@ -63,11 +54,14 @@ export type ServerData = {
   isWebView: boolean;
   accessTokenExpiresAt?: number;
   apiUrl: string;
+  appDownloadUrl: string;
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await requireSessionWithRefresh(request);
   const api = await createAuthenticatedApi(session);
+
+  const bootstrap = await getBootstrap(api);
 
   const teams = await getTeams(api);
 
@@ -92,6 +86,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       isWebView,
       accessTokenExpiresAt: session.get("accessTokenExpiresAt"),
       apiUrl: process.env.EXTERNAL_API_URL,
+      appDownloadUrl: bootstrap.appDownloadUrl,
     } satisfies ServerData,
     {
       headers: {
