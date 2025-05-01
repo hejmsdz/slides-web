@@ -4,11 +4,15 @@ import {
   LoaderFunctionArgs,
   ClientLoaderFunctionArgs,
 } from "react-router";
-import { getSongs } from "../api/songs";
-import { createAuthenticatedApi, requireSessionWithRefresh } from "~/session";
+import { getSongs, Song } from "../api/songs";
+import {
+  commitSession,
+  createAuthenticatedApi,
+  requireSessionWithRefresh,
+} from "~/session";
 import { AppSidebar } from "~/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
-import { getTeams } from "~/api/teams";
+import { getTeams, Team } from "~/api/teams";
 import { Toaster } from "~/components/ui/sonner";
 import * as cache from "~/cache.client";
 import { useEffect, useRef } from "react";
@@ -49,6 +53,18 @@ export default function Dashboard() {
   );
 }
 
+export type ServerData = {
+  songs: Song[];
+  userName: string;
+  teams: Record<string, Team>;
+  currentTeamId: string;
+  isAdmin: boolean;
+  flashMessage?: string;
+  isWebView: boolean;
+  accessTokenExpiresAt?: number;
+  apiUrl: string;
+};
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await requireSessionWithRefresh(request);
   const api = await createAuthenticatedApi(session);
@@ -60,26 +76,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const songs = await getSongs(api, { teamId: currentTeamId });
 
-  const isWebView = request.headers
-    .get("User-Agent")
-    ?.includes("PsalltWebView");
+  const isWebView =
+    request.headers.get("User-Agent")?.includes("PsalltWebView") ?? false;
 
   invariant(process.env.EXTERNAL_API_URL, "EXTERNAL_API_URL is not set");
 
-  return {
-    songs,
-    userName: session.get("name") ?? "Użytkownik",
-    isAdmin: session.get("isAdmin") ?? false,
-    teams,
-    currentTeamId,
-    flashMessage,
-    isWebView,
-    accessTokenExpiresAt: session.get("accessTokenExpiresAt"),
-    apiUrl: process.env.EXTERNAL_API_URL,
-  };
+  return Response.json(
+    {
+      songs,
+      userName: session.get("name") ?? "Użytkownik",
+      isAdmin: session.get("isAdmin") ?? false,
+      teams,
+      currentTeamId,
+      flashMessage,
+      isWebView,
+      accessTokenExpiresAt: session.get("accessTokenExpiresAt"),
+      apiUrl: process.env.EXTERNAL_API_URL,
+    } satisfies ServerData,
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    },
+  );
 }
-
-export type ServerData = Awaited<ReturnType<typeof loader>>;
 
 export async function clientLoader({ serverLoader }: ClientLoaderFunctionArgs) {
   const cachedData = cache.get();

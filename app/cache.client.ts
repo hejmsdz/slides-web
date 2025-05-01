@@ -1,6 +1,4 @@
-import { loader } from "./routes/dashboard";
-
-type ServerData = Awaited<ReturnType<typeof loader>>;
+import { ServerData } from "./routes/dashboard";
 
 let cachedServerData: ServerData | null = null;
 
