@@ -74,6 +74,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     currentTeamId,
     flashMessage,
     isWebView,
+    accessTokenExpiresAt: session.get("accessTokenExpiresAt"),
     apiUrl: process.env.EXTERNAL_API_URL,
   };
 }
@@ -81,8 +82,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export type ServerData = Awaited<ReturnType<typeof loader>>;
 
 export async function clientLoader({ serverLoader }: ClientLoaderFunctionArgs) {
-  if (cache.exists()) {
-    return cache.get();
+  const cachedData = cache.get();
+  if (cachedData !== null) {
+    const shouldRefresh =
+      cachedData.accessTokenExpiresAt &&
+      cachedData.accessTokenExpiresAt < Date.now() / 1000;
+
+    if (!shouldRefresh) {
+      return cachedData;
+    }
   }
 
   const serverData = await serverLoader<typeof loader>();
