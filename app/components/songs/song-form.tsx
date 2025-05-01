@@ -34,6 +34,7 @@ import {
 import { PopoverContent, PopoverTrigger, Popover } from "../ui/popover";
 import { Eye, MoreHorizontal, Save, Trash2 } from "lucide-react";
 import useEventListener from "~/hooks/use-event-listener";
+import useDashboardData from "~/hooks/use-dashboard-data";
 
 function useSaveGuard(): React.MutableRefObject<boolean> {
   const isSavedRef = useRef<boolean>(true);
@@ -66,17 +67,13 @@ function useSaveGuard(): React.MutableRefObject<boolean> {
 
 export default function SongForm({
   song,
-  teams,
-  currentTeamId,
-  isAdmin,
   autoFocus = false,
 }: {
   song?: SongWithLyrics;
-  teams: Record<string, Team>;
-  currentTeamId?: string;
-  isAdmin: boolean;
   autoFocus?: boolean;
 }) {
+  const { teams, currentTeamId, isAdmin } = useDashboardData();
+
   const isNewSong = song === undefined;
   const [isOverride, setIsOverride] = useState<boolean>(
     !isNewSong && song.teamId === null && !isAdmin,

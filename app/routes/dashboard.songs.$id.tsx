@@ -1,7 +1,12 @@
-import { LoaderFunctionArgs, MetaFunction, redirect } from "react-router";
+import {
+  ClientActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+  redirect,
+  useLoaderData,
+} from "react-router";
 import { getSong, patchSong, SongWithLyrics } from "~/api/songs";
 import invariant from "tiny-invariant";
-import { useLoaderData } from "react-router";
 import SongForm from "~/components/songs/song-form";
 import {
   requireSession,
@@ -9,7 +14,7 @@ import {
   commitSession,
 } from "~/session";
 import { createAuthenticatedAction } from "~/routing.server";
-import { getTeams } from "~/api/teams";
+import * as cache from "~/cache.client";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -22,18 +27,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function Song() {
-  const { song, teams, isAdmin, currentTeamId } =
-    useLoaderData<typeof loader>();
+  const { song } = useLoaderData<typeof loader>();
 
-  return (
-    <SongForm
-      key={song.id}
-      song={song}
-      teams={teams}
-      isAdmin={isAdmin}
-      currentTeamId={currentTeamId}
-    />
-  );
+  return <SongForm key={song.id} song={song} />;
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
@@ -48,13 +44,8 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const teams = await getTeams(api);
-
   return {
     song,
-    teams,
-    isAdmin: session.get("isAdmin") ?? false,
-    currentTeamId: session.get("teamId") ?? Object.keys(teams)[0],
   };
 }
 
@@ -69,12 +60,17 @@ export const action = createAuthenticatedAction(
     const lyrics = formData.get("lyrics")?.toString()?.split("\n\n");
     invariant(lyrics, "lyrics are required");
 
-    const orNull = (value?: string) => (value && value !== "0" ? value : null);
+    const orUndefined = (value?: string) =>
+      value && value !== "0" ? value : undefined;
 
-    const teamId = orNull(formData.get("teamId")?.toString());
+    const teamId = orUndefined(formData.get("teamId")?.toString());
     const isOverride = formData.has("isOverride");
 
-    if (teamId !== null && teamId !== "0" && teamId !== session.get("teamId")) {
+    if (
+      teamId !== undefined &&
+      teamId !== "0" &&
+      teamId !== session.get("teamId")
+    ) {
       session.set("teamId", teamId);
     }
 
@@ -101,3 +97,10 @@ export const action = createAuthenticatedAction(
     });
   },
 );
+
+export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
+  const result = await serverAction();
+  cache.clear();
+
+  return result;
+}

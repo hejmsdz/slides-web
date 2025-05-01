@@ -1,46 +1,22 @@
 import invariant from "tiny-invariant";
 import SongForm from "~/components/songs/song-form";
 import { postSong } from "~/api/songs";
-import {
-  redirect,
-  useLoaderData,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from "react-router";
+import { redirect, MetaFunction, ClientActionFunctionArgs } from "react-router";
 import { createAuthenticatedAction } from "~/routing.server";
-import { getTeams } from "~/api/teams";
-import {
-  requireSession,
-  createAuthenticatedApi,
-  commitSession,
-} from "~/session";
+import { commitSession } from "~/session";
+import * as cache from "~/cache.client";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Nowa pieśń" }];
 };
 
 export default function NewSong() {
-  const { teams, isAdmin, currentTeamId } = useLoaderData<typeof loader>();
   return (
     <SongForm
       key="new"
-      teams={teams}
-      isAdmin={isAdmin}
-      currentTeamId={currentTeamId}
       autoFocus // eslint-disable-line jsx-a11y/no-autofocus
     />
   );
-}
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await requireSession(request);
-  const api = await createAuthenticatedApi(session);
-
-  return {
-    teams: await getTeams(api),
-    isAdmin: session.get("isAdmin") ?? false,
-    currentTeamId: session.get("teamId"),
-  };
 }
 
 export const action = createAuthenticatedAction(
@@ -75,3 +51,10 @@ export const action = createAuthenticatedAction(
     });
   },
 );
+
+export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
+  const result = await serverAction();
+  cache.clear();
+
+  return result;
+}

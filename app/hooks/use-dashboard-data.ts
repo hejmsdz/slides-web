@@ -1,10 +1,11 @@
 import { useMatches } from "react-router";
+import { ServerData } from "~/routes/dashboard";
 
-export default function useDashboardData() {
+export default function useDashboardData(): ServerData {
   const matches = useMatches().find(({ id }) => id === "routes/dashboard");
   if (!matches) {
-    return null;
+    throw new Error("Could not access user data");
   }
 
-  return matches.data;
+  return matches.data as ServerData;
 }

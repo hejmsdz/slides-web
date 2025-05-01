@@ -1,14 +1,16 @@
-import { Outlet, useLoaderData, LoaderFunctionArgs } from "react-router";
-import { getSongs } from "../api/songs";
 import {
-  commitSession,
-  createAuthenticatedApi,
-  requireSessionWithRefresh,
-} from "~/session";
+  Outlet,
+  useLoaderData,
+  LoaderFunctionArgs,
+  ClientLoaderFunctionArgs,
+} from "react-router";
+import { getSongs } from "../api/songs";
+import { createAuthenticatedApi, requireSessionWithRefresh } from "~/session";
 import { AppSidebar } from "~/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { getTeams } from "~/api/teams";
 import { Toaster } from "~/components/ui/sonner";
+import * as cache from "~/cache.client";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
@@ -61,20 +63,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
     .get("User-Agent")
     ?.includes("PsalltWebView");
 
-  return Response.json(
-    {
-      songs,
-      userName: session.get("name") ?? "Użytkownik",
-      isAdmin: session.get("isAdmin") ?? false,
-      teams,
-      currentTeamId,
-      flashMessage,
-      isWebView,
-    },
-    {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    },
-  );
+  return {
+    songs,
+    userName: session.get("name") ?? "Użytkownik",
+    isAdmin: session.get("isAdmin") ?? false,
+    teams,
+    currentTeamId,
+    flashMessage,
+    isWebView,
+  };
 }
+
+export type ServerData = Awaited<ReturnType<typeof loader>>;
+
+export async function clientLoader({ serverLoader }: ClientLoaderFunctionArgs) {
+  if (cache.exists()) {
+    return cache.get();
+  }
+
+  const serverData = await serverLoader<typeof loader>();
+  cache.set(serverData);
+
+  return serverData;
+}
+
+clientLoader.hydrate = true;

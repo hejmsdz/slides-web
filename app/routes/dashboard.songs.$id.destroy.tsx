@@ -1,7 +1,8 @@
 import { destroySong, getSong, SongWithLyrics } from "~/api/songs";
 import invariant from "tiny-invariant";
-import { redirect } from "react-router";
+import { ClientActionFunctionArgs, redirect } from "react-router";
 import { createAuthenticatedAction } from "~/routing.server";
+import * as cache from "~/cache.client";
 
 export const action = createAuthenticatedAction(async ({ params }, { api }) => {
   invariant(params.id, "id is required");
@@ -21,3 +22,10 @@ export const action = createAuthenticatedAction(async ({ params }, { api }) => {
 
   return redirect("/dashboard");
 });
+
+export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
+  const result = await serverAction();
+  cache.clear();
+
+  return result;
+}
