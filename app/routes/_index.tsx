@@ -49,6 +49,13 @@ export default function Index() {
           </a>
         </Button>
       </div>
+      <div className="absolute bottom-4 text-white/30 text-xs">
+        Logując się, akceptujesz{" "}
+        <Link className="underline hover:text-white/50" to="/privacy">
+          politykę prywatności
+        </Link>
+        .
+      </div>
     </div>
   );
 }
