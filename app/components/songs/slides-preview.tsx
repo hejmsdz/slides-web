@@ -6,7 +6,7 @@ import {
 import { cn } from "~/lib/utils";
 import { formatLyrics } from "./typesetting";
 import Slide from "~/components/pdf/slide";
-
+import useDashboardData from "~/hooks/use-dashboard-data";
 export default function SlidesPreview({
   lyrics,
   fontSize,
@@ -21,6 +21,7 @@ export default function SlidesPreview({
   >();
 
   const formattedLyrics = useMemo(() => formatLyrics(lyrics), [lyrics]);
+  const { apiUrl } = useDashboardData();
 
   useEffect(() => {
     if (!formattedLyrics) {
@@ -28,7 +29,7 @@ export default function SlidesPreview({
     }
 
     (async () => {
-      const { url } = await fetch("https://slajdy.swro.ch/v2/deck", {
+      const { url } = await fetch(new URL("/v2/deck", apiUrl), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

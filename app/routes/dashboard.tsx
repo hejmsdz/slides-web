@@ -13,6 +13,7 @@ import { Toaster } from "~/components/ui/sonner";
 import * as cache from "~/cache.client";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import invariant from "tiny-invariant";
 
 const useFlashMessage = () => {
   const { flashMessage } = useLoaderData<typeof loader>();
@@ -63,6 +64,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     .get("User-Agent")
     ?.includes("PsalltWebView");
 
+  invariant(process.env.EXTERNAL_API_URL, "EXTERNAL_API_URL is not set");
+
   return {
     songs,
     userName: session.get("name") ?? "Użytkownik",
@@ -71,6 +74,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     currentTeamId,
     flashMessage,
     isWebView,
+    apiUrl: process.env.EXTERNAL_API_URL,
   };
 }
 

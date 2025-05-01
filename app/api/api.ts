@@ -1,4 +1,4 @@
-const apiUrl = process.env.API_URL;
+const apiUrl = process.env.INTERNAL_API_URL;
 
 type RequestOptions = {
   accessToken?: string;
@@ -21,6 +21,8 @@ const get = async (
   init?: RequestInit,
   customOptions?: RequestOptions,
 ) => {
+  console.log("get", path);
+
   const url = new URL(path, apiUrl);
   if (params) {
     url.search = new URLSearchParams(params).toString();

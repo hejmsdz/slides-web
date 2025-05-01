@@ -11,7 +11,10 @@ import Spinner from "~/components/spinner";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   return {
-    eventSourceUrl: `${process.env.API_URL}/v2/live/${params.live}`,
+    eventSourceUrl: new URL(
+      `/v2/live/${params.live}`,
+      process.env.EXTERNAL_API_URL,
+    ).toString(),
   };
 }
 
