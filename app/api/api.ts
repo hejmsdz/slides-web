@@ -21,8 +21,6 @@ const get = async (
   init?: RequestInit,
   customOptions?: RequestOptions,
 ) => {
-  console.log("get", path);
-
   const url = new URL(path, apiUrl);
   if (params) {
     url.search = new URLSearchParams(params).toString();
