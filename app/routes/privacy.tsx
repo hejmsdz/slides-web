@@ -43,8 +43,15 @@ function List({ items }: { items: string[] }) {
 }
 
 function Link({ children, href }: { children: React.ReactNode; href: string }) {
+  const isExternal = href.startsWith("http://") || href.startsWith("https://");
+
   return (
-    <a href={href} className="text-blue-600 hover:underline">
+    <a
+      href={href}
+      className="text-blue-600 hover:underline"
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+    >
       {children}
     </a>
   );
@@ -89,8 +96,8 @@ export default function PrivacyPolicy() {
         <p className="mt-2">
           Dane osobowe są przetwarzane wyłącznie w przypadku zalogowania się
           użytkownika przez konto Google (dotyczy aplikacji webowej oraz
-          zalogowanej wersji mobilnej). W&nbsp;takim przypadku przetwarzane dane
-          to:
+          aplikacji mobilnej po zalogowaniu). W&nbsp;takim przypadku
+          przetwarzane dane to:
         </p>
         <List
           items={[
@@ -129,19 +136,26 @@ export default function PrivacyPolicy() {
       <Section number={5} title="Zbieranie danych technicznych">
         <p>
           Aplikacja może automatycznie zbierać anonimowe dane techniczne
-          dotyczące sposobu korystania, takie jak:
+          dotyczące sposobu korzystania z niej, takie jak:
         </p>
         <List
           items={[
             "liczba żądań HTTP,",
             "czas odpowiedzi serwera,",
-            "komunikaty o błędach.",
+            "komunikaty o błędach,",
+            "metoda i ścieżka zapytania,",
+            "kod odpowiedzi serwera,",
+            "identyfikator agenta użytkownika (User-Agent),",
+            "kraj pochodzenia zapytania (ustalany tymczasowo na podstawie adresu IP).",
           ]}
         />
         <p className="mt-2">
-          Dane te są zbierane wyłącznie w sposób niepozwalający na identyfikację
-          użytkownika. Wykorzystywane są do celów statystycznych i
-          optymalizacyjnych, np. do analizy wydajności aplikacji.
+          Do celów statystycznych i optymalizacyjnych wykorzystywana jest usługa{" "}
+          <Link href="https://apianalytics.dev">API&nbsp;Analytics</Link>. Dane
+          przekazywane do tej usługi są anonimizowane — adres IP jest
+          przetwarzany wyłącznie tymczasowo w celu określenia kraju użytkownika
+          użytkownika i następnie usuwany. Dane te nie pozwalają na
+          identyfikację konkretnego użytkownika.
         </p>
       </Section>
 
@@ -149,6 +163,14 @@ export default function PrivacyPolicy() {
         <p>
           Dane osobowe nie są przekazywane, sprzedawane, ani udostępniane żadnym
           podmiotom trzecim.
+        </p>
+        <p className="mt-2">
+          Wyjątkiem jest przekazywanie zanonimizowanych danych technicznych do
+          usługi API&nbsp;Analytics w celu analizy i optymalizacji działania
+          aplikacji. Usługa ta nie gromadzi danych umożliwiających identyfikację
+          użytkownika — w tym adresów IP, które są usuwane po określeniu kraju.
+          Dane są przechowywane na zabezpieczonym serwerze zlokalizowanym w
+          Londynie (Wielka Brytania).
         </p>
       </Section>
 
@@ -176,8 +198,9 @@ export default function PrivacyPolicy() {
       <Section number={10} title="Ciasteczka (cookies)">
         <p>
           Aplikacja webowa korzysta z ciasteczek wyłącznie w zakresie niezbędnym
-          do&nbsp;działania systemu logowania (utrzymywanie sesji). Nie są one
-          wykorzystywane do&nbsp;celów marketingowych ani analitycznych.
+          do&nbsp;działania systemu logowania (utrzymywanie sesji) i
+          zapamiętania preferencji użytkownika. Nie są one wykorzystywane
+          do&nbsp;celów marketingowych ani analitycznych.
         </p>
       </Section>
 
@@ -199,7 +222,7 @@ export default function PrivacyPolicy() {
         </p>
       </Section>
 
-      <p className="text-gray-600 mb-8">Data publikacji: 1 maja 2025 r.</p>
+      <p className="text-gray-600 mb-8">Data publikacji: 5 maja 2025 r.</p>
     </div>
   );
 }
