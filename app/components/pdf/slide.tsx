@@ -1,5 +1,6 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { type PDFDocumentProxy } from "./pdf.client";
+import { cn } from "~/lib/utils";
 
 type SlideProps = {
   pdfDocument: PDFDocumentProxy;
@@ -66,7 +67,7 @@ const Slide = memo(
 
     return (
       <canvas
-        className={className}
+        className={cn("bg-black", className)}
         style={{ width: renderWidth }}
         ref={ref}
         role="img"

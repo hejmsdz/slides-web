@@ -8,14 +8,31 @@ import useOffline from "~/hooks/use-offline";
 import useMouseIdle from "~/hooks/use-mouse-idle";
 import { cn } from "~/lib/utils";
 import Spinner from "~/components/spinner";
+import { getLiveStatus } from "~/api/live";
+import { defaultApi } from "~/api/api";
+
+const validLiveKeyRegex = /^\d{4}$/;
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  return {
-    eventSourceUrl: new URL(
-      `/v2/live/${params.live}`,
-      process.env.EXTERNAL_API_URL,
-    ).toString(),
-  };
+  if (!params.live || !validLiveKeyRegex.test(params.live)) {
+    throw new Response("Not found", { status: 404 });
+  }
+
+  try {
+    const { url, currentPage } = await getLiveStatus(defaultApi, params.live);
+
+    return {
+      url,
+      currentPage,
+      eventSourceUrl: new URL(
+        `/v2/live/${params.live}`,
+        process.env.EXTERNAL_API_URL,
+      ).toString(),
+    };
+  } catch (error) {
+    console.error(error);
+    throw new Response("Not found", { status: 404 });
+  }
 }
 
 type PresentationState = {
@@ -29,7 +46,8 @@ type SSEResult = {
 };
 
 const useSSE = (url: string): SSEResult => {
-  const [data, setData] = useState<PresentationState | null>(null);
+  const initialState = useLoaderData<typeof loader>();
+  const [data, setData] = useState<PresentationState | null>(initialState);
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
