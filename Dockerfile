@@ -13,9 +13,9 @@ FROM node:22-alpine AS prod
 
 WORKDIR /app
 
-COPY --from=base /app/package.json ./
-COPY --from=base /app/package-lock.json ./
-RUN npm ci --omit=dev
+COPY --from=base /app/package.json /app/package-lock.json ./
+COPY --from=base /app/node_modules ./node_modules
+RUN npm prune --production
 
 COPY --from=base /app/build ./build
 COPY --from=base /app/public ./public
