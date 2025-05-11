@@ -1,16 +1,17 @@
-import type { MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { Key, Smartphone } from "lucide-react";
 import { defaultApi } from "~/api/api";
 import { getBootstrap } from "~/api/bootstrap";
 import { Button } from "~/components/ui/button";
+import { getSession } from "~/session";
 
 export const meta: MetaFunction = () => {
   return [{ title: "psal.lt" }];
 };
 
 export default function Index() {
-  const { appDownloadUrl } = useLoaderData<typeof loader>();
+  const { isAuthenticated, appDownloadUrl } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-blue-900">
@@ -34,13 +35,20 @@ export default function Index() {
           transform="matrix(1.63021 0 0 1.63021 6.339 8.788)"
         />
       </svg>
-      <h1 className="text-white text-4xl font-bold mb-8">psal.lt</h1>
+      <h1 className="text-white text-4xl font-bold mb-8">Psallite</h1>
       <div className="flex flex-row gap-4">
         <Button variant="secondary" asChild>
-          <Link to={`/auth/google`}>
-            <Key className="w-4 h-4" />
-            Zaloguj się
-          </Link>
+          {isAuthenticated ? (
+            <Link to={`/dashboard`}>
+              <Key className="w-4 h-4" />
+              Przejdź do panelu
+            </Link>
+          ) : (
+            <Link to={`/auth/google`}>
+              <Key className="w-4 h-4" />
+              Zaloguj się
+            </Link>
+          )}
         </Button>
         <Button variant="secondary" asChild>
           <a href={appDownloadUrl}>
@@ -60,9 +68,12 @@ export default function Index() {
   );
 }
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
   const bootstrap = await getBootstrap(defaultApi);
+  const session = await getSession(request.headers.get("Cookie"));
+
   return {
     appDownloadUrl: bootstrap.appDownloadUrl,
+    isAuthenticated: Boolean(session.data?.accessToken),
   };
 }
