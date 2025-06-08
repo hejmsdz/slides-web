@@ -23,7 +23,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       console.error(error);
       if (error.message === "you already belong to this team") {
         session.flash("toast", "Już należysz do tego zespołu!");
+      } else if (error.message === "invitation not found") {
+        session.flash(
+          "toast",
+          "Nie znaleziono zaproszenia. Być może zostało już wykorzystane lub wygasło.",
+        );
+      } else {
+        session.flash("toast", "Nie udało się dołączyć do zespołu.");
       }
+    } else {
+      session.flash("toast", "Nie udało się dołączyć do zespołu.");
     }
   }
 
