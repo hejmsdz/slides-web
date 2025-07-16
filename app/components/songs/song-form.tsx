@@ -78,7 +78,9 @@ export default function SongForm({
   const [isOverride, setIsOverride] = useState<boolean>(
     !isNewSong && song.teamId === null && !isAdmin,
   );
-  const [teamId, setTeamId] = useState(song?.teamId ?? "0");
+  const [teamId, setTeamId] = useState(
+    song?.teamId ?? (song?.isUnofficial ? "unofficial" : "0"),
+  );
   const lyricsRef = useRef<HTMLTextAreaElement>(null);
   const isDisabled = (isOverride || isNewSong) && !currentTeamId;
   const isSavedRef = useSaveGuard();
@@ -191,6 +193,7 @@ export default function SongForm({
                 <SelectContent>
                   <SelectGroup>
                     <SelectItem value="0">Publiczna</SelectItem>
+                    <SelectItem value="unofficial">Nieoficjalna</SelectItem>
                     {Object.entries(teams).map(([id, team]) => (
                       <SelectItem key={id} value={id}>
                         {team.name}
@@ -199,24 +202,26 @@ export default function SongForm({
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              {song?.teamId === null && teamId !== "0" && (
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="isOverride"
-                    name="isOverride"
-                    checked={isOverride}
-                    onCheckedChange={(checked) =>
-                      setIsOverride(checked === true)
-                    }
-                  />
-                  <label
-                    htmlFor="isOverride"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Zapisz jako własną wersję
-                  </label>
-                </div>
-              )}
+              {song?.teamId === null &&
+                teamId !== "0" &&
+                teamId !== "unofficial" && (
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isOverride"
+                      name="isOverride"
+                      checked={isOverride}
+                      onCheckedChange={(checked) =>
+                        setIsOverride(checked === true)
+                      }
+                    />
+                    <label
+                      htmlFor="isOverride"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Zapisz jako własną wersję
+                    </label>
+                  </div>
+                )}
             </FormItem>
           ) : (
             <>

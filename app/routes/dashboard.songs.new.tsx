@@ -27,12 +27,19 @@ export const action = createAuthenticatedAction(
     const subtitle = formData.get("subtitle")?.toString();
     const lyrics = formData.get("lyrics")?.toString()?.split("\n\n");
     invariant(lyrics, "lyrics are required");
+
     const orUndefined = (value?: string) =>
-      value && value !== "0" ? value : undefined;
+      value && value !== "0" && value !== "unofficial" ? value : undefined;
 
     const teamId = orUndefined(formData.get("teamId")?.toString());
+    const isUnofficial = formData.get("teamId")?.toString() === "unofficial";
 
-    if (teamId !== undefined && teamId !== session.get("teamId")) {
+    if (
+      teamId !== undefined &&
+      teamId !== "0" &&
+      teamId !== "unofficial" &&
+      teamId !== session.get("teamId")
+    ) {
       session.set("teamId", teamId);
     }
 
@@ -41,6 +48,7 @@ export const action = createAuthenticatedAction(
       subtitle,
       lyrics,
       teamId,
+      isUnofficial,
     });
 
     return redirect(`/dashboard/songs/${id}`, {

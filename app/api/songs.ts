@@ -7,6 +7,7 @@ export type Song = {
   slug: string;
   teamId?: string;
   isOverride?: boolean;
+  isUnofficial?: boolean;
 };
 
 export type SongWithLyrics = Song & {

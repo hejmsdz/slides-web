@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { Copy, LockKeyhole } from "lucide-react";
+import { Copy, LockKeyhole, NotepadTextDashed } from "lucide-react";
 
 const slugify = (text: string): string =>
   text
@@ -67,6 +67,16 @@ export function NavSongs({ songs, query }: { songs: Song[]; query: string }) {
                                 ? "Własna wersja pieśni"
                                 : "Prywatna pieśń"}
                             </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                      {song.isUnofficial && (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <NotepadTextDashed width={16} height={16} />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Nieoficjalna</p>
                           </TooltipContent>
                         </Tooltip>
                       )}

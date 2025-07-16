@@ -61,14 +61,16 @@ export const action = createAuthenticatedAction(
     invariant(lyrics, "lyrics are required");
 
     const orUndefined = (value?: string) =>
-      value && value !== "0" ? value : undefined;
+      value && value !== "0" && value !== "unofficial" ? value : undefined;
 
     const teamId = orUndefined(formData.get("teamId")?.toString());
     const isOverride = formData.has("isOverride");
+    const isUnofficial = formData.get("teamId")?.toString() === "unofficial";
 
     if (
       teamId !== undefined &&
       teamId !== "0" &&
+      teamId !== "unofficial" &&
       teamId !== session.get("teamId")
     ) {
       session.set("teamId", teamId);
@@ -80,6 +82,7 @@ export const action = createAuthenticatedAction(
       lyrics,
       teamId,
       isOverride,
+      isUnofficial,
     });
 
     if (isOverride) {
