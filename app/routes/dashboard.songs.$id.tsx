@@ -57,6 +57,7 @@ export const action = createAuthenticatedAction(
     const title = formData.get("title")?.toString();
     invariant(title, "title is required");
     const subtitle = formData.get("subtitle")?.toString();
+    const author = formData.get("author")?.toString();
     const lyrics = formData.get("lyrics")?.toString()?.split("\n\n");
     invariant(lyrics, "lyrics are required");
 
@@ -79,6 +80,7 @@ export const action = createAuthenticatedAction(
     const result = await patchSong(api, params.id, {
       title,
       subtitle,
+      author,
       lyrics,
       teamId,
       isOverride,

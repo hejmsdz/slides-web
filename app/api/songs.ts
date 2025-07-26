@@ -11,6 +11,7 @@ export type Song = {
 };
 
 export type SongWithLyrics = Song & {
+  author?: string;
   lyrics: string[];
   overriddenSongId?: string;
   // canEdit: boolean;

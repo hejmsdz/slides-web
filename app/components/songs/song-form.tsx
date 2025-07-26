@@ -178,6 +178,16 @@ export default function SongForm({
                 readOnly={isDisabled}
               />
             </FormItem>
+            <FormItem>
+              <Label htmlFor="author">Autor</Label>
+              <Input
+                type="text"
+                id="author"
+                name="author"
+                defaultValue={song?.author}
+                readOnly={isDisabled}
+              />
+            </FormItem>
           </div>
           {isAdmin ? (
             <FormItem>
