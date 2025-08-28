@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Collapsible, CollapsibleContent } from "../ui/collapsible";
 import { DeleteButton } from "./delete-button";
 import { Checkbox } from "../ui/checkbox";
 import LyricsEditor from "./lyrics-editor";
@@ -35,6 +36,7 @@ import { PopoverContent, PopoverTrigger, Popover } from "../ui/popover";
 import { Eye, MoreHorizontal, Save, Trash2 } from "lucide-react";
 import useEventListener from "~/hooks/use-event-listener";
 import useDashboardData from "~/hooks/use-dashboard-data";
+import { useIsMobile } from "~/hooks/use-mobile";
 
 function useSaveGuard(): React.MutableRefObject<boolean> {
   const isSavedRef = useRef<boolean>(true);
@@ -81,9 +83,11 @@ export default function SongForm({
   const [teamId, setTeamId] = useState(
     song?.teamId ?? (song?.isUnofficial ? "unofficial" : "0"),
   );
+  const [isTextareaFocused, setIsTextareaFocused] = useState(false);
   const lyricsRef = useRef<HTMLTextAreaElement>(null);
   const isDisabled = (isOverride || isNewSong) && !currentTeamId;
   const isSavedRef = useSaveGuard();
+  const isMobile = useIsMobile();
 
   return (
     <Form
@@ -155,107 +159,115 @@ export default function SongForm({
       </SiteHeader>
       <MainContent>
         <div className="flex flex-col h-full">
-          <div className="flex flex-col md:flex-row gap-4">
-            <FormItem>
-              <Label htmlFor="title">Tytuł</Label>
-              <Input
-                type="text"
-                id="title"
-                name="title"
-                defaultValue={song?.title}
+          <Collapsible open={!(isMobile && isTextareaFocused)}>
+            <CollapsibleContent className="flex flex-col">
+              <div className="flex flex-col md:flex-row md:gap-4">
+                <FormItem>
+                  <Label htmlFor="title">Tytuł</Label>
+                  <Input
+                    type="text"
+                    id="title"
+                    name="title"
+                    defaultValue={song?.title}
+                    required
+                    readOnly={isDisabled}
+                    autoFocus={autoFocus} // eslint-disable-line jsx-a11y/no-autofocus
+                  />
+                </FormItem>
+                <FormItem>
+                  <Label htmlFor="subtitle">Podtytuł</Label>
+                  <Input
+                    type="text"
+                    id="subtitle"
+                    name="subtitle"
+                    defaultValue={song?.subtitle}
+                    readOnly={isDisabled}
+                  />
+                </FormItem>
+                <FormItem>
+                  <Label htmlFor="author">Autor</Label>
+                  <Input
+                    type="text"
+                    id="author"
+                    name="author"
+                    defaultValue={song?.author}
+                    readOnly={isDisabled}
+                  />
+                </FormItem>
+              </div>
+              {isAdmin ? (
+                <FormItem>
+                  <Label htmlFor="teamId">Widoczność</Label>
+                  <Select
+                    name="teamId"
+                    value={teamId}
+                    onValueChange={(value) => setTeamId(value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Wybierz zespół" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="0">Publiczna</SelectItem>
+                        <SelectItem value="unofficial">Nieoficjalna</SelectItem>
+                        {Object.entries(teams).map(([id, team]) => (
+                          <SelectItem key={id} value={id}>
+                            {team.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {song?.teamId === null &&
+                    teamId !== "0" &&
+                    teamId !== "unofficial" && (
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="isOverride"
+                          name="isOverride"
+                          checked={isOverride}
+                          onCheckedChange={(checked) =>
+                            setIsOverride(checked === true)
+                          }
+                        />
+                        <label
+                          htmlFor="isOverride"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Zapisz jako własną wersję
+                        </label>
+                      </div>
+                    )}
+                </FormItem>
+              ) : (
+                <>
+                  <input type="hidden" name="teamId" value={currentTeamId} />
+                  {isOverride && (
+                    <input type="hidden" name="isOverride" value="yes" />
+                  )}
+                </>
+              )}
+            </CollapsibleContent>
+          </Collapsible>
+          <div className="flex flex-col h-full">
+            <FormItem className="flex-grow">
+              <Label htmlFor="lyrics" className="flex items-center gap-2">
+                Tekst
+                <LyricsFormattingHelpButton />
+              </Label>
+              <LyricsEditor
+                ref={lyricsRef}
+                id="lyrics"
+                name="lyrics"
+                className="flex-grow"
+                defaultValue={song?.lyrics.join("\n\n")}
                 required
                 readOnly={isDisabled}
-                autoFocus={autoFocus} // eslint-disable-line jsx-a11y/no-autofocus
-              />
-            </FormItem>
-            <FormItem>
-              <Label htmlFor="subtitle">Podtytuł</Label>
-              <Input
-                type="text"
-                id="subtitle"
-                name="subtitle"
-                defaultValue={song?.subtitle}
-                readOnly={isDisabled}
-              />
-            </FormItem>
-            <FormItem>
-              <Label htmlFor="author">Autor</Label>
-              <Input
-                type="text"
-                id="author"
-                name="author"
-                defaultValue={song?.author}
-                readOnly={isDisabled}
+                onFocus={() => setIsTextareaFocused(true)}
+                onBlur={() => setIsTextareaFocused(false)}
               />
             </FormItem>
           </div>
-          {isAdmin ? (
-            <FormItem>
-              <Label htmlFor="teamId">Widoczność</Label>
-              <Select
-                name="teamId"
-                value={teamId}
-                onValueChange={(value) => setTeamId(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Wybierz zespół" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="0">Publiczna</SelectItem>
-                    <SelectItem value="unofficial">Nieoficjalna</SelectItem>
-                    {Object.entries(teams).map(([id, team]) => (
-                      <SelectItem key={id} value={id}>
-                        {team.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {song?.teamId === null &&
-                teamId !== "0" &&
-                teamId !== "unofficial" && (
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="isOverride"
-                      name="isOverride"
-                      checked={isOverride}
-                      onCheckedChange={(checked) =>
-                        setIsOverride(checked === true)
-                      }
-                    />
-                    <label
-                      htmlFor="isOverride"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Zapisz jako własną wersję
-                    </label>
-                  </div>
-                )}
-            </FormItem>
-          ) : (
-            <>
-              <input type="hidden" name="teamId" value={currentTeamId} />
-              {isOverride && (
-                <input type="hidden" name="isOverride" value="yes" />
-              )}
-            </>
-          )}
-          <FormItem className="flex-grow">
-            <Label htmlFor="lyrics" className="flex items-center gap-2">
-              Tekst
-              <LyricsFormattingHelpButton />
-            </Label>
-            <LyricsEditor
-              ref={lyricsRef}
-              id="lyrics"
-              name="lyrics"
-              className="flex-grow"
-              defaultValue={song?.lyrics.join("\n\n")}
-              required
-              readOnly={isDisabled}
-            />
-          </FormItem>
         </div>
       </MainContent>
     </Form>
