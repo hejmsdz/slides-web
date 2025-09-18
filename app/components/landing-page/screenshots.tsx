@@ -22,17 +22,17 @@ const Screenshots = () => {
           <img
             src={imgHome}
             alt="Ekran główny aplikacji z listą pieśni dodanych do zestawu"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover max-w-[366px] mx-auto"
           />
           <img
             src={imgSearch}
             alt="Wyszukiwarka pieśni po tytułach"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover max-w-[366px] mx-auto"
           />
           <img
             src={imgVerses}
             alt="Wybór zwrotki pieśni"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover max-w-[366px] mx-auto"
           />
         </div>
         <div className="max-w-6xl mx-auto">
