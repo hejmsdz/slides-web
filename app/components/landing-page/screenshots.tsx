@@ -1,7 +1,7 @@
-import imgHome from "~/assets/screenshots/home.png";
-import imgSearch from "~/assets/screenshots/search.png";
-import imgVerses from "~/assets/screenshots/verses.png";
-import imgPresentation from "~/assets/screenshots/presentation.png";
+import imgHome from "~/assets/screenshots/home.webp";
+import imgSearch from "~/assets/screenshots/search.webp";
+import imgVerses from "~/assets/screenshots/verses.webp";
+import imgPresentation from "~/assets/screenshots/presentation.webp";
 
 const Screenshots = () => {
   return (
@@ -22,17 +22,17 @@ const Screenshots = () => {
           <img
             src={imgHome}
             alt="Ekran główny aplikacji z listą pieśni dodanych do zestawu"
-            className="w-full h-full object-cover max-w-[366px] mx-auto"
+            className="w-full h-full object-cover max-w-[363px] mx-auto"
           />
           <img
             src={imgSearch}
             alt="Wyszukiwarka pieśni po tytułach"
-            className="w-full h-full object-cover max-w-[366px] mx-auto"
+            className="w-full h-full object-cover max-w-[363px] mx-auto"
           />
           <img
             src={imgVerses}
             alt="Wybór zwrotki pieśni"
-            className="w-full h-full object-cover max-w-[366px] mx-auto"
+            className="w-full h-full object-cover max-w-[363px] mx-auto"
           />
         </div>
         <div className="max-w-6xl mx-auto">
