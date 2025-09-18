@@ -12,7 +12,7 @@ const features = [
   {
     icon: Database,
     title: "Baza pieśni",
-    description: "Ponad 100 tekstów pieśni liturgicznych gotowych do użycia.",
+    description: "Ponad 150 tekstów pieśni liturgicznych gotowych do użycia.",
   },
   {
     icon: Edit3,
