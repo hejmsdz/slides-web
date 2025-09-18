@@ -1,4 +1,4 @@
-import heroImage from "~/assets/hero.jpg";
+import heroImage from "~/assets/hero.webp";
 import DownloadAppButton from "./download-app-button";
 import DashboardButton from "./dashboard-button";
 import Logo from "~/assets/psallite.svg";
