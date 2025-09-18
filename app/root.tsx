@@ -13,6 +13,7 @@ import { ExternalScripts } from "remix-utils/external-scripts";
 import "./tailwind.css";
 import { Button } from "~/components/ui/button";
 import { Frown } from "lucide-react";
+import faviconSvg from "~/assets/psallite.svg?no-inline";
 
 export const links: LinksFunction = () => [];
 
@@ -22,6 +23,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href={faviconSvg} type="image/svg+xml" />
         <Meta />
         <Links />
       </head>
