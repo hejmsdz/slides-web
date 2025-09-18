@@ -4,6 +4,10 @@ export const meta: MetaFunction = () => {
   return [{ title: "Polityka prywatności" }];
 };
 
+export const handle = {
+  noScript: true,
+};
+
 export async function loader() {
   return {
     adminName: process.env.PRIVACY_POLICY_ADMIN_NAME,

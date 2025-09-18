@@ -12,6 +12,10 @@ export const meta: MetaFunction = () => {
   return [{ title: "Psallite" }];
 };
 
+export const handle = {
+  noScript: true,
+};
+
 export default function Index() {
   return (
     <div className="min-h-screen">

@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
 } from "react-router";
 import type { LinksFunction } from "react-router";
 import { Route } from "./+types/root";
@@ -18,6 +19,15 @@ import faviconSvg from "~/assets/psallite.svg?no-inline";
 export const links: LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const matches = useMatches();
+  const noScript = matches.some(
+    (match) =>
+      match.handle &&
+      typeof match.handle === "object" &&
+      "noScript" in match.handle &&
+      match.handle?.noScript,
+  );
+
   return (
     <html lang="pl" className="h-full">
       <head>
@@ -31,7 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ExternalScripts />
         <ScrollRestoration />
-        <Scripts />
+        {noScript ? null : <Scripts />}
       </body>
     </html>
   );
