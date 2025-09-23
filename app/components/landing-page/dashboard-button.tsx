@@ -21,7 +21,7 @@ const DashboardButton = () => {
       ) : (
         <Link to={`/auth/google`}>
           <Key className="w-4 h-4" />
-          Zaloguj się
+          Zaloguj się do panelu
         </Link>
       )}
     </Button>

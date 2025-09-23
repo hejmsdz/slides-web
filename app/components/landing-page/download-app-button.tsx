@@ -14,7 +14,7 @@ const DownloadAppButton = () => {
     >
       <a href={appDownloadUrl} target="_blank" rel="noopener noreferrer">
         <Smartphone className="w-5 h-5 mr-2" />
-        Pobierz aplikację
+        Pobierz na Androida
       </a>
     </Button>
   );

@@ -13,6 +13,15 @@ import { defaultApi } from "~/api/api";
 
 const validLiveKeyRegex = /^\d{4}$/;
 
+export function meta() {
+  return [
+    {
+      name: "robots",
+      content: "noindex, nofollow",
+    },
+  ];
+}
+
 export async function loader({ params }: LoaderFunctionArgs) {
   if (!params.live || !validLiveKeyRegex.test(params.live)) {
     throw new Response("Not found", { status: 404 });

@@ -9,7 +9,14 @@ import CTA from "~/components/landing-page/cta";
 import Footer from "~/components/landing-page/footer";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "Psallite" }];
+  return [
+    { title: "Psallite" },
+    {
+      name: "description",
+      content:
+        "Psallite – aplikacja, która ułatwia prowadzenie śpiewu liturgicznego. Wyświetlaj teksty pieśni, steruj prezentacją prosto z telefonu i zaangażuj całą wspólnotę.",
+    },
+  ];
 };
 
 export const handle = {

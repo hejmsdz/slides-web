@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /cdn-cgi/
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /invitation
+Disallow: /cast
+Disallow: /cast2
