@@ -58,9 +58,21 @@ const useSSE = (url: string): SSEResult => {
   const initialState = useLoaderData<typeof loader>();
   const [data, setData] = useState<PresentationState | null>(initialState);
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
+  const connect = useCallback(() => {
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+    }
+
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
+
     const eventSource = new EventSource(url);
+    eventSourceRef.current = eventSource;
 
     eventSource.addEventListener("open", () => {
       setIsConnected(true);
@@ -78,12 +90,26 @@ const useSSE = (url: string): SSEResult => {
 
     eventSource.addEventListener("error", () => {
       setIsConnected(false);
+
+      reconnectTimeoutRef.current = setTimeout(() => {
+        connect();
+      }, 5000);
     });
+  }, [url]);
+
+  useEffect(() => {
+    connect();
 
     return () => {
-      eventSource.close();
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
     };
-  }, [url]);
+  }, [connect]);
 
   return { data, isConnected };
 };
