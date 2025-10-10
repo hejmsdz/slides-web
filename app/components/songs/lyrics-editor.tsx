@@ -162,7 +162,7 @@ const LyricsEditor = forwardRef<
         onInput={(e) => setValue(e.currentTarget.value)}
         className={cn(
           textClassNames,
-          "absolute inset-0 text-transparent caret-foreground rounded-md overscroll-none resize-none",
+          "absolute inset-0 text-transparent caret-foreground bg-background rounded-md overscroll-none resize-none",
         )}
         onScroll={(event) => {
           if (textRef.current) {
