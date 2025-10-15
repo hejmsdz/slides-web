@@ -43,6 +43,13 @@ const Footer = () => {
             </FooterLink>
           </span>{" "}
           &middot;{" "}
+          <span>
+            Materiały graficzne:{" "}
+            <FooterLink href="https://mockuphone.com" external>
+              MockUPhone
+            </FooterLink>
+          </span>{" "}
+          &middot;{" "}
           <FooterLink href="/privacy">
             <span>Polityka prywatności</span>
           </FooterLink>

@@ -19,10 +19,6 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const handle = {
-  noScript: true,
-};
-
 export default function Index() {
   return (
     <div className="min-h-screen">
