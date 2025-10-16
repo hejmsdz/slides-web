@@ -56,7 +56,8 @@ const Features = () => {
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Psallite to kompleksowe rozwiązanie do prezentacji pieśni,
-            zaprojektowane z myślą o scholach, organistach i kantorach.
+            zaprojektowane z&nbsp;myślą o&nbsp;scholach, organistach i
+            kantorach.
           </p>
         </div>
 

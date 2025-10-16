@@ -10,7 +10,7 @@ const DashboardButton = () => {
     <Button
       size="lg"
       variant="outline"
-      className="border-primary-foreground/30 text-primary-background hover:bg-primary-foreground/10 px-8 hover:text-primary-foreground"
+      className="w-full sm:w-auto border-primary-foreground/30 text-primary-background hover:bg-primary-foreground/10 px-8 hover:text-primary-foreground"
       asChild
     >
       {isAuthenticated ? (

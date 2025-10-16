@@ -64,13 +64,11 @@ const Screenshots = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Intuicyjna obsługa
-            <br />
-            <small></small>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Do stworzenia slajdów wystarczy kilka kliknięć, a sterowanie
-            prezentacją odbywa się za pomocą prostych gestów. Możesz skupić się
-            na prowadzeniu śpiewu!
+            prezentacją odbywa się za&nbsp;pomocą prostych gestów. Możesz
+            skupić&nbsp;się na&nbsp;prowadzeniu śpiewu!
           </p>
         </div>
 

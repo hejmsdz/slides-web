@@ -9,7 +9,7 @@ const DownloadAppButton = () => {
   return (
     <Button
       size="lg"
-      className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-glow"
+      className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground shadow-glow"
       asChild
     >
       <a href={appDownloadUrl} target="_blank" rel="noopener noreferrer">
