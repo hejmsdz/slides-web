@@ -5,11 +5,8 @@ import Phone from "./phone";
 import Tv from "./tv";
 import imgHome from "~/assets/screenshots/main-screen.webp";
 import imgPresentation from "~/assets/screenshots/presentation-ui.webp";
-// TODO: unify slides
-import imgSlide1R from "~/assets/slide1r.png";
-import imgSlide2R from "~/assets/slide2r.png";
-import imgSlide1 from "~/assets/slide1.png";
-import imgSlide2 from "~/assets/slide2.png";
+import imgSlide1 from "~/assets/screenshots/slide1.webp";
+import imgSlide2 from "~/assets/screenshots/slide2.webp";
 
 const slideAnimationStep = 0.3;
 
@@ -109,12 +106,18 @@ const Screenshots = () => {
                   }}
                 >
                   <div className="aspect-[0.45]" />
-                  <div className="aspect-[0.45] flex items-center justify-center">
-                    <img src={imgSlide1R} alt="Slajd 1" />
-                  </div>
-                  <div className="aspect-[0.45] flex items-center justify-center">
-                    <img src={imgSlide2R} alt="Slajd 2" />
-                  </div>
+                  {[imgSlide1, imgSlide2].map((img, index) => (
+                    <div
+                      className="aspect-[0.45] flex items-center justify-center relative"
+                      key={index}
+                    >
+                      <img
+                        src={img}
+                        alt={`Slajd ${index + 1}`}
+                        className="rotate-90 scale-[1.777]"
+                      />
+                    </div>
+                  ))}
                 </motion.div>
                 <motion.img
                   src={imgPresentation}
