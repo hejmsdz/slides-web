@@ -1,4 +1,4 @@
-import imgPhone from "~/assets/phone.png";
+import imgPhone from "~/assets/phone.webp";
 import { cn } from "~/lib/utils";
 
 const Phone = ({

@@ -3,8 +3,8 @@ import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import Phone from "./phone";
 import Tv from "./tv";
-import imgHome from "~/assets/screenshots/main-screen.png";
-import imgPresentation from "~/assets/screenshots/presentation-ui.png";
+import imgHome from "~/assets/screenshots/main-screen.webp";
+import imgPresentation from "~/assets/screenshots/presentation-ui.webp";
 // TODO: unify slides
 import imgSlide1R from "~/assets/slide1r.png";
 import imgSlide2R from "~/assets/slide2r.png";

@@ -1,4 +1,4 @@
-import imgTv from "~/assets/tv.png";
+import imgTv from "~/assets/tv.webp";
 import { cn } from "~/lib/utils";
 
 const Tv = ({
