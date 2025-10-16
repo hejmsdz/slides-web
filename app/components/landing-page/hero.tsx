@@ -1,17 +1,25 @@
 import heroImage from "~/assets/hero.webp";
+import heroImageVertical from "~/assets/hero-vertical.webp";
 import DownloadAppButton from "./download-app-button";
 import DashboardButton from "./dashboard-button";
 import Logo from "~/assets/psallite.svg";
+import { cn } from "~/lib/utils";
 
 const Hero = () => {
+  const heroImageClassName =
+    "absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30";
+
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-hero overflow-hidden">
       <div className="absolute inset-0 bg-black/20"></div>
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
+        className={cn(heroImageClassName, "sm:hidden")}
+        style={{ backgroundImage: `url(${heroImageVertical})` }}
+      />
+      <div
+        className={cn(heroImageClassName, "hidden sm:block")}
         style={{ backgroundImage: `url(${heroImage})` }}
-      ></div>
-
+      />
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="w-24 h-24 bg-primary p-1 rounded-2xl shadow-glow mb-4 inline-block">
           <img src={Logo} alt="" className="rounded-2xl text-accent" />
