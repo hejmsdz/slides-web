@@ -60,16 +60,20 @@ const Features = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
               <Card
                 key={index}
+                tagName="li"
                 className="border-none shadow-card hover:shadow-glow transition-all duration-300 hover:-translate-y-1"
               >
                 <CardContent className="p-6 text-center">
-                  <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div
+                    className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    aria-hidden="true"
+                  >
                     <Icon className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">
@@ -82,7 +86,7 @@ const Features = () => {
               </Card>
             );
           })}
-        </div>
+        </ul>
       </div>
     </section>
   );

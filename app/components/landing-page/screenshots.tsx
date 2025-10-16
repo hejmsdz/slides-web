@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useId, useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import Phone from "./phone";
@@ -56,6 +56,8 @@ const Screenshots = () => {
     [0, 1],
   );
 
+  const captionId = useId();
+
   return (
     <section className="py-20 bg-muted/30 overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,84 +74,105 @@ const Screenshots = () => {
           </p>
         </div>
 
-        <div className="flex justify-center sticky top-0 z-10">
-          <div className="max-w-xs max-h-screen flex flex-col" ref={phoneRef}>
-            <motion.div
-              style={{
-                rotate,
-                scale,
-                x,
-              }}
-              transition={{
-                type: "spring",
-                duration: 1,
-                bounce: 0.2,
-              }}
-            >
-              <Phone>
-                <motion.img
-                  src={imgHome}
-                  alt="Ekran główny aplikacji z listą pieśni dodanych do zestawu"
-                  className="absolute w-full h-full object-cover left-0 top-0"
-                  style={{ opacity: homeScreenOpacity }}
-                />
-                <motion.div
-                  className="absolute w-full h-full left-0 top-0"
-                  style={{
-                    opacity: presentationScreenOpacity,
-                    translateY: presentationScreenTranslateY,
-                  }}
-                  transition={{
-                    type: "spring",
-                    duration: 0.5,
-                    bounce: 0.2,
-                  }}
-                >
-                  <div className="aspect-[0.45]" />
-                  {[imgSlide1, imgSlide2].map((img, index) => (
-                    <div
-                      className="aspect-[0.45] flex items-center justify-center relative"
-                      key={index}
-                    >
-                      <img
-                        src={img}
-                        alt={`Slajd ${index + 1}`}
-                        className="rotate-90 scale-[1.777]"
-                      />
-                    </div>
-                  ))}
-                </motion.div>
-                <motion.img
-                  src={imgPresentation}
-                  alt="Widok prezentacji pieśni"
-                  className="absolute w-full h-full object-cover left-0 top-0"
-                  style={{ opacity: presentationScreenOpacity }}
-                  transition={{
-                    duration: 0.5,
-                    type: "spring",
-                    bounce: 0.2,
-                  }}
-                />
-              </Phone>
-            </motion.div>
+        <figure
+          role="presentation"
+          aria-label="Animacja przedstawiająca obsługę aplikacji"
+        >
+          <figcaption id={captionId} className="sr-only">
+            Na początku widoczny jest ekran główny z listą pieśni dodanych do
+            zestawu. Następnie telefon obraca się do orientacji poziomej i
+            uruchamiana jest prezentacja: najpierw widać czarny ekran, potem z
+            prawej strony wyjeżdża tekst refrenu pieśni, a następnie pierwszej
+            zwrotki. Poniżej telefonu widać telewizor, na którym wyświetlają się
+            te same slajdy co na telefonie, z synchronizacją w czasie
+            rzeczywistym.
+          </figcaption>
+          <div
+            className="flex justify-center sticky top-0 z-10"
+            aria-hidden="true"
+          >
+            <div className="max-w-xs max-h-screen flex flex-col" ref={phoneRef}>
+              <motion.div
+                style={{
+                  rotate,
+                  scale,
+                  x,
+                }}
+                transition={{
+                  type: "spring",
+                  duration: 1,
+                  bounce: 0.2,
+                }}
+              >
+                <Phone>
+                  <motion.img
+                    src={imgHome}
+                    alt="Ekran główny aplikacji z listą pieśni dodanych do zestawu"
+                    className="absolute w-full h-full object-cover left-0 top-0"
+                    style={{ opacity: homeScreenOpacity }}
+                  />
+                  <motion.div
+                    className="absolute w-full h-full left-0 top-0"
+                    style={{
+                      opacity: presentationScreenOpacity,
+                      translateY: presentationScreenTranslateY,
+                    }}
+                    transition={{
+                      type: "spring",
+                      duration: 0.5,
+                      bounce: 0.2,
+                    }}
+                  >
+                    <div className="aspect-[0.45]" />
+                    {[imgSlide1, imgSlide2].map((img, index) => (
+                      <div
+                        className="aspect-[0.45] flex items-center justify-center relative"
+                        key={index}
+                      >
+                        <img
+                          src={img}
+                          alt={`Slajd ${index + 1}`}
+                          className="rotate-90 scale-[1.777]"
+                        />
+                      </div>
+                    ))}
+                  </motion.div>
+                  <motion.img
+                    src={imgPresentation}
+                    alt="Widok prezentacji pieśni"
+                    className="absolute w-full h-full object-cover left-0 top-0"
+                    style={{ opacity: presentationScreenOpacity }}
+                    transition={{
+                      duration: 0.5,
+                      type: "spring",
+                      bounce: 0.2,
+                    }}
+                  />
+                </Phone>
+              </motion.div>
+            </div>
           </div>
-        </div>
-        <div className="max-w-2xl mx-auto z-0 -translate-y-[15%]" ref={tvRef}>
-          <Tv>
-            <motion.img
-              src={imgSlide1}
-              alt="Slajd 1"
-              className="absolute w-full h-full object-cover left-0 top-0"
-              style={{ opacity: tvSlide1Opacity }}
-            />
-            <motion.img
-              src={imgSlide2}
-              alt="Slajd 2"
-              className="absolute w-full h-full object-cover left-0 top-0"
-              style={{ opacity: tvSlide2Opacity }}
-            />
-          </Tv>
-        </div>
+          <div
+            ref={tvRef}
+            className="max-w-2xl mx-auto z-0 -translate-y-[15%]"
+            aria-hidden="true"
+          >
+            <Tv>
+              <motion.img
+                src={imgSlide1}
+                alt="Slajd 1"
+                className="absolute w-full h-full object-cover left-0 top-0"
+                style={{ opacity: tvSlide1Opacity }}
+              />
+              <motion.img
+                src={imgSlide2}
+                alt="Slajd 2"
+                className="absolute w-full h-full object-cover left-0 top-0"
+                style={{ opacity: tvSlide2Opacity }}
+              />
+            </Tv>
+          </div>
+        </figure>
       </div>
     </section>
   );
