@@ -144,7 +144,7 @@ const Screenshots = () => {
             />
             <motion.img
               src={imgSlide2}
-              alt="Slajd 1"
+              alt="Slajd 2"
               className="absolute w-full h-full object-cover left-0 top-0"
               style={{ opacity: tvSlide2Opacity }}
             />
