@@ -98,8 +98,8 @@ export default function PrivacyPolicy() {
           przypadku dane osobowe nie są zbierane.
         </p>
         <p className="mt-2">
-          Dane osobowe są przetwarzane wyłącznie w przypadku zalogowania się
-          użytkownika przez konto Google (dotyczy aplikacji webowej oraz
+          Dane osobowe są przetwarzane przede wszystkim w przypadku zalogowania
+          się użytkownika przez konto Google (dotyczy aplikacji webowej oraz
           aplikacji mobilnej po zalogowaniu). W&nbsp;takim przypadku
           przetwarzane dane to:
         </p>
@@ -109,6 +109,11 @@ export default function PrivacyPolicy() {
             "imię i nazwisko (możliwe do edycji po zalogowaniu).",
           ]}
         />
+        <p className="mt-2">
+          Dane osobowe są przetwarzane również po zapisaniu się na listę
+          oczekujących przez stronę WWW. Wówczas przetwarzany jest tylko adres
+          e-mail.
+        </p>
       </Section>
 
       <Section number={3} title="Cel i podstawa prawna przetwarzania danych">
@@ -194,8 +199,14 @@ export default function PrivacyPolicy() {
 
       <Section number={9} title="Czas przechowywania danych">
         <p>
-          Dane są przechowywane dopóki użytkownik posiada konto w aplikacji.
-          Usunięcie konta skutkuje trwałym usunięciem danych.
+          Dane użytkownika zalogowanego są przechowywane dopóki użytkownik
+          posiada konto w aplikacji. Usunięcie konta skutkuje trwałym usunięciem
+          danych.
+        </p>
+        <p className="mt-2">
+          Dane użytkownika zapisanego na listę oczekujących są przechowywane do
+          momentu udostępnienia produktu, na który oczekuje użytkownik, ale nie
+          dłużej niż 2 lata.
         </p>
       </Section>
 
@@ -226,7 +237,9 @@ export default function PrivacyPolicy() {
         </p>
       </Section>
 
-      <p className="text-gray-600 mb-8">Data publikacji: 5 maja 2025 r.</p>
+      <p className="text-gray-600 mb-8">
+        Data aktualizacji: 17 października 2025 r.
+      </p>
     </div>
   );
 }
