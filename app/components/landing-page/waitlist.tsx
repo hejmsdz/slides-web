@@ -81,7 +81,7 @@ const Waitlist = () => {
                 />
                 <span className="text-xs text-muted-foreground text-left">
                   Wyrażam zgodę na otrzymywanie informacji o&nbsp;udostępnieniu
-                  aplikacji na&nbsp;podany adres e-mail zgodnie z&nbsp;
+                  aplikacji na&nbsp;podany adres e-mail, zgodnie z&nbsp;
                   <Link to="/privacy" className="text-primary underline">
                     polityką prywatności
                   </Link>

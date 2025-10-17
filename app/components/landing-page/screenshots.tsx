@@ -8,7 +8,7 @@ import imgPresentation from "~/assets/screenshots/presentation-ui.webp";
 import imgSlide1 from "~/assets/screenshots/slide1.webp";
 import imgSlide2 from "~/assets/screenshots/slide2.webp";
 
-const slideAnimationStep = 0.3;
+const slideAnimationStep = 0.25;
 
 const Screenshots = () => {
   const isMd = useMediaQuery(`(min-width: 640px)`);
@@ -16,19 +16,19 @@ const Screenshots = () => {
   const phoneRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: phoneRef,
-    offset: ["50% end", "end end"],
+    offset: ["60% end", "end end"],
   });
   const tvRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: tvScrollYProgress } = useScroll({
     target: tvRef,
-    offset: ["start end", "end end"],
+    offset: ["start end", "80% end"],
   });
 
   const rotateRaw = useTransform(scrollYProgress, [0, 1], ["0deg", "-90deg"]);
   const rotate = useSpring(rotateRaw, { stiffness: 300, damping: 40 });
   const scale = useTransform(scrollYProgress, [0, 1], [1, isMd ? 0.8 : 0.5]);
-  const xRaw = useTransform(scrollYProgress, [0, 1], [0, 0]);
-  const x = useSpring(xRaw, { stiffness: 300, damping: 40 });
+  const yRaw = useTransform(tvScrollYProgress, [0, 1], ["0%", "10%"]);
+  const y = yRaw;
   const homeScreenOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const presentationScreenOpacity = useTransform(
     scrollYProgress,
@@ -94,7 +94,7 @@ const Screenshots = () => {
                 style={{
                   rotate,
                   scale,
-                  x,
+                  y,
                 }}
                 transition={{
                   type: "spring",
@@ -152,7 +152,7 @@ const Screenshots = () => {
           </div>
           <div
             ref={tvRef}
-            className="max-w-2xl mx-auto z-0 -translate-y-[15%]"
+            className="max-w-2xl mx-auto z-0 -translate-y-[10%]"
             aria-hidden="true"
           >
             <Tv>
