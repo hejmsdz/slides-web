@@ -31,7 +31,7 @@ const Hero = () => {
         </div>
 
         <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
-          Wyświetlaj teksty pieśni liturgicznych bez wysiłku za&nbsp;pomocą
+          Wyświetlaj teksty pieśni liturgicznych bez&nbsp;wysiłku za&nbsp;pomocą
           aplikacji <strong>Psallite</strong>.
         </p>
 

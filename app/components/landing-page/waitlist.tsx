@@ -34,8 +34,8 @@ const Waitlist = () => {
           </h2>
 
           <p className="text-xl text-muted-foreground mb-8">
-            Aplikacja jest obecnie dostępna tylko na Androida, ale trwają prace
-            nad wersją dla&nbsp;iPhone&apos;ów. Zapisz się na listę
+            Aplikacja jest obecnie dostępna tylko na&nbsp;Androida, ale trwają
+            prace nad wersją dla&nbsp;iPhone&apos;ów. Zapisz się na listę
             oczekujących, aby nie przegapić premiery!
           </p>
 
@@ -80,8 +80,8 @@ const Waitlist = () => {
                   required
                 />
                 <span className="text-xs text-muted-foreground text-left">
-                  Wyrażam zgodę na otrzymywanie informacji o udostępnieniu
-                  aplikacji na&nbsp;podany adres e-mail zgodnie z{" "}
+                  Wyrażam zgodę na otrzymywanie informacji o&nbsp;udostępnieniu
+                  aplikacji na&nbsp;podany adres e-mail zgodnie z&nbsp;
                   <Link to="/privacy" className="text-primary underline">
                     polityką prywatności
                   </Link>
