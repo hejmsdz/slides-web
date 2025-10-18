@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { Heart } from "lucide-react";
 
 const FooterLink = ({
   href,
@@ -12,7 +13,7 @@ const FooterLink = ({
   return (
     <Link
       to={href}
-      className="text-primary-foreground/60 underline hover:text-primary-foreground/80"
+      className="underline hover:text-accent"
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
     >
@@ -23,17 +24,23 @@ const FooterLink = ({
 
 const Footer = () => {
   return (
-    <footer className="bg-primary text-primary-foreground py-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-sm text-center text-primary-foreground/50">
-          <span>
-            &copy; 2025{" "}
+    <footer className="bg-primary py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-4 text-primary-foreground/60">
+        <div className="flex items-center justify-center text-sm">
+          <p>
+            © 2025{" "}
             <FooterLink href="https://mrozwadowski.com" external>
               Mikołaj Rozwadowski
             </FooterLink>
-          </span>{" "}
-          &middot;{" "}
-          <span>
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs">
+          <p>
+            <FooterLink href="/privacy">Polityka prywatności</FooterLink>
+          </p>
+          <span className="hidden sm:inline">•</span>
+          <p>
             Zdjęcie w tle:{" "}
             <FooterLink
               href="https://unsplash.com/photos/a-church-with-a-pipe-organ-and-chandelier-WV-OY38J-Mc?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
@@ -41,18 +48,21 @@ const Footer = () => {
             >
               Haberdoedas II
             </FooterLink>
-          </span>{" "}
-          &middot;{" "}
-          <span>
+          </p>
+          <span className="hidden sm:inline">•</span>
+          <p>
             Materiały graficzne:{" "}
             <FooterLink href="https://mockuphone.com" external>
               MockUPhone
             </FooterLink>
-          </span>{" "}
-          &middot;{" "}
-          <FooterLink href="/privacy">
-            <span>Polityka prywatności</span>
-          </FooterLink>
+          </p>
+          <span className="hidden sm:inline">•</span>
+          <p>
+            Hosting:{" "}
+            <FooterLink href="https://mikr.us/?r=2ba02f5f" external>
+              Mikr.us
+            </FooterLink>
+          </p>
         </div>
       </div>
     </footer>
