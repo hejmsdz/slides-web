@@ -2,6 +2,7 @@ import Api from "./api";
 
 export type Bootstrap = {
   appDownloadUrl: string;
+  contactUrl?: string;
 };
 
 export const getBootstrap = async (api: Api): Promise<Bootstrap> => {

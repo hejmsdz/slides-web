@@ -25,7 +25,10 @@ const Waitlist = () => {
     <section className="py-24 bg-gradient-to-b from-primary/5 to-background">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
+          <div
+            className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6"
+            aria-hidden="true"
+          >
             <Smartphone className="w-8 h-8 text-primary" />
           </div>
 

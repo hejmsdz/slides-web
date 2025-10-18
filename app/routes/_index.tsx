@@ -12,6 +12,7 @@ import Waitlist from "~/components/landing-page/waitlist";
 import CTA from "~/components/landing-page/cta";
 import Footer from "~/components/landing-page/footer";
 import invariant from "tiny-invariant";
+import FAQ from "~/components/landing-page/faq";
 
 export const meta: MetaFunction = () => {
   return [
@@ -32,6 +33,7 @@ export default function Index() {
       <Hero />
       <Features />
       <Screenshots />
+      <FAQ />
       {hasWaitlist && <Waitlist />}
       <CTA />
       <Footer />
@@ -55,6 +57,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return {
     appDownloadUrl: bootstrap.appDownloadUrl,
+    contactUrl: bootstrap.contactUrl,
     isAuthenticated: Boolean(session.data?.accessToken),
     hasWaitlist,
     formToken,
