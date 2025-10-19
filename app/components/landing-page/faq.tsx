@@ -36,10 +36,12 @@ const faqs = [
           <li>
             <h4 className="font-bold">Przez stronę WWW</h4>
             Naciśnij przycisk z ikoną ekranu i strzałki{" "}
-            <ScreenShare className="w-4 h-4 inline" />. Pojawi się adres strony,
-            na której będzie dostępna Twoja prezentacja, zsynchronizowana w
-            czasie rzeczywistym z telefonem. Wejdź na nią na komputerze
-            z&nbsp;dostępem do internetu, kliknij dwukrotnie, żeby wejść w tryb
+            <span className="whitespace-nowrap">
+              <ScreenShare className="w-4 h-4 inline" />.
+            </span>{" "}
+            Pojawi się adres strony, na której będzie dostępna Twoja
+            prezentacja, zsynchronizowana w czasie rzeczywistym z telefonem.
+            Wejdź na nią na komputerze, kliknij dwukrotnie, żeby wejść w tryb
             pełnoekranowy i podłącz komputer do&nbsp;rzutnika/telewizora.
           </li>
           <li>
@@ -49,11 +51,15 @@ const faqs = [
             Odszukaj w menu telewizora i telefonu opcję, która w zależności od
             marki może się nazywać „Klonowanie ekranu”, „Bezprzewodowy
             wyświetlacz” lub „Smart View” – i połącz się bezprzewodowo. Zasięg
-            wynosi zazwyczaj ok.&nbsp;5–10&nbsp;<abbr title="metrów">m</abbr>.
+            wynosi zazwyczaj ok.&nbsp;5–10&nbsp;
+            <abbr className="no-underline" title="metrów">
+              m
+            </abbr>
+            .
           </li>
           <li>
             <h4 className="font-bold">Przez kabel HDMI/USB-C</h4>
-            Jeśli Twój telefon obsługuję funkcję <em>
+            Jeśli Twój telefon obsługuje funkcję <em>
               DisplayPort Alt Mode
             </em>{" "}
             (np. Samsung Galaxy z serii S), możesz bezpośrednio połączyć go z
@@ -74,8 +80,14 @@ const faqs = [
             Ta opcja wymaga urządzenia z systemem Android TV / Google TV,
             znajdującego się w tej samej sieci WiFi co telefon. Aby nawiązać
             połączenie, naciśnij przycisk{" "}
-            <Cast aria-label="z ikoną Google Cast" className="w-4 h-4 inline" />
-            . Jeśli Twój telewizor nie ma wbudowanej obsługi Google Cast, możesz
+            <span className="whitespace-nowrap">
+              <Cast
+                aria-label="z ikoną Google Cast"
+                className="w-4 h-4 inline"
+              />
+              .
+            </span>{" "}
+            Jeśli Twój telewizor nie ma wbudowanej obsługi Google Cast, możesz
             użyć przystawki podłączanej przez HDMI, np.{" "}
             <Link href="https://www.x-kom.pl/p/1350572-odtwarzacz-multimedialny-xiaomi-smart-tv-stick-4k-eu-2-gen.html?sm=RJ4v98gu">
               Xiaomi Smart TV Stick
