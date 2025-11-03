@@ -56,13 +56,13 @@ const Footer = () => {
               MockUPhone
             </FooterLink>
           </p>
-          <span className="hidden sm:inline">•</span>
+          {/* <span className="hidden sm:inline">•</span>
           <p>
             Hosting:{" "}
             <FooterLink href="https://mikr.us/?r=2ba02f5f" external>
               Mikr.us
             </FooterLink>
-          </p>
+          </p> */}
         </div>
       </div>
     </footer>

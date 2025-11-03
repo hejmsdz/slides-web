@@ -91,13 +91,24 @@ const faqs = [
             użyć przystawki podłączanej przez HDMI, np.{" "}
             <Link href="https://www.x-kom.pl/p/1350572-odtwarzacz-multimedialny-xiaomi-smart-tv-stick-4k-eu-2-gen.html?sm=RJ4v98gu">
               Xiaomi Smart TV Stick
+            </Link>{" "}
+            lub{" "}
+            <Link href="https://www.x-kom.pl/p/1335632-odtwarzacz-multimedialny-xiaomi-tv-box-s-3rd-gen.html?sm=M52m4qd5">
+              Xiaomi TV Box
             </Link>
             .
           </li>
         </ul>
         <p>
-          Jeśli nie możesz zastosować żadnego z tych sposobów, pobierz
-          prezentację jako plik PDF i wyświetl go tradycyjnie przez komputer.
+          Jeśli masz do dyspozycji dwa telefony, możesz połączyć sposób pierwszy
+          z drugim lub pierwszy z trzecim – to znaczy uruchomić prezentację na
+          jednym telefonie, a drugiego użyć jako odbiornika podłączonego
+          do&nbsp;zewnętrznego ekranu.
+        </p>
+        <p>
+          Jeżeli nie możesz zastosować żadnej z tych metod, pobierz prezentację
+          jako plik PDF i wyświetl go tradycyjnie przez komputer. Oczywiście
+          wtedy zdalne sterowanie z telefonu nie będzie możliwe.
         </p>
       </>
     ),
@@ -175,7 +186,7 @@ const faqs = [
       <p>
         Aplikacja jest darmowa. Choć jeśli liczba użytkowników przekroczy moje
         oczekiwania i wytrzymałość serwera, to mogę w przyszłości wprowadzić
-        drobną opłatę.
+        drobną opłatę na utrzymanie serwisu.
       </p>
     ),
   },
