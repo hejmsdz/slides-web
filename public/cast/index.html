@@ -152,6 +152,10 @@
       loadSlides(data.url, {
         initialPage: data.currentPage + 1,
       });
+
+      if (data.backgroundColor) {
+        document.body.style.backgroundColor = data.backgroundColor;
+      }
     });
 
     context.addCustomMessageListener(`${namespace}.changePage`, (event) => {
