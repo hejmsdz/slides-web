@@ -9,6 +9,7 @@ import { cn } from "~/lib/utils";
 import Spinner from "~/components/spinner";
 import { getLiveStatus } from "~/api/live";
 import { defaultApi } from "~/api/api";
+import '~/styles/presentation.css';
 
 const validLiveKeyRegex = /^\d{4}$/;
 
