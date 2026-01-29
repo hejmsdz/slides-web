@@ -1,6 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { type PDFDocumentProxy } from "./pdf.client";
-import { cn } from "~/lib/utils";
 
 type SlideProps = {
   pdfDocument: PDFDocumentProxy;
@@ -8,6 +7,7 @@ type SlideProps = {
   renderWidth?: number;
   className?: string;
   ariaHidden?: boolean;
+  backgroundColor: string;
 };
 
 const Slide = memo(
@@ -17,6 +17,7 @@ const Slide = memo(
     renderWidth,
     className,
     ariaHidden,
+    backgroundColor = '#000000',
   }: SlideProps) => {
     const ref = useRef<HTMLCanvasElement>(null);
     const isRenderingRef = useRef<boolean>(false);
@@ -67,8 +68,8 @@ const Slide = memo(
 
     return (
       <canvas
-        className={cn("bg-black", className)}
-        style={{ width: renderWidth }}
+        className={className}
+        style={{ width: renderWidth, backgroundColor }}
         ref={ref}
         role="img"
         aria-label={textContent}

@@ -3,6 +3,7 @@ import Api from "./api";
 type LiveStatus = {
   url: string;
   currentPage: number;
+  backgroundColor: string;
 };
 
 export const getLiveStatus = async (

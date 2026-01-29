@@ -28,11 +28,12 @@ export async function loader({ params }: LoaderFunctionArgs) {
   }
 
   try {
-    const { url, currentPage } = await getLiveStatus(defaultApi, params.live);
+    const { url, currentPage, backgroundColor } = await getLiveStatus(defaultApi, params.live);
 
     return {
       url,
       currentPage,
+      backgroundColor,
       eventSourceUrl: new URL(
         `/v2/live/${params.live}`,
         process.env.EXTERNAL_API_URL,
@@ -47,6 +48,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 type PresentationState = {
   url: string;
   currentPage: number;
+  backgroundColor: string;
 };
 
 type SSEResult = {
@@ -79,8 +81,8 @@ const useSSE = (url: string): SSEResult => {
     });
 
     eventSource.addEventListener("start", (event) => {
-      const { url, currentPage } = JSON.parse(event.data);
-      setData({ url, currentPage });
+      const { url, currentPage, backgroundColor } = JSON.parse(event.data);
+      setData({ url, currentPage, backgroundColor });
     });
 
     eventSource.addEventListener("changePage", (event) => {
@@ -115,9 +117,10 @@ const useSSE = (url: string): SSEResult => {
 };
 
 export default function Live() {
-  const { eventSourceUrl } = useLoaderData<typeof loader>();
+  const { eventSourceUrl, backgroundColor: initialBackgroundColor } = useLoaderData<typeof loader>();
   const { data: presentationState, isConnected } = useSSE(eventSourceUrl);
   const isOffline = useOffline();
+  const backgroundColor = presentationState?.backgroundColor || initialBackgroundColor || "#000000";
 
   const presentationRef = useRef<HTMLDivElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -202,6 +205,7 @@ export default function Live() {
         page={page + 1}
         onMouseMove={handleMouseMove}
         className={cn({ "cursor-none": isIdle })}
+        backgroundColor={backgroundColor}
       />
       <a className="hidden" href={presentationState.url} ref={linkRef}>
         {presentationState.url}

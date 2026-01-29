@@ -6,6 +6,7 @@ import Slide from "./slide";
 type PdfPresentationProps = {
   src: string;
   page: number;
+  backgroundColor: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 type CanvasState = {
@@ -15,7 +16,7 @@ type CanvasState = {
 };
 
 export default forwardRef<HTMLDivElement, PdfPresentationProps>(
-  function PdfPresentation({ src, page, className, ...rest }, ref) {
+  function PdfPresentation({ src, page, className, backgroundColor, ...rest }, ref) {
     const pdfDocument = usePdfDocument(src);
 
     const [
@@ -59,6 +60,7 @@ export default forwardRef<HTMLDivElement, PdfPresentationProps>(
                 isActive ? "opacity-100" : "opacity-0",
               )}
               ariaHidden={!isActive}
+              backgroundColor={backgroundColor}
             />
           );
         })}
