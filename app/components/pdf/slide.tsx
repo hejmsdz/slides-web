@@ -7,7 +7,6 @@ type SlideProps = {
   renderWidth?: number;
   className?: string;
   ariaHidden?: boolean;
-  backgroundColor: string;
 };
 
 const Slide = memo(
@@ -17,7 +16,6 @@ const Slide = memo(
     renderWidth,
     className,
     ariaHidden,
-    backgroundColor = '#000000',
   }: SlideProps) => {
     const ref = useRef<HTMLCanvasElement>(null);
     const isRenderingRef = useRef<boolean>(false);
@@ -69,7 +67,7 @@ const Slide = memo(
     return (
       <canvas
         className={className}
-        style={{ width: renderWidth, backgroundColor }}
+        style={{ width: renderWidth }}
         ref={ref}
         role="img"
         aria-label={textContent}

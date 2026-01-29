@@ -117,10 +117,14 @@ const useSSE = (url: string): SSEResult => {
 };
 
 export default function Live() {
-  const { eventSourceUrl, backgroundColor: initialBackgroundColor } = useLoaderData<typeof loader>();
+  const { eventSourceUrl } = useLoaderData<typeof loader>();
   const { data: presentationState, isConnected } = useSSE(eventSourceUrl);
   const isOffline = useOffline();
-  const backgroundColor = presentationState?.backgroundColor || initialBackgroundColor || "#000000";
+  const backgroundColor = presentationState?.backgroundColor || "#000000";
+
+  useEffect(() => {
+    document.body.style.backgroundColor = backgroundColor;
+  }, [backgroundColor]);
 
   const presentationRef = useRef<HTMLDivElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -205,7 +209,6 @@ export default function Live() {
         page={page + 1}
         onMouseMove={handleMouseMove}
         className={cn({ "cursor-none": isIdle })}
-        backgroundColor={backgroundColor}
       />
       <a className="hidden" href={presentationState.url} ref={linkRef}>
         {presentationState.url}

@@ -18,15 +18,16 @@ import faviconSvg from "~/assets/psallite.svg?no-inline";
 
 export const links: LinksFunction = () => [];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function tryGetProperty<T>(obj: any, property: string): T | undefined {
+  return obj && typeof obj === 'object' && property in obj ? obj[property] as T : undefined;
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const matches = useMatches();
-  const noScript = matches.some(
-    (match) =>
-      match.handle &&
-      typeof match.handle === "object" &&
-      "noScript" in match.handle &&
-      match.handle?.noScript,
-  );
+  const noScript = matches.some((match) => tryGetProperty(match.handle, "noScript"));
+
+  const backgroundColor = [...matches].reverse().reduce((stack, match) => stack ?? tryGetProperty<string>(match.loaderData, "backgroundColor"), undefined as string | undefined);
 
   return (
     <html lang="pl" className="h-full">
@@ -37,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <body className="h-full" style={{ backgroundColor }}>
         {children}
         <ExternalScripts />
         <ScrollRestoration />
