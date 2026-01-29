@@ -29,6 +29,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const backgroundColor = [...matches].reverse().reduce((stack, match) => stack ?? tryGetProperty<string>(match.loaderData, "backgroundColor"), undefined as string | undefined);
 
+  const bodyStyle = {
+    '--background-color': backgroundColor,
+    backgroundColor: backgroundColor ? 'var(--background-color)' : undefined,
+  } as React.CSSProperties;
+
   return (
     <html lang="pl" className="h-full">
       <head>
@@ -38,7 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="h-full" style={{ backgroundColor }}>
+      <body className="h-full" style={bodyStyle}>
         {children}
         <ExternalScripts />
         <ScrollRestoration />

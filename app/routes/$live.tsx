@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import PdfPresentation from "~/components/pdf/pdf-presentation";
 import useEventListener from "~/hooks/use-event-listener";
 import useWakeLock from "~/hooks/use-wake-lock";
-import "~/styles/presentation.css";
 import useOffline from "~/hooks/use-offline";
 import useMouseIdle from "~/hooks/use-mouse-idle";
 import { cn } from "~/lib/utils";
@@ -123,7 +122,7 @@ export default function Live() {
   const backgroundColor = presentationState?.backgroundColor || "#000000";
 
   useEffect(() => {
-    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.setProperty("--background-color", backgroundColor);
   }, [backgroundColor]);
 
   const presentationRef = useRef<HTMLDivElement>(null);
