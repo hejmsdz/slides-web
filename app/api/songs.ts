@@ -14,10 +14,12 @@ export type SongWithLyrics = Song & {
   author?: string;
   lyrics: string[];
   overriddenSongId?: string;
-  // canEdit: boolean;
-  // canDelete: boolean;
-  // canOverride: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  canOverride: boolean;
 };
+
+export type SongData = Omit<SongWithLyrics, "id" | "slug" | "canEdit" | "canDelete" | "canOverride">;
 
 export const getSongs = async (
   api: Api,
@@ -36,7 +38,7 @@ export const getSong = async (
 export const patchSong = async (
   api: Api,
   id: string,
-  data: Omit<SongWithLyrics, "id" | "slug">,
+  data: SongData,
 ): Promise<SongWithLyrics> => {
   return api.patch(`v2/songs/${id}`, data);
 };
@@ -47,7 +49,7 @@ export const destroySong = async (api: Api, id: string): Promise<void> => {
 
 export const postSong = async (
   api: Api,
-  data: Omit<SongWithLyrics, "id" | "slug">,
+  data: SongData,
 ): Promise<SongWithLyrics> => {
   return api.post("v2/songs", data);
 };
