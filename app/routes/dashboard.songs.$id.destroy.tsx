@@ -9,7 +9,7 @@ export const action = createAuthenticatedAction(async ({ params }, { api }) => {
   let song: SongWithLyrics;
   try {
     song = await getSong(api, params.id);
-  } catch (error) {
+  } catch {
     throw new Response("Not Found", { status: 404 });
   }
 

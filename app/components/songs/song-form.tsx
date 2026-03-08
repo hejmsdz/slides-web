@@ -56,7 +56,7 @@ function useSaveGuard(): React.MutableRefObject<boolean> {
         blocker.reset();
       }
     }
-  }, [blocker.state]);
+  }, [blocker, blocker.state]);
 
   useEventListener("beforeunload", (event) => {
     if (!isSavedRef.current) {

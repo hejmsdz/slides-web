@@ -40,13 +40,13 @@ export function TeamCard({
           <ConfirmButton
             message={
               <>
-                Czy na pewno chcesz opuścić zespół <strong>{name}</strong>?
+                Czy na pewno chcesz opuścić zespół <strong>{name}</strong>?
               </>
             }
             action={`/dashboard/teams/${id}/leave`}
             actionButtonLabel="Opuść zespół"
           >
-            Opuść zespół
+            Opuść zespół
           </ConfirmButton>
         </div>
       </CardFooter>

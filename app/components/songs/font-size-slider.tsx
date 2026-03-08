@@ -16,7 +16,7 @@ export default function FontSizeSlider({
   useEffect(() => {
     const fontSize = localStorage.getItem("previewFontSize");
     onChange(parseInt(fontSize || defaultFontSize.toString()));
-  }, []);
+  }, [onChange]);
 
   const [uncommittedValue, setUncommittedValue] = useState(value);
 

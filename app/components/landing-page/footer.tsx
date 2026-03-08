@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { Heart } from "lucide-react";
 
 const FooterLink = ({
   href,

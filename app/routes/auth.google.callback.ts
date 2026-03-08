@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let authResponse: AuthResponse;
   try {
     authResponse = await postGoogleAuth(defaultApi, tokens.idToken());
-  } catch (e) {
+  } catch {
     return new Response(null, {
       status: 401,
     });

@@ -18,7 +18,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let authResponse: AuthResponse;
   try {
     authResponse = await postAuthNonceVerify(defaultApi, nonce);
-  } catch (e) {
+  } catch {
     return new Response(null, {
       status: 401,
     });

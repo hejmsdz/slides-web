@@ -1,5 +1,4 @@
 import {
-  ClientActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
   redirect,
@@ -14,7 +13,6 @@ import {
   commitSession,
 } from "~/session";
 import { createAuthenticatedAction } from "~/routing.server";
-import * as cache from "~/cache.client";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [

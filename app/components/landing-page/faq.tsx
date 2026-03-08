@@ -101,7 +101,7 @@ const faqs = [
         </ul>
         <p>
           Jeśli masz do dyspozycji dwa telefony, możesz połączyć sposób pierwszy
-          z drugim lub pierwszy z trzecim – to znaczy uruchomić prezentację na
+          z drugim lub pierwszy z trzecim – to znaczy uruchomić prezentację na
           jednym telefonie, a drugiego użyć jako odbiornika podłączonego
           do&nbsp;zewnętrznego ekranu.
         </p>
@@ -197,16 +197,16 @@ const FAQ = () => {
 
   const contact = contactUrl
     ? [
-        {
-          question:
-            "Mam inne pytanie, chcę zgłosić błąd albo zaproponować nową funkcję.",
-          answer: (
-            <p>
-              Wspaniale! <Link href={contactUrl}>Napisz do mnie maila</Link>.
-            </p>
-          ),
-        },
-      ]
+      {
+        question:
+          "Mam inne pytanie, chcę zgłosić błąd albo zaproponować nową funkcję.",
+        answer: (
+          <p>
+            Wspaniale! <Link href={contactUrl}>Napisz do mnie maila</Link>.
+          </p>
+        ),
+      },
+    ]
     : [];
 
   return (
