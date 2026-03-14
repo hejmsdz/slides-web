@@ -17,7 +17,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const currentTeamId = session.get("teamId") ?? "";
 
-  const songs = await getSongs(api, { teamId: currentTeamId });
+  const { items: songs } = await getSongs(api, {
+    teamId: currentTeamId,
+    limit: 1,
+    offset: 0,
+  });
 
   if (songs.length > 0) {
     return redirect(`/dashboard/songs/${songs[0].id}`);

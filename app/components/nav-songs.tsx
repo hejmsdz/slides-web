@@ -23,11 +23,17 @@ const slugify = (text: string): string =>
     .replaceAll("ź", "z")
     .replaceAll("ż", "z");
 
-export function NavSongs({ songs, query }: { songs: Song[]; query: string }) {
+export function NavSongs({
+  songs,
+  query,
+}: {
+  songs: { items: Song[]; total: number };
+  query: string;
+}) {
   const filteredSongs = useMemo(() => {
     const searchSlug = slugify(query);
 
-    return songs.filter((song) => song.slug.includes(searchSlug));
+    return songs.items.filter((song) => song.slug.includes(searchSlug));
   }, [songs, query]);
 
   return (

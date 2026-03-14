@@ -23,9 +23,13 @@ export type SongData = Omit<SongWithLyrics, "id" | "slug" | "canEdit" | "canDele
 
 export const getSongs = async (
   api: Api,
-  { teamId }: { teamId: string },
-): Promise<Song[]> => {
-  return api.get("v2/songs", { teamId });
+  { teamId, limit, offset }: { teamId: string, limit: number, offset: number },
+): Promise<{ items: Song[], total: number }> => {
+  return api.get("v2/songs", {
+    teamId,
+    limit: limit.toString(),
+    offset: offset.toString(),
+  });
 };
 
 export const getSong = async (
