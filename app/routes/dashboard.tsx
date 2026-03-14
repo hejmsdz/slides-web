@@ -19,6 +19,7 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
 import { getBootstrap } from "~/api/bootstrap";
+import { PAGE_SIZE } from "./dashboard.songs.search";
 
 const useFlashMessage = () => {
   const { flashMessage } = useLoaderData<typeof loader>();
@@ -33,6 +34,7 @@ const useFlashMessage = () => {
 
 export default function Dashboard() {
   useFlashMessage();
+
   return (
     <SidebarProvider>
       <AppSidebar variant="inset" />
@@ -45,7 +47,7 @@ export default function Dashboard() {
 }
 
 export type ServerData = {
-  songs: Song[];
+  songs: { items: Song[]; total: number };
   userName: string;
   teams: Record<string, Team>;
   currentTeamId: string;
@@ -68,7 +70,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const flashMessage = session.get("toast");
   const currentTeamId = session.get("teamId") ?? "";
 
-  const songs = await getSongs(api, { teamId: currentTeamId });
+  const songs = await getSongs(api, {
+    teamId: currentTeamId,
+    limit: PAGE_SIZE,
+    offset: 0,
+  });
 
   const isWebView =
     request.headers.get("User-Agent")?.includes("PsalltWebView") ?? false;

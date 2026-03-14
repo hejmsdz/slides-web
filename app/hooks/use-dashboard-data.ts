@@ -7,5 +7,5 @@ export default function useDashboardData(): ServerData {
     throw new Error("Could not access user data");
   }
 
-  return matches.data as ServerData;
+  return matches.loaderData as ServerData;
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef } from "react";
 import { NavSongs } from "~/components/nav-songs";
 import { NavUser } from "~/components/nav-user";
 import {
@@ -10,25 +10,27 @@ import {
 import { NewSongButton } from "./new-song-button";
 import { SearchForm } from "./search-form";
 import useDashboardData from "~/hooks/use-dashboard-data";
+import usePaginatedSongs from "~/hooks/use-paginated-songs";
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const { songs, currentTeamId } = useDashboardData();
-
-  const [query, setQuery] = useState<string>("");
+  const { songs: defaultSongs, currentTeamId } = useDashboardData();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { songs, total, handleQueryChange, handleNeedItems } =
+    usePaginatedSongs(defaultSongs);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader className="px-0">
         <NavUser />
-        <SearchForm
-          value={query}
-          onChange={(value) => {
-            setQuery(value);
-          }}
-        />
+        <SearchForm onQueryChange={handleQueryChange} />
       </SidebarHeader>
-      <SidebarContent>
-        <NavSongs songs={songs} query={query} />
+      <SidebarContent ref={contentRef}>
+        <NavSongs
+          songs={songs}
+          totalSongs={total}
+          scrollRef={contentRef}
+          onNeedItems={handleNeedItems}
+        />
       </SidebarContent>
       {currentTeamId && (
         <SidebarFooter className="px-0">
