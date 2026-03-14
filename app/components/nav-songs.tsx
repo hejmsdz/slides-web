@@ -1,5 +1,7 @@
 import { useMemo } from "react";
+import type { RefObject } from "react";
 import { NavLink } from "react-router";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Song } from "~/api/songs";
 import {
   SidebarGroupContent,
@@ -26,9 +28,11 @@ const slugify = (text: string): string =>
 export function NavSongs({
   songs,
   query,
+  scrollRef,
 }: {
   songs: { items: Song[]; total: number };
   query: string;
+  scrollRef?: RefObject<HTMLDivElement>;
 }) {
   const filteredSongs = useMemo(() => {
     const searchSlug = slugify(query);
@@ -36,65 +40,84 @@ export function NavSongs({
     return songs.items.filter((song) => song.slug.includes(searchSlug));
   }, [songs, query]);
 
+  const virtualizer = useVirtualizer({
+    count: filteredSongs.length,
+    getScrollElement: () => scrollRef?.current ?? null,
+    estimateSize: () => 32,
+    gap: 4,
+  });
+
   return (
     <>
-      {/* <SidebarGroup className="px-0"> */}
       <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu>
-          {filteredSongs.map((song) => (
-            <SidebarMenuItem key={song.id}>
-              <NavLink
-                to={`/dashboard/songs/${song.id}`}
-                className="max-w-full"
+        <SidebarMenu
+          className="relative"
+          style={{ height: `${virtualizer.getTotalSize()}px` }}
+        >
+          {virtualizer.getVirtualItems().map(({ key, index, size, start }) => {
+            const song = filteredSongs[index];
+
+            return (
+              <SidebarMenuItem
+                key={key}
+                className="absolute top-0 left-0 w-full"
+                style={{
+                  height: size,
+                  transform: `translateY(${start}px)`,
+                }}
               >
-                {({ isActive }) => (
-                  <SidebarMenuButton
-                    tooltip={song.title}
-                    asChild
-                    isActive={isActive}
-                  >
-                    <div className="flex justify-between">
-                      <span className="block truncate">
-                        {song.title}
-                        {song.subtitle && ` / ${song.subtitle}`}
-                      </span>
-                      {song.teamId && (
-                        <Tooltip>
-                          <TooltipTrigger>
-                            {song.isOverride ? (
-                              <Copy width={16} height={16} />
-                            ) : (
-                              <LockKeyhole width={16} height={16} />
-                            )}
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>
-                              {song.isOverride
-                                ? "Własna wersja pieśni"
-                                : "Prywatna pieśń"}
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                      {song.isUnofficial && (
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <NotepadTextDashed width={16} height={16} />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Nieoficjalna</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </div>
-                  </SidebarMenuButton>
-                )}
-              </NavLink>
-            </SidebarMenuItem>
-          ))}
+                <NavLink
+                  to={`/dashboard/songs/${song.id}`}
+                  className="max-w-full"
+                >
+                  {({ isActive }) => (
+                    <SidebarMenuButton
+                      tooltip={song.title}
+                      asChild
+                      isActive={isActive}
+                    >
+                      <div className="flex justify-between">
+                        <span className="block truncate">
+                          {song.title}
+                          {song.subtitle && ` / ${song.subtitle}`}
+                        </span>
+                        {song.teamId && (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {song.isOverride ? (
+                                <Copy width={16} height={16} />
+                              ) : (
+                                <LockKeyhole width={16} height={16} />
+                              )}
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                {song.isOverride
+                                  ? "Własna wersja pieśni"
+                                  : "Prywatna pieśń"}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                        {song.isUnofficial && (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <NotepadTextDashed width={16} height={16} />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Nieoficjalna</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </SidebarMenuButton>
+                  )}
+                </NavLink>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
-      {/* </SidebarGroup> */}
     </>
   );
 }

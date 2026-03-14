@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { NavSongs } from "~/components/nav-songs";
 import { NavUser } from "~/components/nav-user";
 import {
@@ -15,6 +15,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const { songs, currentTeamId } = useDashboardData();
 
   const [query, setQuery] = useState<string>("");
+  const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -27,8 +28,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           }}
         />
       </SidebarHeader>
-      <SidebarContent>
-        <NavSongs songs={songs} query={query} />
+      <SidebarContent ref={contentRef}>
+        <NavSongs songs={songs} query={query} scrollRef={contentRef} />
       </SidebarContent>
       {currentTeamId && (
         <SidebarFooter className="px-0">
