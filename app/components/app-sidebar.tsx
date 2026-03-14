@@ -10,24 +10,27 @@ import {
 import { NewSongButton } from "./new-song-button";
 import { SearchForm } from "./search-form";
 import useDashboardData from "~/hooks/use-dashboard-data";
-import { useFetcher } from "react-router";
-import type { loader } from "~/routes/dashboard.songs.search";
+import usePaginatedSongs from "~/hooks/use-paginated-songs";
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const { songs: defaultSongs, currentTeamId } = useDashboardData();
-
   const contentRef = useRef<HTMLDivElement>(null);
-  const fetcher = useFetcher<typeof loader>();
-  const songs = fetcher.data ?? defaultSongs;
+  const { songs, total, handleQueryChange, handleNeedItems } =
+    usePaginatedSongs(defaultSongs);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader className="px-0">
         <NavUser />
-        <SearchForm fetcher={fetcher} />
+        <SearchForm onQueryChange={handleQueryChange} />
       </SidebarHeader>
       <SidebarContent ref={contentRef}>
-        <NavSongs songs={songs} scrollRef={contentRef} />
+        <NavSongs
+          songs={songs}
+          totalSongs={total}
+          scrollRef={contentRef}
+          onNeedItems={handleNeedItems}
+        />
       </SidebarContent>
       {currentTeamId && (
         <SidebarFooter className="px-0">

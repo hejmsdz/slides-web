@@ -19,6 +19,7 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
 import { getBootstrap } from "~/api/bootstrap";
+import { PAGE_SIZE } from "./dashboard.songs.search";
 
 const useFlashMessage = () => {
   const { flashMessage } = useLoaderData<typeof loader>();
@@ -71,7 +72,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const songs = await getSongs(api, {
     teamId: currentTeamId,
-    limit: 1000,
+    limit: PAGE_SIZE,
     offset: 0,
   });
 

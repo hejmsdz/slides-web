@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { FetcherWithComponents } from "react-router";
+import { useEffect, useId, useRef } from "react";
 import { Search } from "lucide-react";
 import { Label } from "~/components/ui/label";
 import {
@@ -7,54 +6,44 @@ import {
   SidebarGroupContent,
   SidebarInput,
 } from "~/components/ui/sidebar";
-import { useDebouncedCallback } from "~/hooks/use-debounced-callback";
+import useDebouncedCallback from "~/hooks/use-debounced-callback";
 
 export function SearchForm({
-  fetcher,
+  onQueryChange,
 }: {
-  fetcher: FetcherWithComponents<unknown>;
+  onQueryChange: (query: string) => void;
 }) {
-  const debouncedSubmit = useDebouncedCallback(
-    (form: HTMLFormElement | null, value: string) => {
-      if (value.length > 0) {
-        fetcher.submit(form);
-      } else {
-        fetcher.reset();
-      }
-    },
-  );
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSubmit(event.currentTarget.form, event.currentTarget.value);
-  };
-
-  const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const debouncedQueryChange = useDebouncedCallback(onQueryChange);
 
   useEffect(() => {
+    // Re-trigger if the input has a value on mount (e.g. browser back/forward)
     if (inputRef.current && inputRef.current.value.length > 0) {
-      fetcher.submit(formRef.current);
+      onQueryChange(inputRef.current.value);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedQueryChange(event.currentTarget.value);
+  };
+
+  const inputId = useId();
 
   return (
-    <fetcher.Form ref={formRef} method="get" action="/dashboard/songs/search">
-      <SidebarGroup className="py-0">
-        <SidebarGroupContent className="relative">
-          <Label htmlFor="search" className="sr-only">
-            Szukaj
-          </Label>
-          <SidebarInput
-            ref={inputRef}
-            id="search"
-            name="query"
-            placeholder="Wyszukaj pieśni"
-            className="pl-8"
-            onChange={handleChange}
-          />
-          <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-50" />
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </fetcher.Form>
+    <SidebarGroup className="py-0">
+      <SidebarGroupContent className="relative">
+        <Label htmlFor={inputId} className="sr-only">
+          Szukaj
+        </Label>
+        <SidebarInput
+          ref={inputRef}
+          id={inputId}
+          placeholder="Wyszukaj pieśni"
+          className="pl-8"
+          onChange={handleChange}
+        />
+        <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-50" />
+      </SidebarGroupContent>
+    </SidebarGroup>
   );
 }

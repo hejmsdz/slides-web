@@ -13,7 +13,7 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay = 300) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useDebouncedCallback<T extends (...args: any[]) => void>(
+export default function useDebouncedCallback<T extends (...args: any[]) => void>(
   fn: T,
   delay = 300
 ) {
