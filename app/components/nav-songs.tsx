@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import type { RefObject } from "react";
 import { NavLink } from "react-router";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -12,60 +11,39 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Copy, LockKeyhole, NotepadTextDashed } from "lucide-react";
 
-const slugify = (text: string): string =>
-  text
-    .toLowerCase()
-    .replaceAll("ą", "a")
-    .replaceAll("ć", "c")
-    .replaceAll("ę", "e")
-    .replaceAll("ł", "l")
-    .replaceAll("ń", "n")
-    .replaceAll("ó", "o")
-    .replaceAll("ś", "s")
-    .replaceAll("ź", "z")
-    .replaceAll("ż", "z");
-
 export function NavSongs({
   songs,
-  query,
   scrollRef,
 }: {
   songs: { items: Song[]; total: number };
-  query: string;
-  scrollRef?: RefObject<HTMLDivElement>;
+  scrollRef?: RefObject<HTMLElement>;
 }) {
-  const filteredSongs = useMemo(() => {
-    const searchSlug = slugify(query);
-
-    return songs.items.filter((song) => song.slug.includes(searchSlug));
-  }, [songs, query]);
-
   const virtualizer = useVirtualizer({
-    count: filteredSongs.length,
+    count: songs.total,
     getScrollElement: () => scrollRef?.current ?? null,
     estimateSize: () => 32,
     gap: 4,
   });
 
   return (
-    <>
-      <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu
-          className="relative"
-          style={{ height: `${virtualizer.getTotalSize()}px` }}
-        >
-          {virtualizer.getVirtualItems().map(({ key, index, size, start }) => {
-            const song = filteredSongs[index];
+    <SidebarGroupContent className="flex flex-col gap-2">
+      <SidebarMenu
+        className="relative"
+        style={{ height: `${virtualizer.getTotalSize()}px` }}
+      >
+        {virtualizer.getVirtualItems().map(({ key, index, size, start }) => {
+          const song = songs.items[index];
 
-            return (
-              <SidebarMenuItem
-                key={key}
-                className="absolute top-0 left-0 w-full"
-                style={{
-                  height: size,
-                  transform: `translateY(${start}px)`,
-                }}
-              >
+          return (
+            <SidebarMenuItem
+              key={key}
+              className="absolute top-0 left-0 w-full"
+              style={{
+                height: size,
+                transform: `translateY(${start}px)`,
+              }}
+            >
+              {song && (
                 <NavLink
                   to={`/dashboard/songs/${song.id}`}
                   className="max-w-full"
@@ -113,11 +91,11 @@ export function NavSongs({
                     </SidebarMenuButton>
                   )}
                 </NavLink>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </>
+              )}
+            </SidebarMenuItem>
+          );
+        })}
+      </SidebarMenu>
+    </SidebarGroupContent>
   );
 }

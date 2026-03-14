@@ -4,7 +4,6 @@ export type Song = {
   id: string;
   title: string;
   subtitle?: string;
-  slug: string;
   teamId?: string;
   isOverride?: boolean;
   isUnofficial?: boolean;
@@ -19,14 +18,15 @@ export type SongWithLyrics = Song & {
   canOverride: boolean;
 };
 
-export type SongData = Omit<SongWithLyrics, "id" | "slug" | "canEdit" | "canDelete" | "canOverride">;
+export type SongData = Omit<SongWithLyrics, "id" | "canEdit" | "canDelete" | "canOverride">;
 
 export const getSongs = async (
   api: Api,
-  { teamId, limit, offset }: { teamId: string, limit: number, offset: number },
+  { teamId, query, limit, offset }: { teamId?: string, query?: string, limit: number, offset: number },
 ): Promise<{ items: Song[], total: number }> => {
   return api.get("v2/songs", {
-    teamId,
+    ...(teamId && { teamId }),
+    ...(query && { query }),
     limit: limit.toString(),
     offset: offset.toString(),
   });
