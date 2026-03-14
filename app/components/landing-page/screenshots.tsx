@@ -8,8 +8,6 @@ import imgPresentation from "~/assets/screenshots/presentation-ui.webp";
 import imgSlide1 from "~/assets/screenshots/slide1.webp";
 import imgSlide2 from "~/assets/screenshots/slide2.webp";
 
-const slideAnimationStep = 0.25;
-
 const Screenshots = () => {
   const isMd = useMediaQuery(`(min-width: 640px)`);
 
@@ -21,7 +19,7 @@ const Screenshots = () => {
   const tvRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: tvScrollYProgress } = useScroll({
     target: tvRef,
-    offset: ["start end", "80% end"],
+    offset: ["start end", "80% start"],
   });
 
   const rotateRaw = useTransform(scrollYProgress, [0, 1], ["0deg", "-90deg"]);
@@ -35,25 +33,40 @@ const Screenshots = () => {
     [0, 1],
     [0, 1],
   );
+
+  // 5 positions: empty → slide1 → slide2 → slide1 → empty
+  // each quarter hosts one transition (0.15 of scroll) + a short pause
   const presentationScreenTranslateYRaw = useTransform(
     tvScrollYProgress,
-    [0, slideAnimationStep, 1 - slideAnimationStep, 1],
-    ["0%", "-100%", "-100%", "-200%"],
+    [0, 0.15, 0.25, 0.4, 0.5, 0.65, 0.75, 0.9, 1.0],
+    [
+      "0%",
+      "-100%",
+      "-100%",
+      "-200%",
+      "-200%",
+      "-300%",
+      "-300%",
+      "-400%",
+      "-400%",
+    ],
   );
   const presentationScreenTranslateY = useSpring(
     presentationScreenTranslateYRaw,
     { stiffness: 300, damping: 30 },
   );
 
+  // slide1 is visible at positions 1 and 3
   const tvSlide1Opacity = useTransform(
     tvScrollYProgress,
-    [0, slideAnimationStep, 1 - slideAnimationStep, 1],
-    [0, 1, 1, 0],
+    [0, 0.15, 0.25, 0.4, 0.5, 0.65, 0.75, 0.9, 1.0],
+    [0, 1, 1, 0, 0, 1, 1, 0, 0],
   );
+  // slide2 is visible at position 2
   const tvSlide2Opacity = useTransform(
     tvScrollYProgress,
-    [1 - slideAnimationStep, 1],
-    [0, 1],
+    [0.25, 0.4, 0.5, 0.65],
+    [0, 1, 1, 0],
   );
 
   const captionId = useId();
@@ -122,7 +135,7 @@ const Screenshots = () => {
                     }}
                   >
                     <div className="aspect-[0.45]" />
-                    {[imgSlide1, imgSlide2].map((img, index) => (
+                    {[imgSlide1, imgSlide2, imgSlide1].map((img, index) => (
                       <div
                         className="aspect-[0.45] flex items-center justify-center relative"
                         key={index}
@@ -134,6 +147,7 @@ const Screenshots = () => {
                         />
                       </div>
                     ))}
+                    <div className="aspect-[0.45]" />
                   </motion.div>
                   <motion.img
                     src={imgPresentation}
