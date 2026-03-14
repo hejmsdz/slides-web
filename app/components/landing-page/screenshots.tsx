@@ -25,7 +25,7 @@ const Screenshots = () => {
   const rotateRaw = useTransform(scrollYProgress, [0, 1], ["0deg", "-90deg"]);
   const rotate = useSpring(rotateRaw, { stiffness: 300, damping: 40 });
   const scale = useTransform(scrollYProgress, [0, 1], [1, isMd ? 0.8 : 0.5]);
-  const yRaw = useTransform(tvScrollYProgress, [0, 1], ["0%", "10%"]);
+  const yRaw = useTransform(tvScrollYProgress, [0, 0.3], ["0%", "10%"]);
   const y = yRaw;
   const homeScreenOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const presentationScreenOpacity = useTransform(
