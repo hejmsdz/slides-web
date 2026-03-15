@@ -9,7 +9,7 @@ import { cn } from "~/lib/utils";
 import Spinner from "~/components/spinner";
 import { getLiveStatus } from "~/api/live";
 import { defaultApi } from "~/api/api";
-import '~/styles/presentation.css';
+import "~/styles/presentation.css";
 
 const validLiveKeyRegex = /^\d{4}$/;
 
@@ -28,7 +28,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
   }
 
   try {
-    const { url, currentPage, backgroundColor } = await getLiveStatus(defaultApi, params.live);
+    const { url, currentPage, backgroundColor } = await getLiveStatus(
+      defaultApi,
+      params.live,
+    );
 
     return {
       url,

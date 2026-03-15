@@ -20,18 +20,28 @@ export const links: LinksFunction = () => [];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function tryGetProperty<T>(obj: any, property: string): T | undefined {
-  return obj && typeof obj === 'object' && property in obj ? obj[property] as T : undefined;
+  return obj && typeof obj === "object" && property in obj
+    ? (obj[property] as T)
+    : undefined;
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const matches = useMatches();
-  const noScript = matches.some((match) => tryGetProperty(match.handle, "noScript"));
+  const noScript = matches.some((match) =>
+    tryGetProperty(match.handle, "noScript"),
+  );
 
-  const backgroundColor = [...matches].reverse().reduce((stack, match) => stack ?? tryGetProperty<string>(match.loaderData, "backgroundColor"), undefined as string | undefined);
+  const backgroundColor = [...matches]
+    .reverse()
+    .reduce(
+      (stack, match) =>
+        stack ?? tryGetProperty<string>(match.loaderData, "backgroundColor"),
+      undefined as string | undefined,
+    );
 
   const bodyStyle = {
-    '--background-color': backgroundColor,
-    backgroundColor: backgroundColor ? 'var(--background-color)' : undefined,
+    "--background-color": backgroundColor,
+    backgroundColor: backgroundColor ? "var(--background-color)" : undefined,
   } as React.CSSProperties;
 
   return (

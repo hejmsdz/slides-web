@@ -67,7 +67,10 @@ const Slide = memo(
     return (
       <canvas
         className={className}
-        style={{ width: renderWidth, backgroundColor: "var(--background-color)" }}
+        style={{
+          width: renderWidth,
+          backgroundColor: "var(--background-color)",
+        }}
         ref={ref}
         role="img"
         aria-label={textContent}

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import useDebouncedCallback from "./use-debounced-callback";
 
-export default function useDebouncedValue<T>(value: T, delay: number | undefined = undefined) {
+export default function useDebouncedValue<T>(
+  value: T,
+  delay: number | undefined = undefined,
+) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   const debouncedCallback = useDebouncedCallback((value: T) => {

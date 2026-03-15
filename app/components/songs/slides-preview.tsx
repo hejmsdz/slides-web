@@ -64,15 +64,15 @@ export default function SlidesPreview({
     <div className={cn("flex gap-1 flex-col items-center")}>
       {pdfDocument
         ? new Array(pdfDocument.numPages - 2)
-          .fill(null)
-          .map((_, i) => (
-            <Slide
-              key={i}
-              pdfDocument={pdfDocument}
-              pageNumber={i + 2}
-              renderWidth={300}
-            />
-          ))
+            .fill(null)
+            .map((_, i) => (
+              <Slide
+                key={i}
+                pdfDocument={pdfDocument}
+                pageNumber={i + 2}
+                renderWidth={300}
+              />
+            ))
         : null}
     </div>
   );

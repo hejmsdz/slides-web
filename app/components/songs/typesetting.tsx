@@ -1,4 +1,3 @@
-
 const verseName = /^\[(\w+)\]\s+/;
 const verseRef = /^%(\w+)$/;
 

@@ -197,16 +197,16 @@ const FAQ = () => {
 
   const contact = contactUrl
     ? [
-      {
-        question:
-          "Mam inne pytanie, chcę zgłosić błąd albo zaproponować nową funkcję.",
-        answer: (
-          <p>
-            Wspaniale! <Link href={contactUrl}>Napisz do mnie maila</Link>.
-          </p>
-        ),
-      },
-    ]
+        {
+          question:
+            "Mam inne pytanie, chcę zgłosić błąd albo zaproponować nową funkcję.",
+          answer: (
+            <p>
+              Wspaniale! <Link href={contactUrl}>Napisz do mnie maila</Link>.
+            </p>
+          ),
+        },
+      ]
     : [];
 
   return (
