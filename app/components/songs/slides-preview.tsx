@@ -7,6 +7,7 @@ import { cn } from "~/lib/utils";
 import { formatLyrics } from "./typesetting";
 import Slide from "~/components/pdf/slide";
 import useDashboardData from "~/hooks/use-dashboard-data";
+
 export default function SlidesPreview({
   lyrics,
   fontSize,
@@ -58,7 +59,7 @@ export default function SlidesPreview({
         });
       }
     };
-  }, [formattedLyrics, fontSize, ratio, apiUrl, pdfDocument]);
+  }, [formattedLyrics, fontSize, ratio, apiUrl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={cn("flex gap-1 flex-col items-center")}>
