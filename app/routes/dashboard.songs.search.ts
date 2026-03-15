@@ -1,12 +1,12 @@
-import { LoaderFunction } from "react-router";
 import invariant from "tiny-invariant";
 import { getSongs } from "~/api/songs";
-import { createAuthenticatedApi, requireSession } from "~/session";
+import { createAuthenticatedApi, requireSessionWithRefresh } from "~/session";
+import type { Route } from "./+types/dashboard.songs.search";
 
 export const PAGE_SIZE = 30;
 
-export const loader: LoaderFunction = (async ({ request }) => {
-  const session = await requireSession(request);
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const session = await requireSessionWithRefresh(request);
   const api = await createAuthenticatedApi(session);
 
   const { searchParams } = new URL(request.url);
@@ -24,4 +24,4 @@ export const loader: LoaderFunction = (async ({ request }) => {
   });
 
   return songs;
-});
+};

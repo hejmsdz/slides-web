@@ -1,106 +1,116 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useFetcher } from "react-router";
+import type { ServerData } from "~/routes/dashboard";
 import type { loader as searchLoader } from "~/routes/dashboard.songs.search";
 import { PAGE_SIZE } from "~/routes/dashboard.songs.search";
 import type { Song } from "~/api/songs";
 
-function arrayToMap(array: Song[]) {
-  return array.reduce((map, song, i) => map.set(i, song), new Map());
-}
+const copyItems = (
+  sourceArray: Song[],
+  destinationArray: Song[],
+  offset: number = 0,
+): Song[] => {
+  for (let i = 0; i < sourceArray.length; i++) {
+    destinationArray[offset + i] = sourceArray[i];
+  }
+  return destinationArray;
+};
 
-export default function usePaginatedSongs(defaultSongs: {
-  items: Song[];
-  total: number;
-}) {
+const buildSparseArrayFromFirstPage = (
+  defaultSongs: ServerData["songs"],
+): Song[] => copyItems(defaultSongs.items, new Array(defaultSongs.total));
+
+export default function usePaginatedSongs(
+  defaultSongs: ServerData["songs"],
+  query: string,
+) {
+  const [allItems, setAllItems] = useState<Song[]>(() =>
+    buildSparseArrayFromFirstPage(defaultSongs),
+  );
+
   const fetcher = useFetcher<typeof searchLoader>();
+  const [pagesToFetch, setPagesToFetch] = useState<number[]>([]);
+  const pageCurrentlyFetchingRef = useRef<number | null>(null);
 
-  const [songs, setSongs] = useState<Map<number, Song>>(
-    () => arrayToMap(defaultSongs.items),
-  );
-  const [total, setTotal] = useState(defaultSongs.total);
-
-  const queryRef = useRef("");
-  const generationRef = useRef(0);
-  // Tracks the in-flight request; null means nothing is in flight.
-  // The gen field lets us discard responses that belong to a stale query.
-  const inflightRef = useRef<{ page: number; gen: number } | null>(null);
-  const requestedPagesRef = useRef<Set<number>>(new Set([0]));
-  const pendingPagesRef = useRef<number[]>([]);
-
-  const fetchPage = useCallback(
-    (page: number) => {
-      const params = new URLSearchParams({ offset: `${page * PAGE_SIZE}` });
-      if (queryRef.current) params.set("query", queryRef.current);
-      inflightRef.current = { page, gen: generationRef.current };
-      fetcher.load(`/dashboard/songs/search?${params}`);
-    },
-    [fetcher],
-  );
-
-  // Merge a completed page fetch into the map
+  const prevDataRef = useRef<
+    Partial<{ defaultSongs: typeof defaultSongs; query: string }>
+  >({});
   useEffect(() => {
-    if (fetcher.state !== "idle" || !fetcher.data) return;
-    if (inflightRef.current?.gen !== generationRef.current) return;
+    const prevData = prevDataRef.current;
+    const isChange =
+      Boolean(prevData.defaultSongs || prevData.query) &&
+      (prevData.defaultSongs !== defaultSongs || prevData.query !== query);
+    prevDataRef.current = { defaultSongs, query };
+    if (!isChange) {
+      return;
+    }
 
-    const { page } = inflightRef.current;
-    inflightRef.current = null;
+    fetcher.reset();
+    if (query === "") {
+      setAllItems(buildSparseArrayFromFirstPage(defaultSongs));
+      setPagesToFetch([]);
+    } else {
+      setPagesToFetch([0]);
+    }
+  }, [query, defaultSongs]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const { items, total: fetchedTotal } = fetcher.data;
-    setTotal(fetchedTotal);
-    setSongs((prev) => {
-      const next = new Map(prev);
-      (items as Song[]).forEach((song, i) => next.set(page * PAGE_SIZE + i, song));
-      return next;
+  const onNeedItems = useCallback((indices: number[]) => {
+    const pagesNeeded = new Set(
+      indices
+        .map((index) => Math.floor(index / PAGE_SIZE))
+        .filter((page) => page !== pageCurrentlyFetchingRef.current),
+    );
+
+    if (pagesNeeded.size > 0) {
+      setPagesToFetch((prevValue) => [
+        ...new Set([...prevValue, ...pagesNeeded]),
+      ]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      pagesToFetch.length === 0 ||
+      pageCurrentlyFetchingRef.current !== null
+    ) {
+      return;
+    }
+
+    const nextPage = pagesToFetch[0];
+    pageCurrentlyFetchingRef.current = nextPage;
+    fetcher.load(
+      `/dashboard/songs/search?${new URLSearchParams({ ...(query && { query }), offset: `${nextPage * PAGE_SIZE}` })}`,
+    );
+  }, [pagesToFetch, fetcher, query]);
+
+  useEffect(() => {
+    if (
+      pageCurrentlyFetchingRef.current === null ||
+      fetcher.state !== "idle" ||
+      !fetcher.data
+    ) {
+      return;
+    }
+
+    const pageFetched = pageCurrentlyFetchingRef.current;
+    pageCurrentlyFetchingRef.current = null;
+    const data = fetcher.data;
+
+    setAllItems((prevValue) => {
+      const newItems =
+        prevValue.length === data.total
+          ? prevValue.slice()
+          : new Array(data.total);
+      const offset = pageFetched * PAGE_SIZE;
+      return copyItems(data.items, newItems, offset);
     });
 
-    const nextPage = pendingPagesRef.current.shift();
-    if (nextPage !== undefined) fetchPage(nextPage);
-  }, [fetcher.state, fetcher.data, fetcher, fetchPage]);
+    setPagesToFetch((prevValue) => prevValue.slice(1));
+  }, [fetcher.state, fetcher.data]);
 
-  const handleQueryChange = useCallback(
-    (query: string) => {
-      queryRef.current = query;
-      generationRef.current++;
-      inflightRef.current = null;
-      pendingPagesRef.current = [];
-
-      if (query === "") {
-        setSongs(arrayToMap(defaultSongs.items));
-        setTotal(defaultSongs.total);
-        requestedPagesRef.current = new Set([0]);
-      } else {
-        setSongs(new Map());
-        setTotal(0);
-        requestedPagesRef.current = new Set([0]);
-        fetchPage(0);
-      }
-    },
-    [defaultSongs, fetchPage],
-  );
-
-  // Reset when defaultSongs changes (e.g. team switch)
-  const prevDefaultRef = useRef(defaultSongs);
-  useEffect(() => {
-    if (prevDefaultRef.current === defaultSongs) return;
-    prevDefaultRef.current = defaultSongs;
-    handleQueryChange("");
-  }, [defaultSongs, handleQueryChange]);
-
-  const handleNeedItems = useCallback(
-    (indices: number[]) => {
-      const pages = [...new Set(indices.map((i) => Math.floor(i / PAGE_SIZE)))];
-      for (const page of pages) {
-        if (requestedPagesRef.current.has(page)) continue;
-        requestedPagesRef.current.add(page);
-        if (fetcher.state === "idle" && pendingPagesRef.current.length === 0) {
-          fetchPage(page);
-        } else {
-          pendingPagesRef.current.push(page);
-        }
-      }
-    },
-    [fetcher.state, fetchPage],
-  );
-
-  return { songs, total, handleQueryChange, handleNeedItems };
+  return {
+    songs: allItems,
+    total: fetcher.data?.total ?? defaultSongs.total,
+    onNeedItems,
+  };
 }

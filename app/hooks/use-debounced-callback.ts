@@ -1,7 +1,6 @@
 import { useRef } from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function debounce<T extends (...args: any[]) => void>(fn: T, delay = 300) {
+function debounce<T extends (...args: Parameters<T>) => void>(fn: T, delay = 300) {
   let timer: ReturnType<typeof setTimeout>;
 
   return (...args: Parameters<T>) => {
@@ -12,8 +11,7 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay = 300) {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function useDebouncedCallback<T extends (...args: any[]) => void>(
+export default function useDebouncedCallback<T extends (...args: Parameters<T>) => void>(
   fn: T,
   delay = 300
 ) {

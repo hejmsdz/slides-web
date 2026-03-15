@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from "react";
+import { type RefObject } from "react";
 import { NavLink } from "react-router";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Song } from "~/api/songs";
@@ -17,7 +17,7 @@ export function NavSongs({
   scrollRef,
   onNeedItems,
 }: {
-  songs: Map<number, Song>;
+  songs: Song[];
   totalSongs: number;
   scrollRef?: RefObject<HTMLElement>;
   onNeedItems: (indices: number[]) => void;
@@ -27,11 +27,12 @@ export function NavSongs({
     getScrollElement: () => scrollRef?.current ?? null,
     estimateSize: () => 32,
     gap: 4,
+    overscan: 5,
     onChange: (virtualizer) => {
       const missing = virtualizer
         .getVirtualItems()
         .reduce<number[]>((stack, { index }) => {
-          if (!songs.has(index)) {
+          if (!songs[index]) {
             stack.push(index);
           }
 
@@ -51,7 +52,7 @@ export function NavSongs({
         style={{ height: `${virtualizer.getTotalSize()}px` }}
       >
         {virtualizer.getVirtualItems().map(({ key, index, size, start }) => {
-          const song = songs.get(index);
+          const song = songs[index];
 
           return (
             <SidebarMenuItem
