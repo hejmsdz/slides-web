@@ -11,6 +11,7 @@ import {
   AlertDialog,
 } from "./ui/alert-dialog";
 import { Button, ButtonProps, buttonVariants } from "./ui/button";
+import { cn } from "~/lib/utils";
 
 type ConfirmButtonProps = {
   children: React.ReactNode;
@@ -49,11 +50,14 @@ export default function ConfirmButton({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Anuluj</AlertDialogCancel>
-          <Form method="post" action={action}>
+          <Form method="post" action={action} className="flex">
             <AlertDialogAction asChild>
               <Button
                 type="submit"
-                className={buttonVariants({ variant: "destructive" })}
+                className={cn(
+                  buttonVariants({ variant: "destructive" }),
+                  "flex-1",
+                )}
               >
                 {actionButtonLabel}
               </Button>
