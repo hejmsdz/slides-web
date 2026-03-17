@@ -36,7 +36,7 @@ import { PopoverContent, PopoverTrigger, Popover } from "../ui/popover";
 import { Eye, MoreHorizontal, Save, Trash2 } from "lucide-react";
 import useEventListener from "~/hooks/use-event-listener";
 import useDashboardData from "~/hooks/use-dashboard-data";
-import { useIsMobile } from "~/hooks/use-mobile";
+import { useIsWebView } from "~/hooks/use-is-web-view";
 
 function useSaveGuard(): React.MutableRefObject<boolean> {
   const isSavedRef = useRef<boolean>(true);
@@ -87,7 +87,7 @@ export default function SongForm({
   const lyricsRef = useRef<HTMLTextAreaElement>(null);
   const isDisabled = (isOverride || isNewSong) && !currentTeamId;
   const isSavedRef = useSaveGuard();
-  const isMobile = useIsMobile();
+  const isWebView = useIsWebView();
 
   return (
     <Form
@@ -159,7 +159,7 @@ export default function SongForm({
       </SiteHeader>
       <MainContent>
         <div className="flex flex-col h-full">
-          <Collapsible open={!(isMobile && isTextareaFocused)}>
+          <Collapsible open={!(isWebView && isTextareaFocused)}>
             <CollapsibleContent className="flex flex-col">
               <div className="flex flex-col md:flex-row md:gap-4">
                 <FormItem>
