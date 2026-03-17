@@ -1,4 +1,3 @@
-import { type RefObject } from "react";
 import { NavLink } from "react-router";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Song } from "~/api/songs";
@@ -14,17 +13,17 @@ import { Copy, LockKeyhole, NotepadTextDashed } from "lucide-react";
 export function NavSongs({
   songs,
   totalSongs,
-  scrollRef,
+  scrollElement,
   onNeedItems,
 }: {
   songs: Song[];
   totalSongs: number;
-  scrollRef?: RefObject<HTMLElement>;
+  scrollElement: HTMLElement | null;
   onNeedItems: (indices: number[]) => void;
 }) {
   const virtualizer = useVirtualizer({
     count: totalSongs,
-    getScrollElement: () => scrollRef?.current ?? null,
+    getScrollElement: () => scrollElement,
     estimateSize: () => 32,
     gap: 4,
     overscan: 5,

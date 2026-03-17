@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState, useCallback } from "react";
 import { NavSongs } from "~/components/nav-songs";
 import { NavUser } from "~/components/nav-user";
 import {
@@ -15,7 +15,10 @@ import useDebouncedValue from "~/hooks/use-debounced-value";
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const { songs: defaultSongs, currentTeamId } = useDashboardData();
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [scrollElement, setScrollElement] = useState<HTMLDivElement | null>(
+    null,
+  );
+
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query);
   const { songs, total, onNeedItems } = usePaginatedSongs(
@@ -29,11 +32,11 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <NavUser />
         <SearchForm query={query} onQueryChange={setQuery} />
       </SidebarHeader>
-      <SidebarContent ref={contentRef}>
+      <SidebarContent ref={setScrollElement}>
         <NavSongs
           songs={songs}
           totalSongs={total}
-          scrollRef={contentRef}
+          scrollElement={scrollElement}
           onNeedItems={onNeedItems}
         />
       </SidebarContent>
