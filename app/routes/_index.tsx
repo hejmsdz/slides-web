@@ -1,10 +1,9 @@
 import { useLoaderData } from "react-router";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import { defaultApi } from "~/api/api";
 import { getBootstrap } from "~/api/bootstrap";
-import { getSession } from "~/session";
 import Hero from "~/components/landing-page/hero";
 import Features from "~/components/landing-page/features";
 import Screenshots from "~/components/landing-page/screenshots";
@@ -41,9 +40,8 @@ export default function Index() {
   );
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
   const bootstrap = await getBootstrap(defaultApi);
-  const session = await getSession(request.headers.get("Cookie"));
 
   const hasWaitlist = Boolean(process.env.WAITLIST_API_URL);
   let formToken = "";
@@ -58,7 +56,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return {
     appDownloadUrl: bootstrap.appDownloadUrl,
     contactUrl: bootstrap.contactUrl,
-    isAuthenticated: Boolean(session.data?.accessToken),
     hasWaitlist,
     formToken,
   };

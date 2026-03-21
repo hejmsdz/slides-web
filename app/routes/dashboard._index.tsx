@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
 import { getSongs } from "~/api/songs";
 import { SiteHeader } from "~/components/site-header";
-import { createAuthenticatedApi, requireSession } from "~/session";
+import { createAuthenticatedApi, requireSessionWithRefresh } from "~/session";
 
 export default function DashboardIndex() {
   return (
@@ -12,7 +12,7 @@ export default function DashboardIndex() {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await requireSession(request);
+  const session = await requireSessionWithRefresh(request);
   const api = await createAuthenticatedApi(session);
 
   const currentTeamId = session.get("teamId") ?? "";
