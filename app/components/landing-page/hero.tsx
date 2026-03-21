@@ -1,9 +1,25 @@
+import type { LinksFunction } from "react-router";
 import heroImage from "~/assets/hero.webp";
 import heroImageVertical from "~/assets/hero-vertical.webp";
 import DownloadAppButton from "./download-app-button";
 import DashboardButton from "./dashboard-button";
 import Logo from "~/assets/psallite.svg";
 import { cn } from "~/lib/utils";
+
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: "preload",
+      href: heroImage,
+      media: "(min-width: 640px)",
+    },
+    {
+      rel: "preload",
+      href: heroImageVertical,
+      media: "(max-width: 639px)",
+    },
+  ];
+};
 
 const Hero = () => {
   const heroImageClassName =

@@ -1,10 +1,10 @@
 import { useLoaderData } from "react-router";
-import type { MetaFunction } from "react-router";
+import type { LinksFunction, MetaFunction } from "react-router";
 import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import { defaultApi } from "~/api/api";
 import { getBootstrap } from "~/api/bootstrap";
-import Hero from "~/components/landing-page/hero";
+import Hero, { links as heroLinks } from "~/components/landing-page/hero";
 import Features from "~/components/landing-page/features";
 import Screenshots from "~/components/landing-page/screenshots";
 import Waitlist from "~/components/landing-page/waitlist";
@@ -23,6 +23,8 @@ export const meta: MetaFunction = () => {
     },
   ];
 };
+
+export const links: LinksFunction = () => [...heroLinks()];
 
 export default function Index() {
   const { hasWaitlist } = useLoaderData<typeof loader>();
