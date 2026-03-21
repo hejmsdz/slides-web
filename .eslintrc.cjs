@@ -74,6 +74,9 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
       ],
+      rules: {
+        "import/no-duplicates": ["warn", { considerQueryString: true }],
+      },
     },
 
     // Node

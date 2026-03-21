@@ -4,9 +4,13 @@ import { useMediaQuery } from "~/hooks/use-media-query";
 import Phone from "./phone";
 import Tv from "./tv";
 import imgHome from "~/assets/screenshots/main-screen.webp";
+import srcsetHome from "~/assets/screenshots/main-screen.webp?w=320;640&as=srcset";
 import imgPresentation from "~/assets/screenshots/presentation-ui.webp";
+import srcsetPresentation from "~/assets/screenshots/presentation-ui.webp?w=320;640&as=srcset";
 import imgSlide1 from "~/assets/screenshots/slide1.webp";
+import srcsetSlide1 from "~/assets/screenshots/slide1.webp?w=640;1280&as=srcset";
 import imgSlide2 from "~/assets/screenshots/slide2.webp";
+import srcsetSlide2 from "~/assets/screenshots/slide2.webp?w=640;1280&as=srcset";
 
 const Screenshots = () => {
   const isMd = useMediaQuery(`(min-width: 640px)`);
@@ -117,6 +121,8 @@ const Screenshots = () => {
                 <Phone>
                   <motion.img
                     src={imgHome}
+                    srcSet={srcsetHome}
+                    sizes="320px"
                     alt="Ekran główny aplikacji z listą pieśni dodanych do zestawu"
                     className="absolute w-full h-full object-cover left-0 top-0"
                     style={{ opacity: homeScreenOpacity }}
@@ -134,15 +140,24 @@ const Screenshots = () => {
                     }}
                   >
                     <div className="aspect-[0.45]" />
-                    {[imgSlide1, imgSlide2, imgSlide1].map((img, index) => (
+                    {(
+                      [
+                        [imgSlide1, srcsetSlide1],
+                        [imgSlide2, srcsetSlide2],
+                        [imgSlide1, srcsetSlide1],
+                      ] as const
+                    ).map(([img, srcset], index) => (
                       <div
                         className="aspect-[0.45] flex items-center justify-center relative"
                         key={index}
                       >
                         <img
                           src={img}
+                          srcSet={srcset}
+                          sizes="(min-width: 672px) 672px, 100vw"
                           alt={`Slajd ${index + 1}`}
                           className="rotate-90 scale-[1.777]"
+                          loading="lazy"
                         />
                       </div>
                     ))}
@@ -150,6 +165,8 @@ const Screenshots = () => {
                   </motion.div>
                   <motion.img
                     src={imgPresentation}
+                    srcSet={srcsetPresentation}
+                    sizes="320px"
                     alt="Widok prezentacji pieśni"
                     className="absolute w-full h-full object-cover left-0 top-0"
                     style={{ opacity: presentationScreenOpacity }}
@@ -169,18 +186,23 @@ const Screenshots = () => {
             aria-hidden="true"
           >
             <Tv>
-              <motion.img
-                src={imgSlide1}
-                alt="Slajd 1"
-                className="absolute w-full h-full object-cover left-0 top-0"
-                style={{ opacity: tvSlide1Opacity }}
-              />
-              <motion.img
-                src={imgSlide2}
-                alt="Slajd 2"
-                className="absolute w-full h-full object-cover left-0 top-0"
-                style={{ opacity: tvSlide2Opacity }}
-              />
+              {(
+                [
+                  [imgSlide1, srcsetSlide1],
+                  [imgSlide2, srcsetSlide2],
+                ] as const
+              ).map(([img, srcset], index) => (
+                <motion.img
+                  key={img}
+                  src={img}
+                  srcSet={srcset}
+                  sizes="(min-width: 672px) 672px, 100vw"
+                  alt={`Slajd ${index + 1}`}
+                  className="absolute w-full h-full object-cover left-0 top-0"
+                  style={{ opacity: tvSlide1Opacity }}
+                  loading="lazy"
+                />
+              ))}
             </Tv>
           </div>
         </figure>

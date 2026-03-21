@@ -1,4 +1,5 @@
 import imgTv from "~/assets/tv.webp";
+import srcsetTv from "~/assets/tv.webp?w=400;800;1340&as=srcset";
 import { cn } from "~/lib/utils";
 
 const Tv = ({
@@ -13,7 +14,7 @@ const Tv = ({
       <div className="absolute inset-0 left-[0.9%] top-[1.6%] bottom-[14%] right-[0.9%] overflow-hidden z-0 bg-black">
         {children}
       </div>
-      <img src={imgTv} alt="Tv" className="w-full h-full relative z-1" />
+      <img src={imgTv} srcSet={srcsetTv} sizes="(min-width: 672px) 672px, 100vw" alt="Tv" className="w-full h-full relative z-1" />
     </div>
   );
 };
