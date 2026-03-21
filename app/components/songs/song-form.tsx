@@ -250,7 +250,7 @@ export default function SongForm({
             </CollapsibleContent>
           </Collapsible>
           <div className="flex flex-col h-full">
-            <FormItem className="flex-grow">
+            <FormItem className="grow">
               <Label htmlFor="lyrics" className="flex items-center gap-2">
                 Tekst
                 <LyricsFormattingHelpButton />
@@ -259,7 +259,7 @@ export default function SongForm({
                 ref={lyricsRef}
                 id="lyrics"
                 name="lyrics"
-                className="flex-grow"
+                className="grow"
                 defaultValue={song?.lyrics.join("\n\n")}
                 required
                 readOnly={isDisabled}

@@ -32,7 +32,7 @@ export function NavUser() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton className="data-[slot=sidebar-menu-button]:!p-1.5 flex flex-row h-auto">
+        <SidebarMenuButton className="data-[slot=sidebar-menu-button]:p-1.5! flex flex-row h-auto">
           <div className="flex flex-col items-start gap-1">
             <div className="text-base font-semibold truncate">{teamName}</div>
             <div className="text-left text-sm leading-tight">
@@ -50,7 +50,7 @@ export function NavUser() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
         align="end"
       >
         {teamsList.length > 1 && (

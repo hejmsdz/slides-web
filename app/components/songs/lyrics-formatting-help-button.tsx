@@ -16,7 +16,7 @@ export default function LyricsFormattingHelpButton() {
         </button>
       </SheetTrigger>
       <SheetContent className="flex flex-col w-[366px] duration-1000">
-        <SheetHeader className="flex-shrink-0">
+        <SheetHeader className="shrink-0">
           <SheetTitle>Instrukcja formatowania tekstu</SheetTitle>
         </SheetHeader>
 
