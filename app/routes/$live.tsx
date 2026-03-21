@@ -165,7 +165,8 @@ export default function Live() {
       }
 
       try {
-        await screen.orientation.lock("landscape");
+        // @ts-expect-error - screen.orientation.lock is not supported in all browsers
+        await screen.orientation.lock?.("landscape");
       } catch (error) {
         console.warn("Error locking orientation", error);
       }
