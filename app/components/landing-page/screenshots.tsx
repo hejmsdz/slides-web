@@ -8,9 +8,9 @@ import srcsetHome from "~/assets/screenshots/main-screen.webp?w=320;640&as=srcse
 import imgPresentation from "~/assets/screenshots/presentation-ui.webp";
 import srcsetPresentation from "~/assets/screenshots/presentation-ui.webp?w=320;640&as=srcset";
 import imgSlide1 from "~/assets/screenshots/slide1.webp";
-import srcsetSlide1 from "~/assets/screenshots/slide1.webp?w=640;1280&as=srcset";
+import srcsetSlide1 from "~/assets/screenshots/slide1.webp?w=400;800;1280&as=srcset";
 import imgSlide2 from "~/assets/screenshots/slide2.webp";
-import srcsetSlide2 from "~/assets/screenshots/slide2.webp?w=640;1280&as=srcset";
+import srcsetSlide2 from "~/assets/screenshots/slide2.webp?w=400;800;1280&as=srcset";
 
 const Screenshots = () => {
   const isMd = useMediaQuery(`(min-width: 640px)`);
@@ -122,7 +122,7 @@ const Screenshots = () => {
                   <motion.img
                     src={imgHome}
                     srcSet={srcsetHome}
-                    sizes="320px"
+                    sizes="295px"
                     alt="Ekran główny aplikacji z listą pieśni dodanych do zestawu"
                     className="absolute w-full h-full object-cover left-0 top-0"
                     style={{ opacity: homeScreenOpacity }}
@@ -154,7 +154,7 @@ const Screenshots = () => {
                         <img
                           src={img}
                           srcSet={srcset}
-                          sizes="(min-width: 672px) 672px, 100vw"
+                          sizes="(min-width: 672px) 672px, calc(100vw - 32px)"
                           alt={`Slajd ${index + 1}`}
                           className="rotate-90 scale-[1.777]"
                           loading="lazy"
@@ -166,7 +166,7 @@ const Screenshots = () => {
                   <motion.img
                     src={imgPresentation}
                     srcSet={srcsetPresentation}
-                    sizes="320px"
+                    sizes="295px"
                     alt="Widok prezentacji pieśni"
                     className="absolute w-full h-full object-cover left-0 top-0"
                     style={{ opacity: presentationScreenOpacity }}
@@ -188,18 +188,18 @@ const Screenshots = () => {
             <Tv>
               {(
                 [
-                  [imgSlide1, srcsetSlide1],
-                  [imgSlide2, srcsetSlide2],
+                  [imgSlide1, srcsetSlide1, tvSlide1Opacity],
+                  [imgSlide2, srcsetSlide2, tvSlide2Opacity],
                 ] as const
-              ).map(([img, srcset], index) => (
+              ).map(([img, srcset, opacity], index) => (
                 <motion.img
                   key={img}
                   src={img}
                   srcSet={srcset}
-                  sizes="(min-width: 672px) 672px, 100vw"
+                  sizes="(min-width: 672px) 672px, calc(100vw - 32px)"
                   alt={`Slajd ${index + 1}`}
                   className="absolute w-full h-full object-cover left-0 top-0"
-                  style={{ opacity: tvSlide1Opacity }}
+                  style={{ opacity }}
                   loading="lazy"
                 />
               ))}
