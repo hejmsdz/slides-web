@@ -22,6 +22,7 @@ const Phone = ({
         width={imgPhone.w}
         height={imgPhone.h}
         className="w-full h-full relative z-1"
+        loading="lazy"
       />
     </div>
   );

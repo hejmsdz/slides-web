@@ -128,6 +128,7 @@ const Screenshots = () => {
                     height={imgHome.h}
                     className="absolute w-full h-full object-cover left-0 top-0"
                     style={{ opacity: homeScreenOpacity }}
+                    loading="lazy"
                   />
                   <motion.div
                     className="absolute w-full h-full left-0 top-0"
@@ -181,6 +182,7 @@ const Screenshots = () => {
                       type: "spring",
                       bounce: 0.2,
                     }}
+                    loading="lazy"
                   />
                 </Phone>
               </motion.div>
