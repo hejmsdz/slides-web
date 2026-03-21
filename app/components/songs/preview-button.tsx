@@ -37,7 +37,7 @@ export default function PreviewButton({
         )}
       </SheetTrigger>
       <SheetContent className="flex flex-col w-[366px] duration-1000">
-        <SheetHeader className="flex-shrink-0">
+        <SheetHeader className="shrink-0">
           <SheetTitle>Podgląd slajdów</SheetTitle>
         </SheetHeader>
         <div className="grid w-full max-w-sm items-center gap-1.5">
