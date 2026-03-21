@@ -3,13 +3,13 @@ import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import Phone from "./phone";
 import Tv from "./tv";
-import imgHome from "~/assets/screenshots/main-screen.webp";
+import imgHome from "~/assets/screenshots/main-screen.webp?as=img";
 import srcsetHome from "~/assets/screenshots/main-screen.webp?w=320;640&as=srcset";
-import imgPresentation from "~/assets/screenshots/presentation-ui.webp";
+import imgPresentation from "~/assets/screenshots/presentation-ui.webp?as=img";
 import srcsetPresentation from "~/assets/screenshots/presentation-ui.webp?w=320;640&as=srcset";
-import imgSlide1 from "~/assets/screenshots/slide1.webp";
+import imgSlide1 from "~/assets/screenshots/slide1.webp?as=img";
 import srcsetSlide1 from "~/assets/screenshots/slide1.webp?w=400;800;1280&as=srcset";
-import imgSlide2 from "~/assets/screenshots/slide2.webp";
+import imgSlide2 from "~/assets/screenshots/slide2.webp?as=img";
 import srcsetSlide2 from "~/assets/screenshots/slide2.webp?w=400;800;1280&as=srcset";
 
 const Screenshots = () => {
@@ -120,10 +120,12 @@ const Screenshots = () => {
               >
                 <Phone>
                   <motion.img
-                    src={imgHome}
+                    src={imgHome.src}
                     srcSet={srcsetHome}
                     sizes="295px"
                     alt="Ekran główny aplikacji z listą pieśni dodanych do zestawu"
+                    width={imgHome.w}
+                    height={imgHome.h}
                     className="absolute w-full h-full object-cover left-0 top-0"
                     style={{ opacity: homeScreenOpacity }}
                   />
@@ -146,16 +148,18 @@ const Screenshots = () => {
                         [imgSlide2, srcsetSlide2],
                         [imgSlide1, srcsetSlide1],
                       ] as const
-                    ).map(([img, srcset], index) => (
+                    ).map(([{ src, w, h }, srcset], index) => (
                       <div
                         className="aspect-[0.45] flex items-center justify-center relative"
                         key={index}
                       >
                         <img
-                          src={img}
+                          src={src}
                           srcSet={srcset}
                           sizes="(min-width: 672px) 672px, calc(100vw - 32px)"
                           alt={`Slajd ${index + 1}`}
+                          width={w}
+                          height={h}
                           className="rotate-90 scale-[1.777]"
                           loading="lazy"
                         />
@@ -164,10 +168,12 @@ const Screenshots = () => {
                     <div className="aspect-[0.45]" />
                   </motion.div>
                   <motion.img
-                    src={imgPresentation}
+                    src={imgPresentation.src}
                     srcSet={srcsetPresentation}
                     sizes="295px"
                     alt="Widok prezentacji pieśni"
+                    width={imgPresentation.w}
+                    height={imgPresentation.h}
                     className="absolute w-full h-full object-cover left-0 top-0"
                     style={{ opacity: presentationScreenOpacity }}
                     transition={{
@@ -191,13 +197,15 @@ const Screenshots = () => {
                   [imgSlide1, srcsetSlide1, tvSlide1Opacity],
                   [imgSlide2, srcsetSlide2, tvSlide2Opacity],
                 ] as const
-              ).map(([img, srcset, opacity], index) => (
+              ).map(([{ src, w, h }, srcset, opacity], index) => (
                 <motion.img
-                  key={img}
-                  src={img}
+                  key={src}
+                  src={src}
                   srcSet={srcset}
                   sizes="(min-width: 672px) 672px, calc(100vw - 32px)"
                   alt={`Slajd ${index + 1}`}
+                  width={w}
+                  height={h}
                   className="absolute w-full h-full object-cover left-0 top-0"
                   style={{ opacity }}
                   loading="lazy"

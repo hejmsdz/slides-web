@@ -22,7 +22,13 @@ const Hero = () => {
       />
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="w-24 h-24 bg-primary p-1 rounded-2xl shadow-glow mb-4 inline-block">
-          <img src={Logo} alt="" className="rounded-2xl text-accent" />
+          <img
+            src={Logo}
+            alt=""
+            width={88}
+            height={88}
+            className="rounded-2xl text-accent"
+          />
         </div>
         <div className="flex items-center justify-center mb-8">
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground">

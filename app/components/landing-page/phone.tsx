@@ -1,4 +1,4 @@
-import imgPhone from "~/assets/phone.webp";
+import imgPhone from "~/assets/phone.webp?as=img";
 import srcsetPhone from "~/assets/phone.webp?w=320;640&as=srcset";
 import { cn } from "~/lib/utils";
 
@@ -15,10 +15,12 @@ const Phone = ({
         {children}
       </div>
       <img
-        src={imgPhone}
+        src={imgPhone.src}
         srcSet={srcsetPhone}
         sizes="320px"
         alt="Phone"
+        width={imgPhone.w}
+        height={imgPhone.h}
         className="w-full h-full relative z-1"
       />
     </div>
