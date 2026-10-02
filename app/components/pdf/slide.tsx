@@ -48,7 +48,7 @@ const Slide = memo(
           canvas.width = viewport.width;
 
           await page.render({
-            canvasContext: ctx,
+            canvas,
             viewport,
           }).promise;
 

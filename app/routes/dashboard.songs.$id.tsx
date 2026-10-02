@@ -14,11 +14,11 @@ import {
 } from "~/session";
 import { createAuthenticatedAction } from "~/routing.server";
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ loaderData }) => {
   return [
     {
-      title: data?.song
-        ? `${data.song.title}${data.song.subtitle ? ` / ${data.song.subtitle}` : ""}`
+      title: loaderData?.song
+        ? `${loaderData.song.title}${loaderData.song.subtitle ? ` / ${loaderData.song.subtitle}` : ""}`
         : "Edytuj pieśń",
     },
   ];
