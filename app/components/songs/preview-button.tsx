@@ -15,7 +15,7 @@ export default function PreviewButton({
   asChild = false,
   children,
 }: {
-  lyricsRef: React.RefObject<HTMLTextAreaElement>;
+  lyricsRef: React.RefObject<HTMLTextAreaElement | null>;
   asChild?: boolean;
   children?: React.ReactNode;
 }) {

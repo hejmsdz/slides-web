@@ -7,7 +7,9 @@ export default function useMouseIdle(): {
   handleMouseMove: () => void;
 } {
   const [isIdle, setIsIdle] = useState(false);
-  const idleTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const idleTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   const handleMouseMove = useCallback(() => {
     setIsIdle(false);

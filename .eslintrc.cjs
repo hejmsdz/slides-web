@@ -76,6 +76,7 @@ module.exports = {
       ],
       rules: {
         "import/no-duplicates": ["warn", { considerQueryString: true }],
+        "import/no-unresolved": ["error", { ignore: ["\\+types/"] }],
       },
     },
 

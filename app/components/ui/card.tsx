@@ -2,13 +2,13 @@ import * as React from "react";
 
 import { cn } from "~/lib/utils";
 
-type CardProps<T extends keyof JSX.IntrinsicElements = "div"> = {
+type CardProps<T extends keyof React.JSX.IntrinsicElements = "div"> = {
   tagName?: T;
 } & React.HTMLAttributes<
   T extends keyof HTMLElementTagNameMap ? HTMLElementTagNameMap[T] : HTMLElement
 >;
 
-function CardInner<T extends keyof JSX.IntrinsicElements = "div">(
+function CardInner<T extends keyof React.JSX.IntrinsicElements = "div">(
   { className, tagName, ...props }: CardProps<T>,
   ref: React.ForwardedRef<
     T extends keyof HTMLElementTagNameMap
@@ -16,7 +16,7 @@ function CardInner<T extends keyof JSX.IntrinsicElements = "div">(
       : HTMLElement
   >,
 ) {
-  const Tag = tagName || "div";
+  const Tag = (tagName || "div") as React.ElementType;
   return React.createElement(Tag, {
     ref,
     className: cn(
@@ -30,7 +30,9 @@ function CardInner<T extends keyof JSX.IntrinsicElements = "div">(
 const CardComponent = React.forwardRef(CardInner);
 CardComponent.displayName = "Card";
 
-const Card = CardComponent as <T extends keyof JSX.IntrinsicElements = "div">(
+const Card = CardComponent as <
+  T extends keyof React.JSX.IntrinsicElements = "div",
+>(
   props: CardProps<T> & {
     ref?: React.ForwardedRef<
       T extends keyof HTMLElementTagNameMap
