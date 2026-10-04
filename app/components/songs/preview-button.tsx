@@ -9,13 +9,14 @@ import {
 } from "../ui/sheet";
 import SlidesPreview from "./slides-preview";
 import FontSizeSlider from "./font-size-slider";
+import { LyricsEditorHandle } from "./lyrics-editor";
 
 export default function PreviewButton({
   lyricsRef,
   asChild = false,
   children,
 }: {
-  lyricsRef: React.RefObject<HTMLTextAreaElement | null>;
+  lyricsRef: React.RefObject<LyricsEditorHandle | null>;
   asChild?: boolean;
   children?: React.ReactNode;
 }) {

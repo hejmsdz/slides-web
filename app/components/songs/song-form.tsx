@@ -15,12 +15,13 @@ import {
 import { Collapsible, CollapsibleContent } from "../ui/collapsible";
 import { DeleteButton } from "./delete-button";
 import { Checkbox } from "../ui/checkbox";
-import LyricsEditor from "./lyrics-editor";
+import LyricsEditor, { LyricsEditorHandle } from "./lyrics-editor";
 import PreviewButton from "./preview-button";
 import { SiteHeader } from "../site-header";
 import MainContent from "../main-content";
 import { toast } from "sonner";
 import LyricsFormattingHelpButton from "./lyrics-formatting-help-button";
+import useAutoFormat from "./use-auto-format";
 import Form from "~/components/form";
 import FormItem from "../form-item";
 import {
@@ -33,7 +34,8 @@ import {
   SidebarMenuButton,
 } from "../ui/sidebar";
 import { PopoverContent, PopoverTrigger, Popover } from "../ui/popover";
-import { Eye, MoreHorizontal, Save, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Save, Sparkles, Trash2 } from "lucide-react";
+import Spinner from "../spinner";
 import useEventListener from "~/hooks/use-event-listener";
 import useDashboardData from "~/hooks/use-dashboard-data";
 import { useIsWebView } from "~/hooks/use-is-web-view";
@@ -84,10 +86,15 @@ export default function SongForm({
     song?.teamId ?? (song?.isUnofficial ? "unofficial" : "0"),
   );
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
-  const lyricsRef = useRef<HTMLTextAreaElement>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const lyricsRef = useRef<LyricsEditorHandle>(null);
   const isDisabled = (isOverride || isNewSong) && !currentTeamId;
   const isSavedRef = useSaveGuard();
   const isWebView = useIsWebView();
+  const { autoFormat, isFetching: isAutoFormatting } = useAutoFormat({
+    lyricsRef,
+    setIsDisabled: setIsProcessing,
+  });
 
   return (
     <Form
@@ -136,6 +143,28 @@ export default function SongForm({
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         </PreviewButton>
+                        {isAdmin && (
+                          <SidebarMenuItem>
+                            <SidebarMenuButton
+                              type="button"
+                              onClick={autoFormat}
+                              aria-busy={isAutoFormatting}
+                              disabled={isAutoFormatting}
+                            >
+                              {isAutoFormatting ? (
+                                <>
+                                  <Spinner />
+                                  <span>Już wszystko poprawiam...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Sparkles />
+                                  <span>Popraw formatowanie</span>
+                                </>
+                              )}{" "}
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        )}
                         {song?.canDelete && (
                           <DeleteButton id={song.id} asChild>
                             <SidebarMenuItem>
@@ -263,6 +292,7 @@ export default function SongForm({
                 defaultValue={song?.lyrics.join("\n\n")}
                 required
                 readOnly={isDisabled}
+                disabled={isProcessing}
                 onFocus={() => setIsTextareaFocused(true)}
                 onBlur={() => setIsTextareaFocused(false)}
               />

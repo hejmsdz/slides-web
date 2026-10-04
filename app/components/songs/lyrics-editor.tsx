@@ -1,4 +1,10 @@
-import { forwardRef, Fragment, useRef, useState } from "react";
+import {
+  forwardRef,
+  Fragment,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "~/lib/utils";
 
 type Block = VerseText | VerseDefinition | VerseReference | Comment;
@@ -120,7 +126,7 @@ const Block = ({
 };
 
 const textClassNames =
-  "absolute inset-0 px-3 py-2 text-base shadow-xs placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm";
+  "absolute inset-0 px-3 py-2 text-base shadow-xs placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed md:text-sm";
 
 const colors = [
   "text-red-700",
@@ -131,14 +137,24 @@ const colors = [
   "text-orange-700",
 ];
 
+export type LyricsEditorHandle = {
+  value: string;
+  setValue: (value: string) => void;
+};
+
 const LyricsEditor = forwardRef<
-  HTMLTextAreaElement,
+  LyricsEditorHandle,
   Omit<React.ComponentProps<"textarea">, "defaultValue"> & {
     defaultValue?: string;
   }
 >(({ className, defaultValue = "", ...rest }, ref) => {
   const [value, setValue] = useState<string>(defaultValue);
   const textRef = useRef<HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    value,
+    setValue,
+  }));
 
   const { blocks, definitions } = parseLyrics(value);
   const definitionColors = Object.keys(definitions).reduce(
@@ -157,7 +173,6 @@ const LyricsEditor = forwardRef<
       )}
     >
       <textarea
-        ref={ref}
         value={value}
         onInput={(e) => setValue(e.currentTarget.value)}
         className={cn(
@@ -176,6 +191,7 @@ const LyricsEditor = forwardRef<
         className={cn(
           textClassNames,
           "pointer-events-none whitespace-pre-wrap overflow-hidden",
+          { "opacity-50": rest.disabled },
         )}
         aria-hidden
       >
