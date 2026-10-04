@@ -11,7 +11,11 @@ export default function LyricsFormattingHelpButton() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button type="button" className="rounded-full">
+        <button
+          type="button"
+          className="rounded-full cursor-pointer"
+          title="Instrukcja formatowania tekstu"
+        >
           <HelpCircleIcon className="w-4 h-4" />
         </button>
       </SheetTrigger>

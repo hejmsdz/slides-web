@@ -21,7 +21,7 @@ import { SiteHeader } from "../site-header";
 import MainContent from "../main-content";
 import { toast } from "sonner";
 import LyricsFormattingHelpButton from "./lyrics-formatting-help-button";
-import useAutoFormat from "./use-auto-format";
+import useAutoFormat from "./use-autoformat";
 import Form from "~/components/form";
 import FormItem from "../form-item";
 import {

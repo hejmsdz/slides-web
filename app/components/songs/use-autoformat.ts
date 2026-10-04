@@ -20,14 +20,10 @@ export default function useAutoFormat({
     const body = new FormData();
     body.set("lyrics", lyricsRef.current.value);
 
-    try {
-      await fetcher.submit(body, {
-        method: "post",
-        action: "/dashboard/songs/autoformat",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    await fetcher.submit(body, {
+      method: "post",
+      action: "/dashboard/songs/autoformat",
+    });
   }, [fetcher, lyricsRef]);
 
   const isFetching = fetcher.state !== "idle";
