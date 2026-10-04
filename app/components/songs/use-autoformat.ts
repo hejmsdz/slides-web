@@ -48,6 +48,8 @@ export default function useAutoFormat({
           onChange();
         }
       }
+    } else if (data.error === "tooLong") {
+      toast.error("Podany tekst jest zbyt długi dla funkcji autoformatowania.");
     } else if (data.error === "limitExceeded") {
       toast.error(
         "Limit wykorzystania funkcji AI został przekroczony. Spróbuj ponownie w przyszłym tygodniu.",

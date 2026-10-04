@@ -105,6 +105,8 @@ Zwróć **wyłącznie sformatowany tekst pieśni**.
 Bez komentarzy, wyjaśnień, wstępów, podsumowań, informacji o zmianach i Markdownu. Nie dodawaj tekstu typu „Oto poprawiona wersja”.
 `;
 
+const maxLength = 2000;
+
 export const action = createAuthenticatedAction(
   async ({ request }, { session }) => {
     const formData = await request.formData();
@@ -118,6 +120,10 @@ export const action = createAuthenticatedAction(
 
     const lyrics = formData.get("lyrics")?.toString();
     invariant(lyrics, "lyrics are required");
+
+    if (lyrics.length > maxLength) {
+      return { ok: false, error: "tooLong" };
+    }
 
     try {
       const response = await openRouter({
