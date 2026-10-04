@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useBlocker } from "react-router";
 import { SongWithLyrics } from "~/api/songs";
 import { Input } from "../ui/input";
@@ -40,7 +40,10 @@ import useEventListener from "~/hooks/use-event-listener";
 import useDashboardData from "~/hooks/use-dashboard-data";
 import { useIsWebView } from "~/hooks/use-is-web-view";
 
-function useSaveGuard(): React.MutableRefObject<boolean> {
+function useSaveGuard(): {
+  setSaved: () => void;
+  setUnsaved: () => void;
+} {
   const isSavedRef = useRef<boolean>(true);
 
   const blocker = useBlocker(() => {
@@ -66,7 +69,17 @@ function useSaveGuard(): React.MutableRefObject<boolean> {
     }
   });
 
-  return isSavedRef;
+  return useMemo(
+    () => ({
+      setSaved: () => {
+        isSavedRef.current = true;
+      },
+      setUnsaved: () => {
+        isSavedRef.current = false;
+      },
+    }),
+    [],
+  );
 }
 
 export default function SongForm({
@@ -89,10 +102,11 @@ export default function SongForm({
   const [isProcessing, setIsProcessing] = useState(false);
   const lyricsRef = useRef<LyricsEditorHandle>(null);
   const isDisabled = (isOverride || isNewSong) && !currentTeamId;
-  const isSavedRef = useSaveGuard();
+  const { setSaved, setUnsaved } = useSaveGuard();
   const isWebView = useIsWebView();
   const { autoFormat, isFetching: isAutoFormatting } = useAutoFormat({
     lyricsRef,
+    onChange: setUnsaved,
     setIsDisabled: setIsProcessing,
   });
 
@@ -101,12 +115,10 @@ export default function SongForm({
       method="post"
       className="flex flex-col h-full"
       onSubmit={() => {
-        isSavedRef.current = true;
+        setSaved();
         toast.success("Pieśń została zapisana.");
       }}
-      onChange={() => {
-        isSavedRef.current = false;
-      }}
+      onChange={setUnsaved}
     >
       <SiteHeader>
         <h1 className="truncate">{isNewSong ? "Nowa pieśń" : song.title}</h1>

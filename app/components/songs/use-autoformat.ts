@@ -5,9 +5,11 @@ import { toast } from "sonner";
 
 export default function useAutoFormat({
   lyricsRef,
+  onChange,
   setIsDisabled,
 }: {
   lyricsRef: React.RefObject<LyricsEditorHandle | null>;
+  onChange: () => void;
   setIsDisabled: (value: boolean) => void;
 }) {
   const fetcher = useFetcher();
@@ -40,7 +42,11 @@ export default function useAutoFormat({
 
     if (data.ok) {
       if (lyricsRef.current && typeof data?.formattedLyrics === "string") {
-        lyricsRef.current.setValue(fetcher.data.formattedLyrics);
+        const { formattedLyrics } = data;
+        if (formattedLyrics !== lyricsRef.current.value) {
+          lyricsRef.current.setValue(formattedLyrics);
+          onChange();
+        }
       }
     } else if (data.error === "limitExceeded") {
       toast.error(
@@ -49,7 +55,7 @@ export default function useAutoFormat({
     } else {
       toast.error("Nie udało się wykonać automatycznego formatowania.");
     }
-  }, [fetcher.data, lyricsRef]);
+  }, [fetcher.data, lyricsRef, onChange]);
 
   return { autoFormat, isFetching };
 }
