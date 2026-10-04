@@ -128,7 +128,8 @@ export const action = createAuthenticatedAction(
         ],
       });
 
-      const formattedLyrics = response.choices[0].message.content;
+      let formattedLyrics = response.choices[0].message.content;
+      formattedLyrics = formattedLyrics.replaceAll("—", "–");
 
       return { ok: true, formattedLyrics };
     } catch (error) {
