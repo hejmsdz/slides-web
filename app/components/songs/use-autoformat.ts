@@ -1,7 +1,10 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useFetcher } from "react-router";
 import { LyricsEditorHandle } from "./lyrics-editor";
 import { toast } from "sonner";
+
+const isOnboarded = () => localStorage.getItem("autoFormatOnboarded") === "1";
+const setIsOnboarded = () => localStorage.setItem("autoFormatOnboarded", "1");
 
 export default function useAutoFormat({
   lyricsRef,
@@ -14,9 +17,33 @@ export default function useAutoFormat({
 }) {
   const fetcher = useFetcher();
 
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const pendingOnboardingRef = useRef<(accepted: boolean) => void>(null);
+  const acceptOnboarding = () => {
+    setIsOnboardingOpen(false);
+    pendingOnboardingRef.current?.(true);
+  };
+  const closeOnboarding = () => {
+    setIsOnboardingOpen(false);
+    pendingOnboardingRef.current?.(false);
+  };
+
   const autoFormat = useCallback(async () => {
     if (!lyricsRef.current) {
       return;
+    }
+
+    if (!isOnboarded()) {
+      const canContinuePromise = new Promise<boolean>((resolve) => {
+        pendingOnboardingRef.current = resolve;
+      });
+      setIsOnboardingOpen(true);
+
+      if (!(await canContinuePromise)) {
+        return;
+      }
+
+      setIsOnboarded();
     }
 
     const body = new FormData();
@@ -59,5 +86,13 @@ export default function useAutoFormat({
     }
   }, [fetcher.data, lyricsRef, onChange]);
 
-  return { autoFormat, isFetching };
+  return {
+    autoFormat,
+    isFetching,
+    onboarding: {
+      isOpen: isOnboardingOpen,
+      onAccept: acceptOnboarding,
+      onClose: closeOnboarding,
+    },
+  };
 }

@@ -107,40 +107,31 @@ Bez komentarzy, wyjaśnień, wstępów, podsumowań, informacji o zmianach i Mar
 
 const maxLength = 2000;
 
-export const action = createAuthenticatedAction(
-  async ({ request }, { session }) => {
-    const formData = await request.formData();
+export const action = createAuthenticatedAction(async ({ request }) => {
+  const formData = await request.formData();
 
-    if (!session.data.isAdmin) {
-      throw data(
-        { message: "Only admin can use this feature" },
-        { status: 403 },
-      );
-    }
+  const lyrics = formData.get("lyrics")?.toString();
+  invariant(lyrics, "lyrics are required");
 
-    const lyrics = formData.get("lyrics")?.toString();
-    invariant(lyrics, "lyrics are required");
+  if (lyrics.length > maxLength) {
+    return { ok: false, error: "tooLong" };
+  }
 
-    if (lyrics.length > maxLength) {
-      return { ok: false, error: "tooLong" };
-    }
+  try {
+    const response = await openRouter({
+      model: "openai/gpt-6-luna",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: lyrics },
+      ],
+    });
 
-    try {
-      const response = await openRouter({
-        model: "openai/gpt-6-luna",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: lyrics },
-        ],
-      });
+    let formattedLyrics = response.choices[0].message.content;
+    formattedLyrics = formattedLyrics.replaceAll("—", "–");
 
-      let formattedLyrics = response.choices[0].message.content;
-      formattedLyrics = formattedLyrics.replaceAll("—", "–");
-
-      return { ok: true, formattedLyrics };
-    } catch (error) {
-      const isLimitExceeded = error instanceof AiLimitExceededError;
-      return { ok: false, error: isLimitExceeded ? "limitExceeded" : "error" };
-    }
-  },
-);
+    return { ok: true, formattedLyrics };
+  } catch (error) {
+    const isLimitExceeded = error instanceof AiLimitExceededError;
+    return { ok: false, error: isLimitExceeded ? "limitExceeded" : "error" };
+  }
+});

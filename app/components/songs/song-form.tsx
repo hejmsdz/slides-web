@@ -39,6 +39,7 @@ import Spinner from "../spinner";
 import useEventListener from "~/hooks/use-event-listener";
 import useDashboardData from "~/hooks/use-dashboard-data";
 import { useIsWebView } from "~/hooks/use-is-web-view";
+import AutoFormatInfo from "./autoformat-info";
 
 function useSaveGuard(): {
   setSaved: () => void;
@@ -104,7 +105,11 @@ export default function SongForm({
   const isDisabled = (isOverride || isNewSong) && !currentTeamId;
   const { setSaved, setUnsaved } = useSaveGuard();
   const isWebView = useIsWebView();
-  const { autoFormat, isFetching: isAutoFormatting } = useAutoFormat({
+  const {
+    autoFormat,
+    isFetching: isAutoFormatting,
+    onboarding: autoFormatOnboarding,
+  } = useAutoFormat({
     lyricsRef,
     onChange: setUnsaved,
     setIsDisabled: setIsProcessing,
@@ -120,6 +125,11 @@ export default function SongForm({
       }}
       onChange={setUnsaved}
     >
+      <AutoFormatInfo
+        open={autoFormatOnboarding.isOpen}
+        onAccept={autoFormatOnboarding.onAccept}
+        onClose={autoFormatOnboarding.onClose}
+      />
       <SiteHeader>
         <h1 className="truncate">{isNewSong ? "Nowa pieśń" : song.title}</h1>
         <div className="flex gap-2 ml-auto">
@@ -155,28 +165,26 @@ export default function SongForm({
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         </PreviewButton>
-                        {isAdmin && (
-                          <SidebarMenuItem>
-                            <SidebarMenuButton
-                              type="button"
-                              onClick={autoFormat}
-                              aria-busy={isAutoFormatting}
-                              disabled={isAutoFormatting}
-                            >
-                              {isAutoFormatting ? (
-                                <>
-                                  <Spinner />
-                                  <span>Już wszystko poprawiam...</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Sparkles />
-                                  <span>Popraw formatowanie</span>
-                                </>
-                              )}{" "}
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        )}
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            type="button"
+                            onClick={autoFormat}
+                            aria-busy={isAutoFormatting}
+                            disabled={isAutoFormatting}
+                          >
+                            {isAutoFormatting ? (
+                              <>
+                                <Spinner />
+                                <span>Już wszystko poprawiam...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles />
+                                <span>Popraw formatowanie</span>
+                              </>
+                            )}{" "}
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
                         {song?.canDelete && (
                           <DeleteButton id={song.id} asChild>
                             <SidebarMenuItem>
