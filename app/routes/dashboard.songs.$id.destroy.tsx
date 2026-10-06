@@ -1,9 +1,11 @@
 import { destroySong, getSong, SongWithLyrics } from "~/api/songs";
 import invariant from "tiny-invariant";
-import { redirect } from "react-router";
-import { createAuthenticatedAction } from "~/routing.server";
+import { redirect, ActionFunctionArgs } from "react-router";
+import { getSessionContext } from "~/context";
 
-export const action = createAuthenticatedAction(async ({ params }, { api }) => {
+export async function action({ params, context }: ActionFunctionArgs) {
+  const { api } = getSessionContext(context);
+
   invariant(params.id, "id is required");
 
   let song: SongWithLyrics;
@@ -20,4 +22,4 @@ export const action = createAuthenticatedAction(async ({ params }, { api }) => {
   }
 
   return redirect("/dashboard");
-});
+}

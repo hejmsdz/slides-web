@@ -1,13 +1,12 @@
 import invariant from "tiny-invariant";
 import { getSongs } from "~/api/songs";
-import { createAuthenticatedApi, requireSessionWithRefresh } from "~/session";
+import { getSessionContext } from "~/context";
 import type { Route } from "./+types/dashboard.songs.search";
 
 export const PAGE_SIZE = 30;
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const session = await requireSessionWithRefresh(request);
-  const api = await createAuthenticatedApi(session);
+export const loader = async ({ request, context }: Route.LoaderArgs) => {
+  const { session, api } = getSessionContext(context);
 
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query") ?? undefined;

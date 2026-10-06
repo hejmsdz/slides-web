@@ -1,23 +1,23 @@
-import { redirect } from "react-router";
+import { redirect, ActionFunctionArgs } from "react-router";
 import invariant from "tiny-invariant";
 import { getTeams, leaveTeam } from "~/api/teams";
-import { createAuthenticatedAction } from "~/routing.server";
+import { getSessionContext } from "~/context";
 import { commitSession } from "~/session";
 
-export const action = createAuthenticatedAction(
-  async ({ params }, { api, session }) => {
-    const teamId = params.id;
-    invariant(teamId, "teamId is required");
+export async function action({ params, context }: ActionFunctionArgs) {
+  const { api, session } = getSessionContext(context);
 
-    await leaveTeam(api, teamId);
+  const teamId = params.id;
+  invariant(teamId, "teamId is required");
 
-    const teams = await getTeams(api);
+  await leaveTeam(api, teamId);
 
-    session.set("teamId", Object.keys(teams)[0]);
-    return redirect(`/dashboard/settings`, {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
-  },
-);
+  const teams = await getTeams(api);
+
+  session.set("teamId", Object.keys(teams)[0]);
+  return redirect(`/dashboard/settings`, {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
+}

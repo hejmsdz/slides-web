@@ -4,12 +4,9 @@ import {
   LoaderFunctionArgs,
   ClientLoaderFunctionArgs,
 } from "react-router";
+import { Route } from "./+types/dashboard";
 import { getSongs, Song } from "../api/songs";
-import {
-  commitSession,
-  createAuthenticatedApi,
-  requireSessionWithRefresh,
-} from "~/session";
+import { commitSession } from "~/session";
 import { AppSidebar } from "~/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { getTeams, Team } from "~/api/teams";
@@ -20,6 +17,7 @@ import { toast } from "sonner";
 import invariant from "tiny-invariant";
 import { getBootstrap } from "~/api/bootstrap";
 import { PAGE_SIZE } from "./dashboard.songs.search";
+import { getSessionContext, authMiddleware } from "~/context";
 
 const useFlashMessage = () => {
   const { flashMessage } = useLoaderData<typeof loader>();
@@ -59,12 +57,12 @@ export type ServerData = {
   appDownloadUrl: string;
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await requireSessionWithRefresh(request);
-  const api = await createAuthenticatedApi(session);
+export const middleware: Route.MiddlewareFunction[] = [authMiddleware];
+
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  const { session, api } = getSessionContext(context);
 
   const bootstrap = await getBootstrap(api);
-
   const teams = await getTeams(api);
 
   const flashMessage = session.get("toast");

@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, MetaFunction, useLoaderData } from "react-router";
-import { requireSession, createAuthenticatedApi } from "~/session";
+import { getSessionContext } from "~/context";
 import { getTeam } from "~/api/teams";
 import MainContent from "~/components/main-content";
 import { SiteHeader } from "~/components/site-header";
@@ -36,9 +36,8 @@ export default function Settings() {
   );
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await requireSession(request);
-  const api = await createAuthenticatedApi(session);
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { session, api } = getSessionContext(context);
 
   const user = await getUsersMe(api);
   const teamId = session.get("teamId");

@@ -67,14 +67,17 @@ export const requireSession = async (request: Request): Promise<Session> => {
   return session;
 };
 
+const minAccessTokenRemainingSeconds = 30;
+
 export const requireSessionWithRefresh = async (
   request: Request,
-  headers: Headers = new Headers(),
-): Promise<Session> => {
+): Promise<{ session: Session; cookieToSet?: string }> => {
   const session = await requireSession(request);
+  let cookieToSet: string | undefined;
 
-  const accessTokenExpiresAt = session.get("accessTokenExpiresAt");
-  if (accessTokenExpiresAt && accessTokenExpiresAt < Date.now() / 1000) {
+  const accessTokenExpiresAt = session.get("accessTokenExpiresAt") ?? 0;
+  const accessTokenExpiresIn = accessTokenExpiresAt - Date.now() / 1000;
+  if (accessTokenExpiresIn < minAccessTokenRemainingSeconds) {
     const refreshToken = session.get("refreshToken");
     if (!refreshToken) {
       throw await logOut(session);
@@ -88,19 +91,13 @@ export const requireSessionWithRefresh = async (
       throw await logOut(session);
     }
 
-    headers.set("Set-Cookie", await commitSession(session));
-
-    if (request.method === "GET") {
-      throw redirect(request.url, {
-        headers,
-      });
-    }
+    cookieToSet = await commitSession(session);
   }
 
-  return session;
+  return { session, cookieToSet };
 };
 
-export const createAuthenticatedApi = async (session: Session) => {
+export const createAuthenticatedApi = (session: Session): Api => {
   const accessToken = session.get("accessToken");
   invariant(accessToken, "access token is required");
 

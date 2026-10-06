@@ -1,9 +1,11 @@
 import { destroyUsersMe } from "~/api/users";
-import { redirect } from "react-router";
-import { createAuthenticatedAction } from "~/routing.server";
+import { redirect, ActionFunctionArgs } from "react-router";
+import { getSessionContext } from "~/context";
 import { destroySession } from "~/session";
 
-export const action = createAuthenticatedAction(async (_, { api, session }) => {
+export async function action({ context }: ActionFunctionArgs) {
+  const { api, session } = getSessionContext(context);
+
   await destroyUsersMe(api);
 
   return redirect("/", {
@@ -11,4 +13,4 @@ export const action = createAuthenticatedAction(async (_, { api, session }) => {
       "Set-Cookie": await destroySession(session),
     },
   });
-});
+}

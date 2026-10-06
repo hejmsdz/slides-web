@@ -1,7 +1,7 @@
-import { data } from "react-router";
 import invariant from "tiny-invariant";
+import { ActionFunctionArgs } from "react-router";
 import openRouter, { AiLimitExceededError } from "~/api/openrouter";
-import { createAuthenticatedAction } from "~/routing.server";
+import { getSessionContext } from "~/context";
 
 const backticks = (text: string) => `\`${text}\``;
 const threeBackticks = (text: string, type: string = "text") =>
@@ -107,7 +107,9 @@ Bez komentarzy, wyjaśnień, wstępów, podsumowań, informacji o zmianach i Mar
 
 const maxLength = 2000;
 
-export const action = createAuthenticatedAction(async ({ request }) => {
+export async function action({ request, context }: ActionFunctionArgs) {
+  getSessionContext(context);
+
   const formData = await request.formData();
 
   const lyrics = formData.get("lyrics")?.toString();
@@ -134,4 +136,4 @@ export const action = createAuthenticatedAction(async ({ request }) => {
     const isLimitExceeded = error instanceof AiLimitExceededError;
     return { ok: false, error: isLimitExceeded ? "limitExceeded" : "error" };
   }
-});
+}

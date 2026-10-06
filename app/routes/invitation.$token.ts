@@ -2,15 +2,13 @@ import { LoaderFunction, redirect } from "react-router";
 import invariant from "tiny-invariant";
 import { ApiError } from "~/api/api";
 import { joinTeam } from "~/api/teams";
-import {
-  requireSession,
-  createAuthenticatedApi,
-  commitSession,
-} from "~/session";
+import { authMiddleware, getSessionContext } from "~/context";
+import { commitSession } from "~/session";
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  const session = await requireSession(request);
-  const api = await createAuthenticatedApi(session);
+export const middleware = [authMiddleware];
+
+export const loader: LoaderFunction = async ({ params, context }) => {
+  const { session, api } = getSessionContext(context);
   const { token } = params;
   invariant(token, "token is required");
 

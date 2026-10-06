@@ -1,4 +1,5 @@
 import {
+  ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
   redirect,
@@ -7,12 +8,8 @@ import {
 import { getSong, patchSong, SongWithLyrics } from "~/api/songs";
 import invariant from "tiny-invariant";
 import SongForm from "~/components/songs/song-form";
-import {
-  requireSession,
-  createAuthenticatedApi,
-  commitSession,
-} from "~/session";
-import { createAuthenticatedAction } from "~/routing.server";
+import { commitSession } from "~/session";
+import { getSessionContext } from "~/context";
 
 export const meta: MetaFunction<typeof loader> = ({ loaderData }) => {
   return [
@@ -30,10 +27,9 @@ export default function Song() {
   return <SongForm key={song.id} song={song} />;
 }
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   invariant(params.id, "id is required");
-  const session = await requireSession(request);
-  const api = await createAuthenticatedApi(session);
+  const { api } = getSessionContext(context);
 
   let song: SongWithLyrics;
   try {
@@ -47,56 +43,56 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   };
 }
 
-export const action = createAuthenticatedAction(
-  async ({ params, request }, { api, session }) => {
-    invariant(params.id, "id is required");
-    const formData = await request.formData();
+export async function action({ params, request, context }: ActionFunctionArgs) {
+  const { api, session } = getSessionContext(context);
 
-    const title = formData.get("title")?.toString();
-    invariant(title, "title is required");
-    const subtitle = formData.get("subtitle")?.toString();
-    const author = formData.get("author")?.toString();
-    const lyrics = formData.get("lyrics")?.toString()?.split("\n\n");
-    invariant(lyrics, "lyrics are required");
+  invariant(params.id, "id is required");
+  const formData = await request.formData();
 
-    const orUndefined = (value?: string) =>
-      value && value !== "0" && value !== "unofficial" ? value : undefined;
+  const title = formData.get("title")?.toString();
+  invariant(title, "title is required");
+  const subtitle = formData.get("subtitle")?.toString();
+  const author = formData.get("author")?.toString();
+  const lyrics = formData.get("lyrics")?.toString()?.split("\n\n");
+  invariant(lyrics, "lyrics are required");
 
-    const teamId = orUndefined(formData.get("teamId")?.toString());
-    const isOverride = formData.has("isOverride");
-    const isUnofficial = formData.get("teamId")?.toString() === "unofficial";
+  const orUndefined = (value?: string) =>
+    value && value !== "0" && value !== "unofficial" ? value : undefined;
 
-    if (
-      teamId !== undefined &&
-      teamId !== "0" &&
-      teamId !== "unofficial" &&
-      teamId !== session.get("teamId")
-    ) {
-      session.set("teamId", teamId);
-    }
+  const teamId = orUndefined(formData.get("teamId")?.toString());
+  const isOverride = formData.has("isOverride");
+  const isUnofficial = formData.get("teamId")?.toString() === "unofficial";
 
-    const result = await patchSong(api, params.id, {
-      title,
-      subtitle,
-      author,
-      lyrics,
-      teamId,
-      isOverride,
-      isUnofficial,
-    });
+  if (
+    teamId !== undefined &&
+    teamId !== "0" &&
+    teamId !== "unofficial" &&
+    teamId !== session.get("teamId")
+  ) {
+    session.set("teamId", teamId);
+  }
 
-    if (isOverride) {
-      return redirect(`/dashboard/songs/${result.id}`, {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
-    }
+  const result = await patchSong(api, params.id, {
+    title,
+    subtitle,
+    author,
+    lyrics,
+    teamId,
+    isOverride,
+    isUnofficial,
+  });
 
-    return Response.json(true, {
+  if (isOverride) {
+    return redirect(`/dashboard/songs/${result.id}`, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
     });
-  },
-);
+  }
+
+  return Response.json(true, {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
+}
