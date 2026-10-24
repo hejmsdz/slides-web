@@ -72,7 +72,7 @@
     "prettier": "3.5.3",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.1.6",
-    "vite": "^7.3.6",
+    "vite": "^7.3.7",
     "vite-imagetools": "^10.0.1",
     "vite-tsconfig-paths": "^4.2.1"
   },
